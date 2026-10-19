@@ -1,0 +1,10 @@
+{
+  "watch": ["src", ".env"],
+  "ext": "js,json",
+  "ignore": ["src/migrations", "src/seeders", "*.test.js"],
+  "exec": "node server.js",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "delay": "1000"
+}

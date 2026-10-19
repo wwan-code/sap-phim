@@ -1,0 +1,251 @@
+/**
+ * @file tooltip.scss
+ * @module Components/UI/Tooltip/TooltipStyles
+ * @description SCSS styles cho Tooltip component (chuẩn BEM, Material 3 Expressive, Speech Bubble / Capsule Silhouette và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.tooltip {
+  position: fixed;
+  z-index: var(--sp-z-tooltip, 1400);
+  pointer-events: none;
+  max-width: 320px;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  flex-direction: column;
+
+  // Component Tokens - Base (Mapped 100% to Sạp Phim Design System Tokens)
+  --sp-tooltip-bg: var(--sp-color-surface-container-highest, #262626);
+  --sp-tooltip-border: var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  --sp-tooltip-color: var(--sp-color-text-primary, #F5F5F7);
+  --sp-tooltip-shadow: var(--sp-shadow-elevated, 0 8px 24px rgba(0, 0, 0, 0.8));
+  --sp-tooltip-radius: var(--sp-radius-md, 12px);
+  --sp-tooltip-font-size: var(--sp-font-caption, 0.75rem);
+  --sp-tooltip-padding: 6px var(--sp-space-3, 12px);
+  --sp-tooltip-backdrop: none;
+
+  &--interactive {
+    pointer-events: auto;
+  }
+
+  &--nowrap &__inner {
+    white-space: nowrap;
+  }
+
+  // ─── Disabled Wrapper ───────────────────────────────────────────────────────
+  &__disabled-wrapper {
+    display: inline-block;
+    cursor: not-allowed;
+    vertical-align: middle;
+    outline: none;
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  // ─── Motion Animator Wrapper ───────────────────────────────────────────────
+  &__animator {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  // ─── Inner Container (Balloon Body) ────────────────────────────────────────
+  &__inner {
+    position: relative;
+    padding: var(--sp-tooltip-padding);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-tooltip-font-size);
+    font-weight: var(--sp-font-weight-medium, 500);
+    line-height: var(--sp-line-height-tight, 1.15);
+    letter-spacing: -0.01em;
+    color: var(--sp-tooltip-color);
+    background-color: var(--sp-tooltip-bg);
+    backdrop-filter: var(--sp-tooltip-backdrop);
+    -webkit-backdrop-filter: var(--sp-tooltip-backdrop);
+    border: 1px solid var(--sp-tooltip-border);
+    border-radius: var(--sp-tooltip-radius);
+    box-shadow: var(--sp-tooltip-shadow);
+    text-align: center;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast);
+  }
+
+  // ─── Seamless CSS Diamond Arrow (100% Unified with Body) ───────────────────
+  &__arrow {
+    position: absolute;
+    pointer-events: none;
+    z-index: 2;
+
+    &::before {
+      content: '';
+      position: absolute;
+      box-sizing: border-box;
+      background-color: var(--sp-tooltip-bg);
+      border: 1px solid var(--sp-tooltip-border);
+      border-radius: 1px;
+      transform: rotate(45deg);
+    }
+  }
+
+  // Directional Arrow Geometry (Exact 10px x 5px Clipped Diamond)
+  &--placement-top &__arrow {
+    bottom: 0;
+    margin-bottom: -5px;
+    width: 10px;
+    height: 5px;
+    overflow: hidden;
+
+    &::before {
+      top: -5px;
+      left: 1px;
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &--placement-bottom &__arrow {
+    top: 0;
+    margin-top: -5px;
+    width: 10px;
+    height: 5px;
+    overflow: hidden;
+
+    &::before {
+      bottom: -5px;
+      left: 1px;
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &--placement-left &__arrow {
+    right: 0;
+    margin-right: -5px;
+    width: 5px;
+    height: 10px;
+    overflow: hidden;
+
+    &::before {
+      left: -5px;
+      top: 1px;
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &--placement-right &__arrow {
+    left: 0;
+    margin-left: -5px;
+    width: 5px;
+    height: 10px;
+    overflow: hidden;
+
+    &::before {
+      right: -5px;
+      top: 1px;
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  // ─── Semantic & Aesthetic Variants ──────────────────────────────────────────
+  &--variant-default {
+    --sp-tooltip-bg: var(--sp-color-surface-container-highest, #262626);
+    --sp-tooltip-border: var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    --sp-tooltip-color: var(--sp-color-text-primary, #F5F5F7);
+    --sp-tooltip-shadow: var(--sp-shadow-elevated);
+  }
+
+  &--variant-primary {
+    --sp-tooltip-bg: var(--sp-color-brand-primary, #E50914);
+    --sp-tooltip-border: color-mix(in srgb, #FFFFFF 20%, transparent);
+    --sp-tooltip-color: var(--sp-color-on-primary, #FFFFFF);
+    --sp-tooltip-shadow: var(--sp-shadow-glow-brand);
+  }
+
+  &--variant-accent {
+    --sp-tooltip-bg: var(--sp-color-brand-accent, #7C5DFA);
+    --sp-tooltip-border: color-mix(in srgb, #FFFFFF 25%, transparent);
+    --sp-tooltip-color: var(--sp-color-on-primary, #FFFFFF);
+    --sp-tooltip-shadow: var(--sp-shadow-glow-ambient);
+  }
+
+  &--variant-success {
+    --sp-tooltip-bg: var(--sp-color-status-success, #10B981);
+    --sp-tooltip-border: color-mix(in srgb, #FFFFFF 20%, transparent);
+    --sp-tooltip-color: #FFFFFF;
+    --sp-tooltip-shadow: 0 4px 16px color-mix(in srgb, var(--sp-color-status-success) 40%, transparent);
+  }
+
+  &--variant-warning {
+    --sp-tooltip-bg: var(--sp-color-status-warning, #F59E0B);
+    --sp-tooltip-border: color-mix(in srgb, #000000 20%, transparent);
+    --sp-tooltip-color: #000000;
+    --sp-tooltip-shadow: 0 4px 16px color-mix(in srgb, var(--sp-color-status-warning) 40%, transparent);
+  }
+
+  &--variant-error {
+    --sp-tooltip-bg: var(--sp-color-status-error, #EF4444);
+    --sp-tooltip-border: color-mix(in srgb, #FFFFFF 20%, transparent);
+    --sp-tooltip-color: #FFFFFF;
+    --sp-tooltip-shadow: 0 4px 16px color-mix(in srgb, var(--sp-color-status-error) 40%, transparent);
+  }
+
+  &--variant-info {
+    --sp-tooltip-bg: var(--sp-color-status-info, #3B82F6);
+    --sp-tooltip-border: color-mix(in srgb, #FFFFFF 20%, transparent);
+    --sp-tooltip-color: #FFFFFF;
+    --sp-tooltip-shadow: 0 4px 16px color-mix(in srgb, var(--sp-color-status-info) 40%, transparent);
+  }
+
+  &--variant-light {
+    --sp-tooltip-bg: var(--sp-color-surface-bright, #2C2C2C);
+    --sp-tooltip-border: var(--sp-border-strong);
+    --sp-tooltip-color: var(--sp-color-text-primary, #F5F5F7);
+    --sp-tooltip-shadow: var(--sp-shadow-elevated);
+  }
+
+  &--variant-neural {
+    --sp-tooltip-bg: color-mix(in srgb, var(--sp-color-surface-container-highest, #262626) 88%, var(--sp-color-brand-accent, #7C5DFA) 12%);
+    --sp-tooltip-backdrop: blur(14px);
+    --sp-tooltip-border: var(--sp-color-ai-glow, rgba(124, 93, 250, 0.45));
+    --sp-tooltip-color: var(--sp-color-text-primary, #F5F5F7);
+    --sp-tooltip-shadow: var(--sp-shadow-glow-ambient);
+  }
+
+  // ─── Sizes ──────────────────────────────────────────────────────────────────
+  &--size-small {
+    --sp-tooltip-font-size: var(--sp-font-micro, 0.6875rem);
+    --sp-tooltip-padding: var(--sp-space-1, 4px) var(--sp-space-2, 8px);
+    --sp-tooltip-radius: var(--sp-radius-sm, 6px);
+    max-width: 240px;
+  }
+
+  &--size-medium {
+    --sp-tooltip-font-size: var(--sp-font-caption, 0.75rem);
+    --sp-tooltip-padding: 6px var(--sp-space-3, 12px);
+    --sp-tooltip-radius: var(--sp-radius-md, 12px);
+    max-width: 320px;
+  }
+
+  &--size-large {
+    --sp-tooltip-font-size: var(--sp-font-body-sm, 0.875rem);
+    --sp-tooltip-padding: var(--sp-space-2, 8px) var(--sp-space-4, 16px);
+    --sp-tooltip-radius: var(--sp-radius-lg, 18px);
+    max-width: 400px;
+  }
+}
+
+// Responsive Constraints
+@include responsive(max-sm) {
+  .tooltip {
+    max-width: calc(100vw - 32px) !important;
+  }
+}

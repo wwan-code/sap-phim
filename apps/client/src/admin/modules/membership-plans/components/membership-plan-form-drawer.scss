@@ -1,0 +1,426 @@
+/**
+ * @file membership-plan-form-drawer.scss
+ * @module Admin/Modules/MembershipPlans/Components/Styles
+ * @description Stylesheet chuẩn Material 3 Expressive, Tonal Depth & Obsidian Cinema cho MembershipPlanFormDrawer (3 Tabs Chức Năng Tinh Gọn).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.plan-form-drawer {
+  &__body {
+    padding: var(--sp-space-5, 20px) var(--sp-space-6, 24px);
+    overflow-y: auto;
+    background-color: var(--sp-color-surface-base, #07080a);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  // ── Layout Form Thẳng Đứng ──
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    width: 100%;
+  }
+
+  // ── Navigation Tabs trong Drawer ──
+  &__tabs-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+    padding: var(--sp-space-1, 4px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-md, 12px);
+    width: 100%;
+  }
+
+  &__tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    background: transparent;
+    border: none;
+    border-radius: var(--sp-radius-sm, 8px);
+    color: var(--sp-color-text-secondary, #9499a8);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--sp-color-text-primary, #f4f4f6);
+      background-color: var(--sp-state-hover, rgba(255, 255, 255, 0.06));
+    }
+
+    &--active {
+      color: var(--sp-color-brand-primary, #e50914);
+      background-color: var(--sp-color-surface-container, #12151e);
+      box-shadow: var(--sp-elevation-1);
+    }
+  }
+
+  &__tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    width: 100%;
+  }
+
+  // ── Khối Section ──
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-5, 20px);
+    background-color: var(--sp-color-surface-container-low, #0e1017);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-lg, 18px);
+    box-shadow: var(--sp-elevation-0);
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    padding-bottom: var(--sp-space-2, 8px);
+    border-bottom: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.06));
+  }
+
+  &__section-icon {
+    color: var(--sp-color-brand-primary, #e50914);
+  }
+
+  &__section-title {
+    margin: 0;
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  // ── Layout Hàng & Cột Field ──
+  &__row {
+    display: flex;
+    gap: var(--sp-space-3, 12px);
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+
+    &--half {
+      flex: 1;
+    }
+
+    &--third {
+      flex: 1;
+    }
+  }
+
+  &__label {
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-secondary, #9499a8);
+  }
+
+  &__required {
+    color: var(--sp-color-status-error, #ef4444);
+  }
+
+  &__hint {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    line-height: var(--sp-line-height-normal, 1.5);
+  }
+
+  &__input,
+  &__select,
+  &__textarea {
+    width: 100%;
+    padding: var(--sp-space-3, 10px) var(--sp-space-3, 14px);
+    background-color: var(--sp-color-surface-container, #12151e);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-md, 10px);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-family: inherit;
+    transition: border-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    &:focus {
+      outline: none;
+      border-color: var(--sp-color-brand-primary, #e50914);
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+    }
+
+    &::placeholder {
+      color: var(--sp-color-text-muted, #5c6275);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: var(--sp-color-surface-container-lowest, #07080a);
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 72px;
+  }
+
+  // ── Savings Calculator Banner ──
+  &__savings-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: var(--sp-radius-md, 10px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-status-success, #10b981);
+
+    .savings-label {
+      font-weight: var(--sp-font-weight-medium, 500);
+    }
+
+    .savings-value {
+      font-weight: var(--sp-font-weight-bold, 700);
+      background: rgba(16, 185, 129, 0.2);
+      padding: 2px 8px;
+      border-radius: var(--sp-radius-full, 9999px);
+    }
+  }
+
+  // ── DANH SÁCH ĐẶC QUYỀN VIP (LIST-BASED ROWS) ──
+  &__entitlements-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__entitlement-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-3, 12px);
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 14px);
+    background-color: var(--sp-color-surface-container, #12151e);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.06));
+    border-radius: var(--sp-radius-md, 10px);
+    transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-container-high, #1b1f2b);
+      border-color: var(--sp-border-strong, rgba(255, 255, 255, 0.12));
+    }
+
+    &--active {
+      border-color: rgba(124, 93, 250, 0.3);
+      background: rgba(124, 93, 250, 0.04);
+    }
+  }
+
+  &__entitlement-left {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__entitlement-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--sp-radius-sm, 8px);
+    background: rgba(124, 93, 250, 0.12);
+    color: var(--sp-color-brand-accent, #7c5dfa);
+    flex-shrink: 0;
+  }
+
+  &__entitlement-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  &__entitlement-title {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary, #f4f4f6);
+  }
+
+  &__entitlement-desc {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ── LƯỚI ICON 6 Ô NGANG (ICON GRID) ──
+  &__icon-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--sp-space-2, 8px);
+
+    @media (max-width: 640px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__icon-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: var(--sp-space-3, 10px) var(--sp-space-1, 4px);
+    background-color: var(--sp-color-surface-container, #12151e);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-md, 10px);
+    color: var(--sp-color-text-secondary, #9499a8);
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-container-high, #1b1f2b);
+      color: var(--sp-color-text-primary, #f4f4f6);
+      transform: translateY(-2px);
+    }
+
+    &--active {
+      background-color: rgba(124, 93, 250, 0.12);
+      border-color: var(--sp-color-brand-accent, #7c5dfa);
+      color: var(--sp-color-brand-accent, #7c5dfa);
+      box-shadow: 0 0 12px rgba(124, 93, 250, 0.3);
+    }
+
+    .tile-label {
+      font-size: var(--sp-font-micro, 0.6875rem);
+      font-weight: var(--sp-font-weight-medium, 500);
+    }
+  }
+
+  // ── COLOR PICKER ROW ──
+  &__color-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    flex-wrap: wrap;
+  }
+
+  &__color-swatches {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--sp-radius-full, 9999px);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform var(--sp-transition-fast), border-color var(--sp-transition-fast);
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    &--active {
+      border-color: #ffffff;
+      transform: scale(1.15);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  &__color-hex-field {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    margin-left: auto;
+
+    .color-preview-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .color-hex-input {
+      width: 100px;
+      padding: 6px 10px;
+      font-size: var(--sp-font-caption, 0.75rem);
+      text-transform: uppercase;
+    }
+  }
+
+  // ── HÀNG CÀI ĐẶT HIỂN THỊ (DISPLAY SETTING ROWS) ──
+  &__settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-3, 12px);
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 14px);
+    background-color: var(--sp-color-surface-container, #12151e);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.06));
+    border-radius: var(--sp-radius-md, 10px);
+  }
+
+  &__setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__setting-title {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary, #f4f4f6);
+  }
+
+  &__setting-desc {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+  }
+
+  // ── Footer Actions ──
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sp-space-3, 12px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-6, 24px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border-top: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  }
+}

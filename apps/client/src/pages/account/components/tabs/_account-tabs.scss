@@ -1,0 +1,741 @@
+/**
+ * @file _account-tabs.scss
+ * @module Pages/Account/Styles/Tabs
+ * @description Styling cho các Cards và Forms trong các Tabs của trang Account.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.account-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-6);
+  width: 100%;
+  animation: fadeIn var(--sp-transition-normal);
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-space-4);
+  }
+
+  &__title {
+    @include typography('h3');
+    color: var(--sp-color-text-primary);
+    margin-bottom: var(--sp-space-1);
+
+    &--danger {
+      color: var(--sp-color-status-error);
+    }
+  }
+
+  &__subtitle {
+    @include typography('body-md');
+    color: var(--sp-color-text-secondary);
+    max-width: 720px;
+  }
+}
+
+/* ==========================================================================
+ 1. ACCOUNT CARDS (Material 3 Tonal Containers)
+ ========================================================================== */
+
+.account-card {
+  @include surface('container');
+  border-radius: var(--sp-radius-lg);
+  overflow: hidden;
+  transition: box-shadow var(--sp-transition-normal), border-color var(--sp-transition-normal);
+
+  &__header {
+    padding: var(--sp-space-5) var(--sp-space-6);
+    border-bottom: 1px solid var(--sp-border-subtle);
+    background-color: var(--sp-color-surface-container-high);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1);
+
+    &--between {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--sp-space-4);
+    }
+  }
+
+  &__header-icon-title {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-space-3);
+  }
+
+  &__header-icon {
+    color: var(--sp-color-brand-primary);
+    margin-top: 2px;
+    flex-shrink: 0;
+
+    &--danger {
+      color: var(--sp-color-status-error);
+    }
+  }
+
+  &__title-badge-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    @include typography('h4');
+    color: var(--sp-color-text-primary);
+    margin-bottom: var(--sp-space-1);
+
+    &--danger {
+      color: var(--sp-color-status-error);
+    }
+  }
+
+  &__desc {
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__body {
+    padding: var(--sp-space-6);
+  }
+
+  &__banner-error {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    padding: var(--sp-space-3) var(--sp-space-4);
+    margin: var(--sp-space-4) var(--sp-space-6) 0;
+    border-radius: var(--sp-radius-md);
+    background-color: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--sp-color-status-error);
+    @include typography('body-sm');
+  }
+
+  &__info-box {
+    padding: var(--sp-space-4);
+    border-radius: var(--sp-radius-md);
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    color: var(--sp-color-text-secondary);
+    @include typography('body-sm');
+    line-height: var(--sp-line-height-normal);
+  }
+
+  /* Danger Card */
+  &--danger {
+    border-color: rgba(239, 68, 68, 0.3);
+
+    .account-card__header {
+      background-color: rgba(239, 68, 68, 0.06);
+    }
+  }
+
+  &__danger-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-space-3);
+    padding: var(--sp-space-4);
+    border-radius: var(--sp-radius-md);
+    background-color: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--sp-color-text-secondary);
+    @include typography('body-sm');
+  }
+
+  &__danger-icon {
+    color: var(--sp-color-status-error);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Hero Avatar Card */
+  &--hero {
+    background: linear-gradient(135deg, var(--sp-color-surface-container-high) 0%, var(--sp-color-surface-container) 100%);
+    padding: var(--sp-space-6);
+  }
+
+  &__hero-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-6);
+
+    @include responsive(mobile) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  &__avatar-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 0;
+
+    .avatar {
+      box-shadow: 0 0 0 3px var(--sp-color-surface-container-high), 0 0 0 4px var(--sp-border-strong);
+    }
+  }
+
+  &__avatar-upload-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: var(--sp-radius-full);
+    background-color: var(--sp-color-brand-primary);
+    color: #ffffff;
+    border: 3px solid var(--sp-color-surface-container-high);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--sp-shadow-elevated);
+    transition: transform var(--sp-transition-fast), background-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    svg {
+      display: block;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      background-color: var(--sp-color-brand-primary-hover);
+      transform: scale(1.12);
+      box-shadow: var(--sp-shadow-glow-brand);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--sp-color-brand-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__hidden-file-input {
+    display: none;
+  }
+
+  &__hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1);
+    min-width: 0;
+  }
+
+  &__hero-name-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    flex-wrap: wrap;
+
+    @include responsive(mobile) {
+      justify-content: center;
+    }
+  }
+
+  &__hero-name {
+    @include typography('body-lg');
+    color: var(--sp-color-text-primary);
+  }
+
+  &__hero-handle {
+    @include typography('body-sm');
+    color: var(--sp-color-brand-primary);
+    font-weight: var(--sp-font-weight-medium);
+  }
+
+  &__hero-meta {
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+    margin-top: var(--sp-space-1);
+
+    strong {
+      color: var(--sp-color-text-primary);
+    }
+  }
+}
+
+/* ==========================================================================
+ 2. FORM GRID & INPUT LAYOUTS
+ ========================================================================== */
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-6);
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--sp-space-4);
+  }
+
+  &__col-12 {
+    grid-column: span 12;
+  }
+
+  &__col-md-6 {
+    grid-column: span 12;
+
+    @include responsive(tablet-portrait) {
+      grid-column: span 6;
+    }
+
+    @include responsive(lg-up) {
+      grid-column: span 6;
+    }
+  }
+
+  &__col-md-4 {
+    grid-column: span 12;
+
+    @include responsive(tablet-portrait) {
+      grid-column: span 4;
+    }
+
+    @include responsive(lg-up) {
+      grid-column: span 4;
+    }
+  }
+
+  &__input-icon {
+    color: var(--sp-color-text-muted);
+  }
+
+  &__lock-icon {
+    color: var(--sp-color-text-muted);
+  }
+
+  &__field-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2);
+  }
+
+  &__label {
+    @include typography('caption');
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__radio-group {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4);
+    height: 48px;
+  }
+
+  &__radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    cursor: pointer;
+    @include typography('body-sm');
+    color: var(--sp-color-text-primary);
+
+    input[type='radio'] {
+      accent-color: var(--sp-color-brand-primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+
+  &__checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    cursor: pointer;
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+
+    input[type='checkbox'] {
+      accent-color: var(--sp-color-brand-primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+
+  &__password-strength-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sp-space-3);
+    padding: var(--sp-space-4) 0;
+
+    &--between {
+      justify-content: space-between;
+    }
+  }
+}
+
+/* ==========================================================================
+ 3. PRIVACY & PRESETS
+ ========================================================================== */
+
+.account-presets-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-space-4);
+
+  @include responsive(mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.account-preset-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-3);
+  padding: var(--sp-space-4) var(--sp-space-4);
+  border-radius: var(--sp-radius-md);
+  background-color: var(--sp-color-surface-container-high);
+  border: 1.5px solid var(--sp-border-subtle);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+  &__icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--sp-radius-md);
+    background-color: var(--sp-color-surface-container);
+    color: var(--sp-color-text-secondary);
+    flex-shrink: 0;
+    transition: all var(--sp-transition-fast);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    strong {
+      @include typography('body-sm');
+      font-weight: var(--sp-font-weight-semibold);
+      color: var(--sp-color-text-primary);
+      white-space: nowrap;
+      @include text-truncate;
+    }
+
+    span {
+      @include typography('caption');
+      color: var(--sp-color-text-muted);
+      white-space: nowrap;
+      @include text-truncate;
+    }
+  }
+
+  &:hover {
+    background-color: var(--sp-color-surface-hover);
+    border-color: var(--sp-border-strong);
+    transform: translateY(-2px);
+    box-shadow: var(--sp-elevation-2);
+
+    .account-preset-chip__icon-box {
+      color: var(--sp-color-brand-primary);
+      background-color: rgba(229, 9, 20, 0.1);
+    }
+  }
+
+  &--active {
+    background-color: rgba(229, 9, 20, 0.08);
+    border-color: var(--sp-color-brand-primary);
+    box-shadow: 0 0 0 1px var(--sp-color-brand-primary), var(--sp-shadow-elevated);
+
+    .account-preset-chip__icon-box {
+      background-color: var(--sp-color-brand-primary);
+      color: var(--sp-color-on-primary);
+    }
+
+    strong {
+      color: var(--sp-color-brand-primary);
+    }
+
+    span {
+      color: var(--sp-color-text-secondary);
+    }
+  }
+}
+
+.account-privacy-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-5);
+}
+
+.account-privacy-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-space-4);
+  padding-bottom: var(--sp-space-4);
+  border-bottom: 1px solid var(--sp-border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  @include responsive(mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__icon-title {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-space-3);
+  }
+
+  &__icon {
+    color: var(--sp-color-text-muted);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    @include typography('body-md');
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-text-primary);
+    margin-bottom: 2px;
+  }
+
+  &__desc {
+    @include typography('caption');
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__options {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4);
+
+    @include responsive(mobile) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  &__radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    cursor: pointer;
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+
+    input[type='radio'] {
+      accent-color: var(--sp-color-brand-primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+}
+
+/* ==========================================================================
+ 4. TOGGLE LIST (PREFERENCES)
+ ========================================================================== */
+
+.account-toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-4);
+}
+
+.account-toggle-item {
+  padding-bottom: var(--sp-space-4);
+  border-bottom: 1px solid var(--sp-border-subtle);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  &--select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-4);
+
+    @include responsive(mobile) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__text-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1);
+  }
+
+  &__title {
+    @include typography('body-md');
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__desc {
+    @include typography('caption');
+    color: var(--sp-color-text-secondary);
+  }
+}
+
+.account-select-native {
+  padding: var(--sp-space-2) var(--sp-space-4);
+  border-radius: var(--sp-radius-md);
+  background-color: var(--sp-color-surface-container-high);
+  border: 1px solid var(--sp-border-strong);
+  color: var(--sp-color-text-primary);
+  @include typography('body-sm');
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: var(--sp-color-brand-primary);
+  }
+}
+
+/* ==========================================================================
+ 5. SESSIONS LIST
+ ========================================================================== */
+
+.account-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-3);
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-3);
+    padding: var(--sp-space-8) 0;
+    color: var(--sp-color-text-muted);
+  }
+
+  &__empty-icon {
+    opacity: 0.5;
+  }
+}
+
+.account-session-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-4);
+  padding: var(--sp-space-3) var(--sp-space-4);
+  border-radius: var(--sp-radius-md);
+  background-color: var(--sp-color-surface-container-high);
+  border: 1px solid var(--sp-border-subtle);
+
+  @include responsive(mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--sp-radius-md);
+    background-color: var(--sp-color-surface-container);
+    color: var(--sp-color-brand-primary);
+    flex-shrink: 0;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1);
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+  }
+
+  &__device-name {
+    @include typography('body-md');
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    @include typography('caption');
+    color: var(--sp-color-text-muted);
+    flex-wrap: wrap;
+  }
+}
+
+/* ==========================================================================
+ 6. DELETE MODAL
+ ========================================================================== */
+
+.account-delete-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-4);
+}
+
+.account-delete-modal__instruction {
+  @include typography('body-sm');
+  color: var(--sp-color-text-secondary);
+  margin-bottom: var(--sp-space-2);
+
+  strong {
+    color: var(--sp-color-status-error);
+    user-select: all;
+  }
+}
+
+.account-delete-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-space-3);
+  margin-top: var(--sp-space-4);
+}

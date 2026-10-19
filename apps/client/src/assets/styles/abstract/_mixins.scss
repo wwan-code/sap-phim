@@ -1,0 +1,645 @@
+/**
+ * @file _mixins.scss
+ * @module Styles/Abstract/Mixins
+ * @description Sạp Phim Design System - SCSS Mixins & Utilities (The Aesthetic OS).
+ * Bao gồm Responsive Breakpoints, Neural Motion, Surface Hierarchy, Typography,
+ * Invisible Interface Utilities, Cinematic Effects và State Layers.
+ */
+
+@use 'sass:list';
+
+/* ==========================================================================
+   1. RESPONSIVE BREAKPOINT SYSTEM
+   ========================================================================== */
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1440px;
+$breakpoint-3xl: 1600px;
+
+@mixin responsive($breakpoint) {
+
+    // Semantic aliases for product layouts:
+    // mobile < 768px, tablet 768px-1279px, desktop >= 1280px
+    @if $breakpoint ==mobile {
+        @media (max-width: #{$breakpoint-md - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==tablet {
+        @media (min-width: $breakpoint-md) and (max-width: #{$breakpoint-xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==tablet-portrait {
+        @media (min-width: $breakpoint-md) and (max-width: #{$breakpoint-lg - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==tablet-landscape {
+        @media (min-width: $breakpoint-lg) and (max-width: #{$breakpoint-xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==desktop-up {
+        @media (min-width: $breakpoint-xl) {
+            @content;
+        }
+    }
+
+    // Min-width (Mobile-First Inheritance)
+    @else if $breakpoint ==sm-up {
+        @media (min-width: $breakpoint-sm) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==md-up {
+        @media (min-width: $breakpoint-md) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==lg-up {
+        @media (min-width: $breakpoint-lg) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==xl-up {
+        @media (min-width: $breakpoint-xl) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==xxl-up {
+        @media (min-width: $breakpoint-2xl) {
+            @content;
+        }
+    }
+
+    // Exact Range Queries
+    @else if $breakpoint ==xs {
+        @media (max-width: #{$breakpoint-sm - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==sm {
+        @media (min-width: #{$breakpoint-sm}) and (max-width: #{$breakpoint-md - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==md {
+        @media (min-width: #{$breakpoint-md}) and (max-width: #{$breakpoint-lg - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==lg {
+        @media (min-width: #{$breakpoint-lg}) and (max-width: #{$breakpoint-xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==xl {
+        @media (min-width: #{$breakpoint-xl}) and (max-width: #{$breakpoint-2xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==xxl {
+        @media (min-width: #{$breakpoint-2xl}) and (max-width: #{$breakpoint-3xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==3xl {
+        @media (min-width: #{$breakpoint-3xl}) {
+            @content;
+        }
+    }
+
+    // Max-width queries & Semantic Down Aliases
+    @else if $breakpoint ==max-sm {
+        @media (max-width: #{$breakpoint-sm - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==max-md or $breakpoint ==mobile-down {
+        @media (max-width: #{$breakpoint-md - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==max-lg or $breakpoint ==tablet-down {
+        @media (max-width: #{$breakpoint-lg - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==max-xl or $breakpoint ==desktop-down {
+        @media (max-width: #{$breakpoint-xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==max-xxl {
+        @media (max-width: #{$breakpoint-2xl - 0.02px}) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==max-3xl {
+        @media (max-width: #{$breakpoint-3xl - 0.02px}) {
+            @content;
+        }
+    }
+}
+
+@mixin touch-target {
+    min-height: var(--sp-space-12, 48px);
+    min-width: var(--sp-space-12, 48px);
+
+    @include responsive(md-up) {
+        min-height: auto;
+        min-width: auto;
+    }
+}
+
+/* ==========================================================================
+   2. NEURAL MOTION & TRANSITIONS
+   ========================================================================== */
+@mixin neural-transition($properties...) {
+    $transitions: (
+    );
+
+@each $prop in $properties {
+    $transitions: list.append($transitions, $prop var(--sp-motion-duration-medium) var(--sp-motion-easing-neural), comma);
+}
+
+transition: $transitions;
+}
+
+@mixin transition-fast($properties...) {
+    $transitions: (
+    );
+
+@each $prop in $properties {
+    $transitions: list.append($transitions, $prop var(--sp-transition-fast), comma);
+}
+
+transition: $transitions;
+}
+
+@mixin transition-normal($properties...) {
+    $transitions: (
+    );
+
+@each $prop in $properties {
+    $transitions: list.append($transitions, $prop var(--sp-transition-normal), comma);
+}
+
+transition: $transitions;
+}
+
+@mixin transition-expressive($properties...) {
+    $transitions: (
+    );
+
+@each $prop in $properties {
+    $transitions: list.append($transitions, $prop var(--sp-transition-expressive), comma);
+}
+
+transition: $transitions;
+}
+
+/* ==========================================================================
+   3. LAYOUT & FLEX/GRID HELPERS
+   ========================================================================== */
+@mixin container {
+    width: 100%;
+    max-width: var(--sp-container-max-width, 1900px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--sp-container-padding, 24px);
+    padding-right: var(--sp-container-padding, 24px);
+
+    @include responsive(mobile) {
+        padding-left: var(--sp-container-padding-mobile, 16px);
+        padding-right: var(--sp-container-padding-mobile, 16px);
+    }
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin flex-start {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+@mixin flex-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+@mixin grid($columns: 1, $gap: var(--sp-space-4, 16px)) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $gap;
+}
+
+@mixin aspect-ratio($width, $height) {
+    aspect-ratio: #{$width} / #{$height};
+}
+
+/* ==========================================================================
+   4. SURFACE & TONAL LAYER ARCHITECTURE (Material 3 Expressive)
+   ========================================================================== */
+@mixin surface($level: 'container') {
+    @if $level =='base' {
+        background-color: var(--sp-color-surface-base);
+        color: var(--sp-color-text-primary);
+    }
+
+    @else if $level =='elevated' {
+        background-color: var(--sp-color-surface-elevated);
+        box-shadow: var(--sp-shadow-flat);
+        color: var(--sp-color-text-primary);
+    }
+
+    @else if $level =='container-lowest' {
+        background-color: var(--sp-color-surface-container-lowest);
+        color: var(--sp-color-text-primary);
+    }
+
+    @else if $level =='container-low' {
+        background-color: var(--sp-color-surface-container-low);
+        color: var(--sp-color-text-primary);
+    }
+
+    @else if $level =='container' {
+        background-color: var(--sp-color-surface-container);
+        border-radius: var(--sp-radius-md, 12px);
+        box-shadow: var(--sp-shadow-flat);
+        color: var(--sp-color-text-primary);
+    }
+
+    @else if $level =='container-high' {
+        background-color: var(--sp-color-surface-container-high);
+        color: var(--sp-color-text-primary);
+    }
+
+    @else if $level =='container-highest' {
+        background-color: var(--sp-color-surface-container-highest);
+        color: var(--sp-color-text-primary);
+    }
+}
+
+@mixin interactive-surface {
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast),
+        border-color var(--sp-transition-fast),
+        box-shadow var(--sp-transition-fast),
+        transform var(--sp-transition-fast);
+
+    &:hover {
+        background-color: var(--sp-color-surface-hover);
+        border-color: var(--sp-border-strong);
+        box-shadow: var(--sp-shadow-elevated);
+    }
+
+    &:active {
+        background-color: var(--sp-color-surface-active);
+        transform: scale(0.99);
+    }
+}
+
+@mixin state-layer($state: 'hover') {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-color: var(--sp-state-#{$state});
+        opacity: 0;
+        transition: opacity var(--sp-transition-fast);
+    }
+
+    @if $state =='hover' {
+        &:hover::after {
+            opacity: 1;
+        }
+    }
+
+    @else if $state =='focus' {
+        &:focus-visible::after {
+            opacity: 1;
+        }
+    }
+
+    @else if $state =='active' {
+        &:active::after {
+            opacity: 1;
+        }
+    }
+}
+
+/* ==========================================================================
+   5. INVISIBLE INTERFACE & ACCESSIBILITY
+   ========================================================================== */
+@mixin focus-ring($color: var(--sp-color-brand-primary), $offset: 2px) {
+    outline: none;
+
+    &:focus-visible {
+        outline: 2px solid $color;
+        outline-offset: $offset;
+        box-shadow: 0 0 0 #{$offset + 2px} rgba(229, 9, 20, 0.25);
+    }
+}
+
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==========================================================================
+   6. TYPOGRAPHY HELPERS
+   ========================================================================== */
+@mixin typography($variant: 'body-md') {
+    @if $variant =='hero' {
+        font-family: var(--sp-font-display);
+        font-size: var(--sp-font-display-hero);
+        font-weight: var(--sp-font-weight-extrabold);
+        line-height: var(--sp-line-height-tight, 1.15);
+        letter-spacing: -0.03em;
+    }
+
+    @else if $variant =='h1' {
+        font-family: var(--sp-font-display);
+        font-size: var(--sp-font-display-h1);
+        font-weight: var(--sp-font-weight-bold);
+        line-height: var(--sp-line-height-heading, 1.25);
+        letter-spacing: -0.02em;
+    }
+
+    @else if $variant =='h2' {
+        font-family: var(--sp-font-display);
+        font-size: var(--sp-font-display-h2);
+        font-weight: var(--sp-font-weight-bold);
+        line-height: var(--sp-line-height-heading, 1.25);
+        letter-spacing: -0.015em;
+    }
+
+    @else if $variant =='h3' {
+        font-family: var(--sp-font-display);
+        font-size: var(--sp-font-heading-h3);
+        font-weight: var(--sp-font-weight-semibold);
+        line-height: var(--sp-line-height-heading, 1.25);
+    }
+
+    @else if $variant =='h4' {
+        font-family: var(--sp-font-display);
+        font-size: var(--sp-font-heading-h4);
+        font-weight: var(--sp-font-weight-semibold);
+        line-height: var(--sp-line-height-heading, 1.25);
+    }
+
+    @else if $variant =='body-lg' {
+        font-family: var(--sp-font-body);
+        font-size: var(--sp-font-body-lg);
+        font-weight: var(--sp-font-weight-regular);
+        line-height: var(--sp-line-height-normal, 1.5);
+    }
+
+    @else if $variant =='body-md' {
+        font-family: var(--sp-font-body);
+        font-size: var(--sp-font-body-md);
+        font-weight: var(--sp-font-weight-regular);
+        line-height: var(--sp-line-height-normal, 1.5);
+    }
+
+    @else if $variant =='body-sm' {
+        font-family: var(--sp-font-body);
+        font-size: var(--sp-font-body-sm);
+        font-weight: var(--sp-font-weight-regular);
+        line-height: var(--sp-line-height-normal, 1.5);
+    }
+
+    @else if $variant =='caption' {
+        font-family: var(--sp-font-body);
+        font-size: var(--sp-font-caption);
+        font-weight: var(--sp-font-weight-medium);
+        line-height: var(--sp-line-height-normal, 1.5);
+    }
+
+    @else if $variant =='micro' {
+        font-family: var(--sp-font-body);
+        font-size: var(--sp-font-micro);
+        font-weight: var(--sp-font-weight-medium);
+        line-height: var(--sp-line-height-tight, 1.15);
+    }
+}
+
+@mixin text-truncate($lines: 1) {
+    @if $lines ==1 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @else {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: $lines;
+        line-clamp: $lines;
+        overflow: hidden;
+    }
+}
+
+@mixin truncate-text($lines: 1) {
+    @include text-truncate($lines);
+}
+
+/* ==========================================================================
+   7. ELEVATION & SHADOW SYSTEM
+   ========================================================================== */
+@mixin shadow($type: 'flat') {
+    @if $type =='sm' or $type =='flat' {
+        box-shadow: var(--sp-shadow-flat);
+    }
+
+    @else if $type =='md' or $type =='elevated' {
+        box-shadow: var(--sp-shadow-elevated);
+    }
+
+    @else if $type =='lg' or $type =='xl' or $type =='2xl' or $type =='modal' {
+        box-shadow: var(--sp-shadow-modal);
+    }
+
+    @else if $type =='card' {
+        box-shadow: var(--sp-shadow-flat);
+    }
+
+    @else if $type =='brand' {
+        box-shadow: var(--sp-shadow-glow-brand);
+    }
+
+    @else if $type =='ambient' {
+        box-shadow: var(--sp-shadow-glow-ambient);
+    }
+
+    @else if $type =='ai' {
+        box-shadow: var(--sp-shadow-glow-ai-pulse);
+    }
+}
+
+/* ==========================================================================
+   8. CINEMATIC & NEURAL AI EFFECTS
+   ========================================================================== */
+@mixin glassmorphism($bg: var(--sp-overlay-glass, rgba(18, 21, 30, 0.75)), $blur: 16px) {
+    background: $bg;
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    border: 1px solid var(--sp-border-subtle);
+}
+
+@mixin cinematic-glow($glow-color: rgba(229, 9, 20, 0.4), $size: 20px) {
+    box-shadow: 0 0 $size $glow-color;
+}
+
+@mixin ai-ambient-glow {
+    box-shadow: var(--sp-shadow-glow-ambient);
+    border-color: rgba(124, 93, 250, 0.3);
+}
+
+/* ==========================================================================
+   9. SCROLLBARS, SKELETONS & ANIMATIONS
+   ========================================================================== */
+@mixin custom-scrollbar($width: 6px, $thumb-color: var(--sp-color-surface-hover), $track-color: transparent) {
+    &::-webkit-scrollbar {
+        width: $width;
+        height: $width;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $track-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $thumb-color;
+        border-radius: var(--sp-radius-full, 9999px);
+
+        &:hover {
+            background-color: var(--sp-color-surface-active);
+        }
+    }
+}
+
+@mixin skeleton-shimmer {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.03) 25%,
+            rgba(255, 255, 255, 0.08) 50%,
+            rgba(255, 255, 255, 0.03) 75%);
+    background-size: 800px 100%;
+    animation: spShimmer 1.5s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+@mixin skeleton {
+    @include skeleton-shimmer;
+}
+
+@mixin spin($duration: 1s) {
+    animation: spSpin $duration linear infinite;
+}
+
+@mixin scale-in($duration: 0.2s) {
+    animation: spScaleIn $duration var(--sp-motion-easing-neural) forwards;
+}
+
+/* Global Keyframes for Mixins */
+@keyframes spShimmer {
+    0% {
+        background-position: -800px 0;
+    }
+
+    100% {
+        background-position: 800px 0;
+    }
+}
+
+@keyframes spSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spScaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes spFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

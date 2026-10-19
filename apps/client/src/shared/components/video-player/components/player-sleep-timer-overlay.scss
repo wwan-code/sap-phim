@@ -1,0 +1,145 @@
+/**
+ * @file player-sleep-timer-overlay.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Giao diện thông báo kết thúc hẹn giờ (Sleep Timer Overlay) theo chuẩn Aesthetic OS Obsidian Cinema & Glass Hybrid.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.player-sleep-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--sp-z-modal, 1000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-space-6, 24px);
+  background-color: var(--sp-overlay-scrim-dark, rgba(7, 8, 10, 0.85));
+  backdrop-filter: blur(12px) saturate(160%);
+  animation: sleepOverlayFadeIn var(--sp-motion-duration-slow, 400ms) var(--sp-motion-easing-neural);
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 420px;
+    width: 100%;
+    padding: var(--sp-space-8, 32px) var(--sp-space-6, 24px);
+    background-color: var(--sp-color-surface-container, #12151E);
+    border: 1px solid var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    border-radius: var(--sp-radius-xl, 28px);
+    box-shadow: var(--sp-shadow-modal, 0 20px 50px rgba(0, 0, 0, 0.85));
+    transform-origin: center center;
+    animation: sleepCardPop var(--sp-motion-duration-slow, 400ms) var(--sp-motion-easing-neural);
+  }
+
+  &__icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: var(--sp-space-5, 20px);
+    border-radius: var(--sp-radius-full, 9999px);
+    background: linear-gradient(135deg, rgba(124, 93, 250, 0.25) 0%, rgba(229, 9, 20, 0.15) 100%);
+    border: 1px solid rgba(124, 93, 250, 0.35);
+    color: var(--sp-color-brand-accent, #7C5DFA);
+    box-shadow: 0 0 24px var(--sp-color-ai-glow, rgba(124, 93, 250, 0.4));
+  }
+
+  &__title {
+    margin: 0 0 var(--sp-space-2, 8px) 0;
+    font-family: var(--sp-font-display, system-ui, sans-serif);
+    font-size: var(--sp-font-heading-h3, 1.35rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary, #F4F4F6);
+    letter-spacing: -0.01em;
+  }
+
+  &__description {
+    margin: 0 0 var(--sp-space-6, 24px) 0;
+    font-family: var(--sp-font-body, system-ui, sans-serif);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    line-height: var(--sp-line-height-relaxed, 1.6);
+    color: var(--sp-color-text-secondary, #9499A8);
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3, 12px);
+    width: 100%;
+  }
+
+  &__btn-resume {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2, 8px);
+    width: 100%;
+    padding: var(--sp-space-3, 12px) var(--sp-space-5, 20px);
+    background-color: var(--sp-color-brand-primary, #E50914);
+    color: var(--sp-color-on-primary, #FFFFFF);
+    font-family: var(--sp-font-body, system-ui, sans-serif);
+    font-size: var(--sp-font-body-md, 1rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    border: none;
+    border-radius: var(--sp-radius-md, 12px);
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(229, 9, 20, 0.4);
+    transition: background-color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-brand-primary-hover, #FF1E27);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &__btn-dismiss {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2, 8px);
+    width: 100%;
+    padding: var(--sp-space-3, 12px) var(--sp-space-5, 20px);
+    background-color: var(--sp-color-surface-container-high, #1B1F2B);
+    color: var(--sp-color-text-secondary, #9499A8);
+    font-family: var(--sp-font-body, system-ui, sans-serif);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-md, 12px);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-container-highest, #242A3B);
+      color: var(--sp-color-text-primary, #F4F4F6);
+    }
+  }
+}
+
+@keyframes sleepOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sleepCardPop {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

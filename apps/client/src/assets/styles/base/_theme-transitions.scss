@@ -1,0 +1,66 @@
+/**
+ * @file _theme-transitions.scss
+ * @module Styles/Base/ThemeTransitions
+ * @description Hiệu ứng chuyển đổi Theme (View Transitions API & CSS Fallback) chuẩn Material 3 Expressive và Aesthetic OS.
+ */
+
+/* ==========================================================================
+   1. VIEW TRANSITIONS API PSEUDO-ELEMENTS (Circular Ripple Reveal)
+   ========================================================================== */
+::view-transition-group(root) {
+  animation-duration: 0.45s;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  display: block;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999999;
+}
+
+/* ==========================================================================
+   2. FALLBACK CSS TRANSITIONS (Khi trình duyệt không hỗ trợ View Transitions)
+   ========================================================================== */
+[data-theme-transitioning="true"] {
+  &,
+  & *,
+  & *::before,
+  & *::after {
+    transition: background-color var(--sp-transition-normal, 250ms cubic-bezier(0.4, 0, 0.2, 1)),
+                border-color var(--sp-transition-normal, 250ms cubic-bezier(0.4, 0, 0.2, 1)),
+                color var(--sp-transition-normal, 250ms cubic-bezier(0.4, 0, 0.2, 1)),
+                box-shadow var(--sp-transition-normal, 250ms cubic-bezier(0.4, 0, 0.2, 1)) !important;
+  }
+}
+
+/* ==========================================================================
+   3. REDUCED MOTION GUARDS (Tôn trọng cài đặt tiếp cận của người dùng)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
+  [data-theme-transitioning="true"] {
+    &,
+    & *,
+    & *::before,
+    & *::after {
+      transition: none !important;
+    }
+  }
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" id="app-theme-color" content="#07080a" />
+
+  <!-- Critical Anti-FOUC & Theme Background Styles -->
+  <style>
+    html,
+    body {
+      background-color: #07080a;
+      color: #f4f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    html[data-theme="light"],
+    html[data-theme="light"] body {
+      background-color: #f8f9fc !important;
+      color: #111318 !important;
+    }
+
+    html[data-theme="dark"],
+    html[data-theme="dark"] body {
+      background-color: #07080a !important;
+      color: #f4f4f6 !important;
+    }
+  </style>
+
+  <!-- Pre-render Theme Initialization Script (Anti-Flash) -->
+  <script>
+    (function () {
+      try {
+        var pref = localStorage.getItem('sap-phim-theme') || 'system';
+        var theme = pref;
+        if (pref === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        var metaTheme = document.getElementById('app-theme-color') || document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', theme === 'dark' ? '#07080a' : '#f8f9fc');
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <title>Sạp Phim - Nền tảng xem phim & anime trực tuyến chất lượng cao</title>
+  <meta name="description"
+    content="Khám phá kho phim và anime trực tuyến chất lượng cao, cập nhật nhanh chóng, trải nghiệm mượt mà tại Sạp Phim." />
+  <meta name="keywords" content="phim, anime, xem phim, xem anime online, streaming, vietsub, sạp phim" />
+  <meta name="author" content="Sạp Phim Team" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sạp Phim - Xem phim & anime online chất lượng cao" />
+  <meta property="og:description"
+    content="Khám phá kho phim và anime trực tuyến chất lượng cao, cập nhật nhanh chóng, trải nghiệm mượt mà tại Sạp Phim." />
+  <meta property="og:image" content="/images/placeholder-banner.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sạp Phim - Xem phim & anime online chất lượng cao" />
+  <meta name="twitter:description"
+    content="Khám phá kho phim và anime trực tuyến chất lượng cao, cập nhật nhanh chóng, trải nghiệm mượt mà tại Sạp Phim." />
+  <meta name="twitter:image" content="/images/placeholder-banner.png" />
+
+  <!-- Google Fonts Preconnect & Stylesheets -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/index.jsx"></script>
+</body>
+
+</html>

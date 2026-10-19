@@ -1,0 +1,126 @@
+/**
+ * @file admin-layout.scss
+ * @module Admin/Layout/Styles
+ * @description Stylesheet toàn cục cho AdminLayout chuẩn The Aesthetic OS: Tonal Surfaces, Invisible Interface SkipLink, Neural Motion Transitions, Fluid Responsive Constraints. Loại bỏ hoàn toàn glassmorphism/blur.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: var(--sp-color-surface-base, #07080a);
+  color: var(--sp-color-text-primary, #eff0fc);
+  position: relative;
+  overflow: hidden;
+
+  // ── 0. Invisible Interface: A11y Skip Link ────────────────────
+  &__skip-link {
+    position: absolute;
+    top: var(--sp-space-3, 12px);
+    left: var(--sp-space-3, 12px);
+    padding: var(--sp-space-2, 8px) var(--sp-space-4, 16px);
+    background-color: var(--sp-color-brand-primary, #e50914);
+    color: var(--sp-color-on-primary, #ffffff);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    border-radius: var(--sp-radius-md, 8px);
+    box-shadow: var(--sp-shadow-elevated);
+    z-index: var(--sp-z-tooltip, 1400);
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform var(--sp-transition-fast);
+
+    &:focus-visible {
+      transform: translateY(0);
+      outline: 2px solid var(--sp-color-on-primary, #ffffff);
+      outline-offset: 2px;
+    }
+  }
+
+  // ── 1. Mobile & Tablet Portrait Backdrop Overlay (< 1024px) ───
+  &__backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: var(--sp-overlay-scrim-dark, rgba(7, 8, 10, 0.85));
+    z-index: var(--sp-z-overlay, 800);
+    animation: adminLayoutFadeIn var(--sp-motion-duration-fast, 150ms) var(--sp-motion-easing-invisible, cubic-bezier(0.4, 0, 0.2, 1)) forwards;
+  }
+
+  // ── 2. Sidebar Container Wrapper ──────────────────────────────
+  &__sidebar-wrapper {
+    flex-shrink: 0;
+    position: relative;
+    z-index: calc(var(--sp-z-header, 500) + 10);
+    overflow: visible;
+
+    // Drawer mode (< 1024px)
+    &--drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      transition: transform var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+      z-index: var(--sp-z-modal, 1000);
+      box-shadow: var(--sp-shadow-modal);
+    }
+
+    &--mobile-open {
+      transform: translateX(0);
+    }
+
+    // Rail mode (1024px - 1279px) & Desktop (>= 1280px)
+    &--rail,
+    &--desktop {
+      position: relative;
+      height: 100vh;
+    }
+  }
+
+  // ── 3. Main Content Wrapper ───────────────────────────────────
+  &__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--sp-color-surface-base, #07080a);
+  }
+
+  // ── 4. Main Scrollable Content Area ───────────────────────────
+  &__content {
+    flex: 1;
+    padding: var(--sp-space-6, 24px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    outline: none;
+
+    @include custom-scrollbar(6px, var(--sp-color-surface-container-high, #1b1f2b));
+
+    @include responsive(tablet-down) {
+      padding: var(--sp-space-4, 16px);
+    }
+
+    @include responsive(mobile) {
+      padding: var(--sp-space-3, 12px);
+    }
+
+    &-inner {
+      max-width: var(--sp-container-max-width, 1900px);
+      margin: 0 auto;
+      width: 100%;
+    }
+  }
+}
+
+@keyframes adminLayoutFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

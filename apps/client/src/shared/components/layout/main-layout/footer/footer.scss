@@ -1,0 +1,345 @@
+/**
+ * @file footer.scss
+ * @module Components/Layout/Footer/FooterStyles
+ * @description SCSS styles cho Footer component (chuẩn BEM, Material 3 Expressive, Tonal Surfaces và Tokens --sp-*, hỗ trợ Dual-Theme Light & Dark Mode).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.footer {
+  position: relative;
+  width: 100%;
+  margin-top: var(--sp-space-16, 64px);
+  overflow: hidden;
+  background-color: var(--sp-color-surface-base, #07080A);
+  transition: background-color var(--sp-transition-normal);
+
+  // ─── Decorative Background Layer ───
+  &__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &__decor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    opacity: 0.95;
+    transition: opacity var(--sp-transition-normal);
+
+    [data-theme='light'] & {
+      opacity: 0.5;
+      mix-blend-mode: multiply;
+    }
+
+    @include responsive(mobile) {
+      opacity: 0.85;
+
+      [data-theme='light'] & {
+        opacity: 0.45;
+      }
+    }
+  }
+
+  &__bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    z-index: 2;
+    transition: opacity var(--sp-transition-normal);
+
+    [data-theme='light'] & {
+      opacity: 0.35;
+      mix-blend-mode: multiply;
+    }
+  }
+
+  &__bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(
+      to top,
+      var(--sp-color-surface-base, #07080A) 0%,
+      rgba(7, 8, 10, 0.85) 45%,
+      rgba(7, 8, 10, 0.4) 75%,
+      rgba(7, 8, 10, 0) 100%
+    );
+    transition: background var(--sp-transition-normal);
+
+    [data-theme='light'] & {
+      background: linear-gradient(
+        to top,
+        var(--sp-color-surface-base, #F8F9FC) 0%,
+        rgba(248, 249, 252, 0.95) 40%,
+        rgba(248, 249, 252, 0.7) 70%,
+        rgba(248, 249, 252, 0.2) 100%
+      );
+    }
+  }
+
+  // ─── Content Block ───
+  &__content-block {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding-top: calc(13.06vw + var(--sp-space-8, 32px));
+    padding-bottom: var(--sp-space-12, 48px);
+
+    @include responsive(tablet-landscape) {
+      padding-top: calc(13.06vw + var(--sp-space-6, 24px));
+      padding-bottom: var(--sp-space-6, 24px);
+    }
+
+    @include responsive(tablet-portrait) {
+      padding-top: 13.06vw;
+      padding-bottom: var(--sp-space-6, 24px);
+    }
+
+    @include responsive(mobile) {
+      padding-top: calc(13.06vw + var(--sp-space-2, 8px));
+      padding-bottom: var(--sp-space-6, 24px);
+    }
+  }
+
+  &__container {
+    @include container;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-10, 40px);
+
+    @include responsive(mobile) {
+      gap: var(--sp-space-8, 32px);
+    }
+  }
+
+  // ─── Anime Mascot Vector ───
+  &__icon {
+    position: absolute !important;
+    z-index: 1 !important;
+    pointer-events: none;
+
+    @include responsive(desktop-up) {
+      top: 10vw;
+      left: 70%;
+      transform: translate(0%, -40%);
+      width: clamp(200px, 20vw, 350px);
+    }
+
+    @include responsive(tablet-landscape) {
+      top: 12vw;
+      left: 75%;
+      transform: translate(0%, -40%);
+      width: 18vw;
+    }
+
+    @include responsive(tablet-portrait) {
+      display: none;
+    }
+
+    @include responsive(mobile) {
+      display: none;
+    }
+  }
+
+  &__icon-anime {
+    width: 100%;
+    height: 100%;
+    color: var(--sp-color-text-primary, #F4F4F6);
+    opacity: 0.12;
+    filter: drop-shadow(0 0 12px rgba(229, 9, 20, 0.25));
+    transition: color var(--sp-transition-normal), opacity var(--sp-transition-normal);
+
+    [data-theme='light'] & {
+      opacity: 0.08;
+      filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.15));
+    }
+  }
+
+  // ─── Main Content ───
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-6, 24px);
+    position: relative;
+    z-index: 2;
+    max-width: calc(100% - 360px);
+
+    @include responsive(tablet-landscape) {
+      max-width: calc(100% - 220px);
+    }
+
+    @include responsive(tablet-portrait) {
+      max-width: 100%;
+    }
+
+    @include responsive(mobile) {
+      max-width: 100%;
+    }
+  }
+
+  &__top-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+    flex-wrap: wrap;
+
+    @include responsive(lg-up) {
+      gap: var(--sp-space-10, 40px);
+    }
+
+    @include responsive(mobile) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__logo-badge {
+    display: inline-flex;
+    text-decoration: none;
+    border-radius: var(--sp-radius-md, 12px);
+    outline: none;
+    transition: transform var(--sp-transition-fast);
+
+    &:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px var(--sp-color-brand-primary, #E50914);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.98);
+    }
+  }
+
+  &__logo {
+    display: block;
+    height: 42px;
+    width: auto;
+    color: var(--sp-color-text-primary, #F4F4F6);
+    filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.3));
+  }
+
+  // ─── Social Links (M3 Solid Tonal Surface) ───
+  &__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-space-2, 8px);
+    padding-left: var(--sp-space-4, 16px);
+    border-left: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+
+    @include responsive(lg-up) {
+      gap: var(--sp-space-3, 12px);
+      padding-left: var(--sp-space-8, 32px);
+    }
+
+    @include responsive(mobile) {
+      border-left: none;
+      padding-left: 0;
+    }
+  }
+
+  &__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--sp-radius-full, 9999px);
+    color: var(--sp-color-text-secondary, #9499A8);
+    background-color: var(--sp-color-surface-container-high, #1B1F2B);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    text-decoration: none;
+    outline: none;
+    transition: color var(--sp-transition-fast),
+                background-color var(--sp-transition-fast),
+                border-color var(--sp-transition-fast),
+                transform var(--sp-transition-normal) var(--sp-motion-easing-neural),
+                box-shadow var(--sp-transition-fast);
+
+    svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      color: #FFFFFF;
+      background-color: var(--sp-color-brand-primary, #E50914);
+      border-color: var(--sp-color-brand-primary, #E50914);
+      transform: translateY(-3px);
+      box-shadow: var(--sp-shadow-flat, 0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--sp-color-brand-primary, #E50914);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.94);
+    }
+  }
+
+  // ─── Internal Navigation Links ───
+  &__links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-space-2, 8px) var(--sp-space-6, 24px);
+    padding-top: var(--sp-space-2, 8px);
+
+    @include responsive(mobile) {
+      gap: var(--sp-space-2, 8px) var(--sp-space-4, 16px);
+    }
+  }
+
+  &__link {
+    color: var(--sp-color-text-secondary, #9499A8);
+    text-decoration: none;
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    border-radius: var(--sp-radius-xs, 4px);
+    outline: none;
+    position: relative;
+    transition: color var(--sp-transition-fast), background-color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-brand-primary, #E50914);
+    }
+
+    &:focus-visible {
+      color: var(--sp-color-brand-primary, #E50914);
+      outline: 2px solid var(--sp-color-brand-primary, #E50914);
+      outline-offset: 2px;
+    }
+  }
+
+  // ─── SEO Text & Copyright ───
+  &__brand-desc {
+    color: var(--sp-color-text-secondary, #9499A8);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    line-height: var(--sp-line-height-relaxed, 1.65);
+    margin: 0;
+    max-width: 100%;
+  }
+
+  &__copyright {
+    padding-top: var(--sp-space-2, 8px);
+    color: var(--sp-color-text-muted, #5C6275);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+  }
+}

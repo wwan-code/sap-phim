@@ -1,0 +1,62 @@
+/**
+ * @file benefits-list.scss
+ * @module Components/Common/AccessDeniedFallback/Components/BenefitsListStyles
+ * @description SCSS styles cho BenefitsList component (chuẩn BEM, Material 3 Expressive, Solid Tonal và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.access-denied-benefits {
+  width: 100%;
+  margin-top: var(--sp-space-2, 8px);
+  padding: var(--sp-space-5, 20px);
+  border-radius: var(--sp-radius-lg, 18px);
+  background-color: var(--sp-color-surface-container-low, #0e1017);
+  border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  text-align: left;
+  box-sizing: border-box;
+  transition: border-color var(--sp-transition-fast);
+
+  @include responsive(mobile) {
+    padding: var(--sp-space-4, 16px);
+  }
+
+  &__title {
+    @include typography('h3');
+    font-size: 1.05rem;
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-rating-star, #ffb800);
+    margin: 0 0 var(--sp-space-1, 4px) 0;
+  }
+
+  &__subtitle {
+    @include typography('caption');
+    color: var(--sp-color-text-secondary, #9499a8);
+    margin: 0 0 var(--sp-space-4, 16px) 0;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    line-height: var(--sp-line-height-normal, 1.5);
+
+    svg {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--sp-color-status-success, #10b981);
+    }
+  }
+}

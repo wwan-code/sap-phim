@@ -1,0 +1,58 @@
+/**
+ * @file unsaved-changes-modal.scss
+ * @module Admin/Shared/Components/Feedback/UnsavedChangesModal
+ * @description Styling cho UnsavedChangesModal chuẩn Material 3 Expressive & Design Tokens (--sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.sp-unsaved-modal {
+  &__header-content {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  &__icon-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--sp-radius-md, 12px);
+    background-color: rgba(245, 158, 11, 0.12);
+    color: var(--sp-color-status-warning, #f59e0b);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    flex-shrink: 0;
+  }
+
+  &__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title {
+    font-size: var(--sp-font-body-md, 1rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-status-warning, #f59e0b);
+    width: fit-content;
+  }
+
+  &__desc {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    line-height: 1.55;
+    color: var(--sp-color-text-secondary);
+    margin: 0;
+  }
+}

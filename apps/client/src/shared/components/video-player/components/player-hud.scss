@@ -1,0 +1,250 @@
+/**
+ * @file player-hud.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Định kiểu cho HUD Feedback & Double-click Seek Gestures chuẩn Neural Expressive & Glass Hybrid.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.player-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: calc(var(--sp-z-docked) + 5);
+  user-select: none;
+
+  // ════════════════════════════════════════
+  // 1. CENTER PLAY / PAUSE HUD
+  // ════════════════════════════════════════
+  &__center-action {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--sp-vp-hud-circle-size, 72px);
+    height: var(--sp-vp-hud-circle-size, 72px);
+    border-radius: 50%;
+    background-color: var(--sp-vp-hud-bg);
+    backdrop-filter: var(--sp-vp-hud-blur);
+    border: 1px solid var(--sp-vp-hud-border);
+    box-shadow: var(--sp-vp-hud-shadow);
+    color: var(--sp-vp-color-icon);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: sp-hud-center-pop 600ms var(--sp-motion-easing-neural) forwards;
+
+    // Trên giao diện Mobile, cụm Center Stage đã có nút Play/Pause riêng nên không hiển thị HUD pop trùng lặp
+    .video-player--tier-mobile &,
+    .video-player--orientation-portrait & {
+      display: none !important;
+    }
+  }
+
+  // ════════════════════════════════════════
+  // 2. DOUBLE-CLICK SEEK RIPPLE (±10s)
+  // ════════════════════════════════════════
+  &__seek-ripple {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 38%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2);
+    color: var(--sp-vp-color-text-primary);
+
+    &--left {
+      left: 0;
+      border-radius: 0 100% 100% 0 / 0 50% 50% 0;
+      background: radial-gradient(ellipse at 0% 50%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 80%);
+      animation: sp-seek-ripple-left 650ms var(--sp-motion-easing-neural) forwards;
+    }
+
+    &--right {
+      right: 0;
+      border-radius: 100% 0 0 100% / 50% 0 0 50%;
+      background: radial-gradient(ellipse at 100% 50%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 80%);
+      animation: sp-seek-ripple-right 650ms var(--sp-motion-easing-neural) forwards;
+    }
+
+    &-icon {
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+    }
+
+    &-text {
+      font-family: var(--sp-font-mono);
+      font-size: var(--sp-font-body-md);
+      font-weight: var(--sp-font-weight-bold);
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  // ════════════════════════════════════════
+  // 3. TOP VOLUME MINI HUD
+  // ════════════════════════════════════════
+  &__volume-hud {
+    position: absolute;
+    top: calc(var(--sp-vp-topbar-height, 56px) + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    padding: 8px 18px;
+    background-color: var(--sp-vp-hud-bg);
+    backdrop-filter: var(--sp-vp-hud-blur);
+    border: 1px solid var(--sp-vp-hud-border);
+    border-radius: var(--sp-radius-full);
+    box-shadow: var(--sp-vp-hud-shadow);
+    color: var(--sp-vp-color-text-primary);
+    animation: sp-hud-volume-pop 750ms var(--sp-motion-easing-neural) forwards;
+  }
+
+  &__volume-track {
+    width: 90px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: var(--sp-radius-full);
+    overflow: hidden;
+  }
+
+  &__volume-fill {
+    height: 100%;
+    background-color: var(--sp-vp-seekbar-thumb-bg, #ffffff);
+    border-radius: var(--sp-radius-full);
+    transition: width var(--sp-transition-fast);
+  }
+
+  &__volume-text {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-caption);
+    font-weight: var(--sp-font-weight-semibold);
+    min-width: 32px;
+    text-align: right;
+  }
+
+  // ════════════════════════════════════════
+  // 4. TOP 2X SPEED BADGE (YouTube Long-Press)
+  // ════════════════════════════════════════
+  &__speed-badge {
+    position: absolute;
+    top: calc(var(--sp-vp-topbar-height, 56px) + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: 6px 16px;
+    background-color: var(--sp-vp-hud-bg);
+    backdrop-filter: var(--sp-vp-hud-blur);
+    border: 1px solid var(--sp-vp-hud-border);
+    border-radius: var(--sp-radius-full);
+    box-shadow: var(--sp-vp-hud-shadow);
+    color: var(--sp-vp-color-text-primary);
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-bold);
+    letter-spacing: 0.5px;
+    animation: sp-hud-speed-pop 300ms var(--sp-motion-easing-neural) forwards;
+
+    &-icon {
+      color: var(--sp-vp-color-brand, #E50914);
+    }
+  }
+}
+
+// ════════════════════════════════════════
+// NEURAL KEYFRAME ANIMATIONS
+// ════════════════════════════════════════
+@keyframes sp-hud-center-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.65);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
+  65% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.25);
+  }
+}
+
+@keyframes sp-seek-ripple-left {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  75% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes sp-seek-ripple-right {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  75% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes sp-hud-volume-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(0.9);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -6px) scale(0.95);
+  }
+}
+
+@keyframes sp-hud-speed-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -8px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}

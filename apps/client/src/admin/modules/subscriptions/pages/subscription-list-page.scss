@@ -1,0 +1,262 @@
+/**
+ * @file subscription-list-page.scss
+ * @module Admin/Modules/Subscriptions/Styles/SubscriptionListPage
+ * @description Styling trang Quản lý thuê bao VIP chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+.subscription-admin-page {
+  // ── KPI Stats Grid ──
+  &__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--sp-space-4, 16px);
+    margin-bottom: var(--sp-space-6, 24px);
+  }
+
+  &__stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+    box-shadow: var(--sp-shadow-flat);
+    transition: transform var(--sp-transition-fast), border-color var(--sp-transition-fast);
+
+    &:hover {
+      border-color: var(--sp-border-strong);
+      transform: translateY(-2px);
+    }
+
+    &-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--sp-radius-md, 12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      &--total {
+        background-color: rgba(124, 93, 250, 0.14);
+        color: var(--sp-color-brand-accent, #7c5dfa);
+      }
+
+      &--active {
+        background-color: rgba(16, 185, 129, 0.14);
+        color: var(--sp-color-status-success, #10b981);
+      }
+
+      &--grace {
+        background-color: rgba(245, 158, 11, 0.14);
+        color: var(--sp-color-status-warning, #f59e0b);
+      }
+
+      &--expired {
+        background-color: rgba(239, 68, 68, 0.14);
+        color: var(--sp-color-status-error, #ef4444);
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .stat-label {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-secondary);
+        font-weight: var(--sp-font-weight-medium, 500);
+        margin-bottom: 2px;
+      }
+
+      .stat-value {
+        font-size: var(--sp-font-display-h2, 1.5rem);
+        font-weight: var(--sp-font-weight-extrabold, 800);
+        color: var(--sp-color-text-primary);
+        line-height: var(--sp-line-height-tight);
+      }
+
+      .stat-sub {
+        font-size: var(--sp-font-micro, 0.6875rem);
+        color: var(--sp-color-text-muted);
+        margin-top: 2px;
+      }
+    }
+  }
+
+  // ── Filter Toolbar Selects ──
+  &__filter-select {
+    min-width: 170px;
+  }
+
+  // ── DataGrid Cells ──
+  // 1. Member Cell
+  &__member-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    width: 100%;
+    min-width: 0;
+
+    .member-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--sp-radius-full, 9999px);
+      overflow: hidden;
+      background-color: var(--sp-color-surface-container-highest);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .fallback {
+        font-size: var(--sp-font-caption, 0.75rem);
+        font-weight: var(--sp-font-weight-bold, 700);
+        color: var(--sp-color-brand-accent);
+      }
+    }
+
+    .member-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .member-name {
+        font-size: var(--sp-font-body-sm, 0.875rem);
+        font-weight: var(--sp-font-weight-semibold, 600);
+        color: var(--sp-color-text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .member-sub {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  // 2. VIP Plan Badge Cell
+  &__plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    border: 1px solid transparent;
+
+    &--plus {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.16) 0%, rgba(37, 99, 235, 0.10) 100%);
+      color: var(--sp-color-status-info, #3B82F6);
+      border-color: rgba(59, 130, 246, 0.35);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.12);
+    }
+
+    &--pro {
+      background-color: rgba(124, 93, 250, 0.14);
+      color: var(--sp-color-brand-accent, #7C5DFA);
+      border-color: rgba(124, 93, 250, 0.3);
+      box-shadow: 0 0 10px rgba(124, 93, 250, 0.12);
+    }
+
+    &--ultra {
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.18) 0%, rgba(229, 9, 20, 0.14) 100%);
+      color: var(--sp-color-rating-star, #FFB800);
+      border-color: rgba(255, 184, 0, 0.35);
+      box-shadow: 0 0 10px rgba(255, 184, 0, 0.15);
+    }
+
+    &--free {
+      background-color: var(--sp-color-surface-container-high);
+      color: var(--sp-color-text-secondary);
+      border-color: var(--sp-border-subtle);
+    }
+  }
+
+  // 3. Price Tag
+  &__price-tag {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+
+    &--admin {
+      color: var(--sp-color-status-info, #3B82F6);
+      font-weight: var(--sp-font-weight-semibold, 600);
+    }
+
+    &--free {
+      color: var(--sp-color-text-muted);
+      font-weight: var(--sp-font-weight-medium, 500);
+    }
+  }
+
+  // 4. Remaining Days Cell
+  &__remaining-cell {
+    display: flex;
+    flex-direction: column;
+
+    .days-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: var(--sp-font-caption, 0.75rem);
+      font-weight: var(--sp-font-weight-semibold, 600);
+
+      &--permanent {
+        color: var(--sp-color-status-info, #3B82F6);
+      }
+
+      &--safe {
+        color: var(--sp-color-status-success, #10b981);
+      }
+
+      &--warning {
+        color: var(--sp-color-status-warning, #f59e0b);
+      }
+
+      &--danger {
+        color: var(--sp-color-status-error, #ef4444);
+      }
+
+      &--expired {
+        color: var(--sp-color-text-muted);
+      }
+    }
+
+    .end-date {
+      font-size: var(--sp-font-micro, 0.6875rem);
+      color: var(--sp-color-text-muted);
+    }
+  }
+
+  // 5. Code pill
+  &__code-pill {
+    font-family: var(--sp-font-mono, monospace);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary);
+    background-color: var(--sp-color-surface-container-high);
+    padding: 2px 6px;
+    border-radius: var(--sp-radius-xs, 4px);
+    border: 1px solid var(--sp-border-subtle);
+  }
+
+  // 6. Actions
+  &__actions-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+}

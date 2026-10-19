@@ -1,0 +1,290 @@
+/**
+ * @file episode-upload-modal.scss
+ * @module Admin/Modules/Episodes/Styles
+ * @description Định kiểu cho Modal tải lên video TUS và tiến trình xử lý theo chuẩn Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.episode-upload-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-5);
+  padding: 0;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4);
+  }
+
+  &__row {
+    display: flex;
+    gap: var(--sp-space-4);
+
+    @include responsive(mobile) {
+      flex-direction: column;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2);
+
+    &--grow {
+      flex: 1;
+    }
+  }
+
+  &__label {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__input {
+    height: 42px;
+    padding: 0 var(--sp-space-3);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm);
+    color: var(--sp-color-text-primary);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    transition: border-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    &:focus {
+      outline: none;
+      border-color: var(--sp-color-brand-accent);
+      box-shadow: 0 0 0 2px rgba(124, 93, 250, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // ── Dropzone tải tệp ──
+  &__dropzone {
+    position: relative;
+    border: 2px dashed var(--sp-border-strong);
+    border-radius: var(--sp-radius-md);
+    background-color: var(--sp-color-surface-container-low);
+    transition: all var(--sp-transition-normal);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--sp-color-brand-accent);
+      background-color: var(--sp-color-surface-container);
+    }
+  }
+
+  &__file-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__dropzone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-space-8) var(--sp-space-4);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  &__upload-icon {
+    color: var(--sp-color-brand-accent);
+    margin-bottom: var(--sp-space-3);
+  }
+
+  &__dropzone-text {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-text-primary);
+    margin-bottom: var(--sp-space-1);
+  }
+
+  &__dropzone-hint {
+    font-size: var(--sp-font-caption);
+    color: var(--sp-color-text-muted);
+  }
+
+  &__file-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-space-1);
+  }
+
+  &__file-icon {
+    color: var(--sp-color-status-success);
+    margin-bottom: var(--sp-space-1);
+  }
+
+  &__file-name {
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-text-primary);
+    word-break: break-all;
+  }
+
+  &__file-size {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-caption);
+    color: var(--sp-color-text-secondary);
+  }
+
+  // ── Tiến trình TUS Upload ──
+  &__progress-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3);
+    padding: var(--sp-space-5);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md);
+  }
+
+  &__status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__status-title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__speed {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-caption);
+    color: var(--sp-color-brand-accent);
+  }
+
+  &__track {
+    width: 100%;
+    height: 8px;
+    background-color: var(--sp-color-surface-container-highest);
+    border-radius: var(--sp-radius-full);
+    overflow: hidden;
+  }
+
+  &__bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sp-color-brand-accent) 0%, var(--sp-color-brand-primary) 100%);
+    border-radius: var(--sp-radius-full);
+    transition: width var(--sp-transition-normal);
+  }
+
+  &__stats {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-caption);
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    margin-top: var(--sp-space-2);
+  }
+
+  // ── Transcoding Box ──
+  &__transcoding-section {
+    padding: var(--sp-space-4);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md);
+  }
+
+  &__transcode-box {
+    display: flex;
+    gap: var(--sp-space-4);
+    align-items: flex-start;
+  }
+
+  &__transcode-icon {
+    color: var(--sp-color-brand-accent);
+    flex-shrink: 0;
+    margin-top: var(--sp-space-1);
+  }
+
+  &__transcode-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2);
+    flex: 1;
+  }
+
+  &__transcode-title {
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__transcode-desc {
+    font-size: var(--sp-font-caption);
+    color: var(--sp-color-text-secondary);
+    line-height: var(--sp-line-height-normal);
+  }
+
+  // ── Success State ──
+  &__success-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--sp-space-6) var(--sp-space-4);
+    gap: var(--sp-space-2);
+  }
+
+  &__success-icon {
+    color: var(--sp-color-status-success);
+    margin-bottom: var(--sp-space-2);
+  }
+
+  &__success-title {
+    font-family: var(--sp-font-display);
+    font-size: var(--sp-font-heading-h3);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__success-desc {
+    font-size: var(--sp-font-body-sm);
+    color: var(--sp-color-text-secondary);
+  }
+
+  // ── Error Box ──
+  &__error-box {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: var(--sp-space-3) var(--sp-space-4);
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: var(--sp-radius-sm);
+    color: var(--sp-color-status-error);
+    font-size: var(--sp-font-body-sm);
+  }
+
+  &__spinner {
+    animation: sp-spin 1s linear infinite;
+  }
+}
+

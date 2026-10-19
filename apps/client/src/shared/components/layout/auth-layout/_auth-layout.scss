@@ -1,0 +1,425 @@
+/**
+ * @file _auth-layout.scss
+ * @module Components/Layout/AuthLayout/Styles
+ * @description SCSS styles cho AuthLayout chuẩn Seamless Gradient Blend tách lớp Backdrop & Content độc lập, tối ưu tuyệt đối cho cả Dark Mode (Obsidian Cinema) và Light Mode (Material 3 Expressive).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.auth-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--sp-color-surface-base);
+  color: var(--sp-color-text-primary);
+  position: relative;
+  overflow-x: hidden;
+  transition: background-color var(--sp-transition-normal), color var(--sp-transition-normal);
+
+  // ==========================================================================
+  // 1. SEAMLESS BACKDROP LAYER (Poster Wall & Soft Horizontal Fade)
+  // ==========================================================================
+  &__backdrop {
+    display: none; // Ẩn trên Mobile/Tablet Portrait để tối ưu hiệu năng và bố cục
+
+    @include responsive(lg-up) {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 64%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+      mask-image: linear-gradient(to right,
+          #000000 0%,
+          #000000 48%,
+          rgba(0, 0, 0, 0.45) 76%,
+          transparent 100%);
+      -webkit-mask-image: linear-gradient(to right,
+          #000000 0%,
+          #000000 48%,
+          rgba(0, 0, 0, 0.45) 76%,
+          transparent 100%);
+    }
+
+    @include responsive(xl-up) {
+      width: 68%;
+    }
+
+    @include responsive(2xl-up) {
+      width: 65%;
+    }
+  }
+
+  &__backdrop-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    transform: scale(1.02);
+    filter: saturate(1.15) brightness(0.95);
+    transition: transform var(--sp-transition-slow), filter var(--sp-transition-normal), opacity var(--sp-transition-normal);
+  }
+
+  &__backdrop-scrim {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 25% 20%, rgba(229, 9, 20, 0.22), transparent 50%),
+      radial-gradient(circle at 75% 80%, rgba(124, 93, 250, 0.18), transparent 50%),
+      linear-gradient(180deg,
+        rgba(5, 6, 8, 0.38) 0%,
+        rgba(5, 6, 8, 0.58) 45%,
+        rgba(5, 6, 8, 0.92) 100%),
+      linear-gradient(to right, transparent 40%, var(--sp-color-surface-base) 96%);
+    pointer-events: none;
+    transition: background var(--sp-transition-normal);
+  }
+
+  // Tối ưu Backdrop Layer cho Light Mode (Sáng trong, mềm mại, không bị loang xám đục)
+  html[data-theme='light'] &__backdrop {
+    mask-image: linear-gradient(to right,
+        #000000 0%,
+        #000000 35%,
+        rgba(0, 0, 0, 0.3) 65%,
+        transparent 95%);
+    -webkit-mask-image: linear-gradient(to right,
+        #000000 0%,
+        #000000 35%,
+        rgba(0, 0, 0, 0.3) 65%,
+        transparent 95%);
+  }
+
+  html[data-theme='light'] &__backdrop-img {
+    filter: saturate(1.2) brightness(1.02);
+  }
+
+  html[data-theme='light'] &__backdrop-scrim {
+    background: radial-gradient(circle at 18% 22%, rgba(229, 9, 20, 0.07), transparent 45%),
+      radial-gradient(circle at 65% 75%, rgba(124, 93, 250, 0.05), transparent 50%),
+      linear-gradient(180deg,
+        rgba(248, 249, 253, 0.25) 0%,
+        rgba(248, 249, 253, 0.65) 100%),
+      linear-gradient(to right, transparent 25%, var(--sp-color-surface-base) 60%);
+  }
+
+  // ==========================================================================
+  // 2. MOBILE MINI-HEADER BAR (< 1024px)
+  // ==========================================================================
+  &__mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--sp-space-3) var(--sp-space-5);
+    background-color: var(--sp-color-surface-base);
+    border-bottom: 1px solid var(--sp-border-subtle);
+    position: sticky;
+    top: 0;
+    z-index: var(--sp-z-header);
+    transition: background-color var(--sp-transition-normal), border-color var(--sp-transition-normal);
+
+    @include responsive(lg-up) {
+      display: none;
+    }
+  }
+
+  &__mobile-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    outline: none;
+    @include focus-ring;
+  }
+
+  &__mobile-logo-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  &__theme-btn {
+    border-radius: var(--sp-radius-full);
+    transition: transform var(--sp-transition-fast), background-color var(--sp-transition-fast);
+
+    &:hover {
+      transform: scale(1.06);
+    }
+
+    @include focus-ring;
+  }
+
+  // ==========================================================================
+  // 3. MAIN SPLIT CONTAINER (Brand Panel & Form Content)
+  // ==========================================================================
+  &__container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+
+    @include responsive(lg-up) {
+      flex-direction: row;
+    }
+  }
+
+  // ==========================================================================
+  // 4. BRAND PANEL (Left Column - Vùng an toàn 0-40%, không bao giờ bị cắt)
+  // ==========================================================================
+  &__brand {
+    display: none; // Ẩn trên Mobile & Tablet Portrait (< 1024px)
+
+    @include responsive(lg-up) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 0 0 38%;
+      max-width: 520px;
+      min-width: 380px;
+      padding: var(--sp-space-10) var(--sp-space-8);
+      position: relative;
+      z-index: 2;
+    }
+
+    @include responsive(xl-up) {
+      flex: 0 0 42%;
+      max-width: 580px;
+      padding: var(--sp-space-12) var(--sp-space-10);
+    }
+
+    @include responsive(2xl-up) {
+      flex: 0 0 40%;
+      max-width: 640px;
+    }
+  }
+
+  &__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    text-decoration: none;
+    outline: none;
+    transition: transform var(--sp-transition-fast);
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    @include focus-ring;
+  }
+
+  &__logo-img {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.9));
+    transition: transform var(--sp-transition-fast), filter var(--sp-transition-fast);
+  }
+
+  // Logo màu trắng trên nền tối (Dark Theme)
+  [data-theme='dark'] &__logo-img,
+  :root:not([data-theme='light']) &__logo-img {
+    .brand-logo {
+      &__ic-white {
+        fill: #FFFFFF !important;
+      }
+
+      &__ic-roof {
+        stroke: #FFFFFF !important;
+      }
+
+      &__ic-play {
+        fill: #FFFFFF !important;
+        stroke: #FFFFFF !important;
+      }
+
+      &__txt-cream {
+        fill: #FFFFFF !important;
+      }
+
+      &__txt-tag {
+        fill: #E2E6EF !important;
+      }
+    }
+  }
+
+  // Logo trên Light Mode dùng màu sắc nét tự nhiên
+  html[data-theme='light'] &__logo-img {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+  }
+
+  &__brand-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4);
+    width: 100%;
+    max-width: 480px;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: var(--sp-space-6) 0;
+  }
+
+  &__brand-title {
+    font-family: var(--sp-font-display);
+    font-size: clamp(1.65rem, 2.2vw + 0.4rem, 2.6rem);
+    font-weight: var(--sp-font-weight-extrabold);
+    color: #F4F4F6 !important;
+    line-height: var(--sp-line-height-heading);
+    letter-spacing: -0.02em;
+    margin: 0;
+    overflow: visible;
+    word-break: normal;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+    transition: color var(--sp-transition-normal);
+
+    span {
+      color: var(--sp-color-brand-primary, #E50914);
+    }
+  }
+
+  html[data-theme='light'] &__brand-title {
+    color: var(--sp-color-text-primary, #141724) !important;
+    text-shadow: none;
+  }
+
+  &__tagline {
+    @include typography('body-md');
+    color: #D1D5E0 !important;
+    line-height: var(--sp-line-height-relaxed);
+    margin: 0;
+    overflow: visible;
+    word-break: normal;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+    transition: color var(--sp-transition-normal);
+
+    @include responsive(xl-up) {
+      font-size: var(--sp-font-body-lg);
+    }
+  }
+
+  html[data-theme='light'] &__tagline {
+    color: var(--sp-color-text-secondary, #45495D) !important;
+    text-shadow: none;
+  }
+
+  &__brand-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include typography('caption');
+    color: #9499A8 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding-top: var(--sp-space-4);
+    transition: color var(--sp-transition-normal), border-color var(--sp-transition-normal);
+  }
+
+  html[data-theme='light'] &__brand-footer {
+    color: var(--sp-color-text-muted, #71768E) !important;
+    border-top-color: var(--sp-border-subtle, rgba(0, 0, 0, 0.08)) !important;
+  }
+
+  // ==========================================================================
+  // 5. FORM CONTENT PANEL (Right Side - Material 3 Expressive Elevation)
+  // ==========================================================================
+  &__content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: calc(100vh - 60px);
+    position: relative;
+    overflow-y: auto;
+    background-color: transparent;
+    transition: background-color var(--sp-transition-normal);
+
+    @include responsive(lg-up) {
+      min-height: 100vh;
+    }
+  }
+
+  // Integrated Desktop Topbar
+  &__topbar {
+    display: none;
+
+    @include responsive(lg-up) {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-space-6) var(--sp-space-8);
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+  &__back-link {
+    color: var(--sp-color-text-secondary);
+    border-radius: var(--sp-radius-md);
+    transition: color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-brand-primary);
+      transform: translateX(-2px);
+    }
+  }
+
+  &__content-wrapper {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--sp-space-6) var(--sp-space-4) var(--sp-space-8);
+    position: relative;
+    z-index: 1;
+
+    @include responsive(tablet-portrait) {
+      padding: var(--sp-space-8) var(--sp-space-6) var(--sp-space-12);
+    }
+
+    @include responsive(lg-up) {
+      padding: var(--sp-space-4) var(--sp-space-8) var(--sp-space-10);
+    }
+  }
+
+  &__content-inner {
+    width: 100%;
+    max-width: 460px;
+    background-color: var(--sp-color-surface-container);
+    border-radius: var(--sp-radius-xl);
+    box-shadow: var(--sp-shadow-elevated);
+    padding: var(--sp-space-8) var(--sp-space-7);
+    backdrop-filter: blur(12px);
+    position: relative;
+    transition: background-color var(--sp-transition-normal), border-color var(--sp-transition-normal), box-shadow var(--sp-transition-normal);
+
+    @include responsive(mobile) {
+      padding: var(--sp-space-2) 0 var(--sp-space-6);
+      border-radius: 0;
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none;
+    }
+  }
+
+  // Form Card M3 Elevated Surface trên Light Mode (Trắng tinh khiết, đổ bóng mềm mại đa tầng)
+  html[data-theme='light'] &__content-inner {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.08), 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+
+    @include responsive(mobile) {
+      background-color: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+}

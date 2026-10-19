@@ -1,0 +1,915 @@
+/**
+ * @file text-field.scss
+ * @module Components/UI/TextField/Styles
+ * @description SCSS styles cho TextField component (chuẩn BEM, Material 3 Expressive, floating label và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AUTOFILL DETECTION KEYFRAMES
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes onAutoFillStart {
+  from {
+    /** Triggers onAnimationStart in JS */
+  }
+  to {
+    /** Triggers onAnimationStart in JS */
+  }
+}
+
+@keyframes onAutoFillCancel {
+  from {
+    /** Triggers onAnimationStart in JS */
+  }
+  to {
+    /** Triggers onAnimationStart in JS */
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. MAIN BLOCK (.text-field)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.text-field {
+  // ─── Design Tokens Mapped ──────────────────────────────────────────────────
+  --sp-tf-accent: var(--sp-color-brand-primary);
+  --sp-tf-border: var(--sp-border-subtle);
+  --sp-tf-border-hover: var(--sp-border-strong);
+  --sp-tf-text: var(--sp-color-text-primary);
+  --sp-tf-label: var(--sp-color-text-secondary);
+  --sp-tf-filled-bg: var(--sp-color-surface-container-high);
+  --sp-tf-error: var(--sp-color-status-error);
+  --sp-tf-disabled: var(--sp-color-text-muted);
+  --sp-tf-radius: var(--sp-radius-md, 12px);
+
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  vertical-align: top;
+  font-family: var(--sp-font-body);
+  min-width: 0;
+
+  &--full-width {
+    width: 100%;
+    display: flex;
+  }
+
+  // Quản lý hiển thị placeholder theo trạng thái focus/floating
+  .text-field__input {
+    &::placeholder {
+      opacity: 0;
+      transition: opacity var(--sp-motion-duration-fast, 150ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+    }
+  }
+
+  &.text-field--focused .text-field__input::placeholder,
+  &.text-field--no-label .text-field__input::placeholder {
+    opacity: 1;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 2. WRAPPER & INPUT CONTAINER
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    border-radius: var(--sp-tf-radius);
+    transition:
+      background-color var(--sp-transition-normal),
+      box-shadow var(--sp-transition-normal);
+  }
+
+  &__input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+    cursor: text;
+  }
+
+  &__input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    border: none !important;
+    outline: none !important;
+    background: transparent;
+    color: var(--sp-tf-text);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    line-height: var(--sp-line-height-normal);
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    animation-name: onAutoFillCancel;
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:autofill {
+      animation-name: onAutoFillStart;
+      -webkit-text-fill-color: var(--sp-tf-text) !important;
+      -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+      transition: background-color 5000s ease-in-out 0s;
+      background-clip: text !important;
+      -webkit-background-clip: text !important;
+    }
+
+    &::placeholder {
+      color: var(--sp-color-text-muted);
+      opacity: 1;
+      transition: opacity var(--sp-transition-fast);
+    }
+
+    &:disabled {
+      color: var(--sp-tf-disabled);
+      cursor: not-allowed;
+      -webkit-text-fill-color: var(--sp-tf-disabled);
+    }
+
+    // ─── Multiline Textarea ─────────────────────────────────────────────────
+    &--multiline {
+      resize: vertical;
+      white-space: pre-wrap !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      text-overflow: unset !important;
+      min-height: 88px;
+      height: auto !important;
+      line-height: var(--sp-line-height-normal, 1.5);
+      box-sizing: border-box;
+      @include custom-scrollbar(6px, var(--sp-color-surface-hover), transparent);
+    }
+  }
+
+  // ─── Multiline Wrapper & Variants Rules ────────────────────────────────────
+  &--multiline {
+    .text-field__wrapper {
+      min-height: 100px;
+      height: auto;
+    }
+
+    .text-field__input-container {
+      align-items: flex-start;
+      height: auto;
+      min-height: 100px;
+    }
+
+    .text-field__input,
+    textarea.text-field__input,
+    .text-field__input--multiline {
+      height: auto !important;
+      min-height: 88px;
+      resize: vertical;
+      white-space: pre-wrap !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      text-overflow: unset !important;
+      line-height: var(--sp-line-height-normal, 1.5);
+      box-sizing: border-box;
+      @include custom-scrollbar(6px, var(--sp-color-surface-hover), transparent);
+    }
+
+    &.text-field--variant-outlined {
+      .text-field__input,
+      textarea.text-field__input {
+        padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px) !important;
+      }
+
+      .text-field__label {
+        top: 14px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-22px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-filled {
+      .text-field__input,
+      textarea.text-field__input {
+        padding: 24px var(--sp-space-4, 16px) var(--sp-space-2, 8px) !important;
+      }
+
+      .text-field__label {
+        top: 8px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-5px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-standard {
+      .text-field__input,
+      textarea.text-field__input {
+        padding: 16px 0 var(--sp-space-2, 8px) !important;
+      }
+
+      .text-field__label {
+        top: 14px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-14px) scale(0.75);
+      }
+    }
+
+    .text-field__adornment {
+      align-self: flex-start;
+      padding-top: var(--sp-space-3, 12px);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3. ADORNMENTS & INTERACTIVE BUTTONS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__adornment {
+    @include flex-center;
+    color: var(--sp-tf-label);
+    white-space: nowrap;
+    font-size: var(--sp-font-body-lg);
+    line-height: 1;
+    flex-shrink: 0;
+
+    .icon-button {
+      margin: 0;
+    }
+  }
+
+  &__end-adornments {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+  }
+
+  &__icon-btn {
+    background: transparent;
+    border: none;
+    padding: var(--sp-space-1, 4px);
+    color: var(--sp-color-text-muted);
+    cursor: pointer;
+    border-radius: var(--sp-radius-full, 9999px);
+    @include flex-center;
+    transition:
+      color var(--sp-transition-fast),
+      background-color var(--sp-transition-fast),
+      transform var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-text-primary);
+      background-color: var(--sp-state-hover);
+    }
+
+    &:active {
+      transform: scale(0.92);
+      background-color: var(--sp-state-active);
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 4. FLOATING LABEL & NOTCHED OUTLINE
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__label {
+    font-family: var(--sp-font-body);
+    display: inline-block;
+    position: absolute;
+    max-width: 100%;
+    color: var(--sp-tf-label);
+    font-size: var(--sp-font-body-md);
+    pointer-events: none;
+    transform-origin: left top;
+    transition:
+      transform var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1)),
+      left var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1)),
+      color var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+    will-change: transform, left, color;
+    z-index: 2;
+    white-space: nowrap;
+    @include text-truncate;
+    line-height: var(--sp-line-height-tight);
+  }
+
+  &__required-star {
+    color: var(--sp-color-status-error);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 5. FOOTER (Helper Text & Counter)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: var(--sp-space-1, 4px);
+    padding: 0 var(--sp-space-3, 12px);
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__helper-text {
+    @include typography('caption');
+    color: var(--sp-tf-label);
+    line-height: var(--sp-line-height-normal);
+    text-align: left;
+    flex: 1;
+    transition: color var(--sp-transition-fast);
+  }
+
+  &__counter {
+    @include typography('caption');
+    color: var(--sp-color-text-muted);
+    line-height: var(--sp-line-height-normal);
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &--limit {
+      color: var(--sp-color-status-error);
+      font-weight: var(--sp-font-weight-bold);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 6. VARIANT: OUTLINED (Material 3 Expressive)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--variant-outlined {
+    .text-field__wrapper {
+      background-color: var(--sp-color-surface-container-lowest);
+      border-radius: var(--sp-tf-radius);
+    }
+
+    .text-field__input {
+      padding: 0 var(--sp-space-4, 16px);
+
+      &--has-start {
+        padding-left: 0;
+      }
+
+      &--has-end {
+        padding-right: 0;
+      }
+    }
+
+    .text-field__adornment {
+      &--start {
+        padding-left: var(--sp-space-3, 12px);
+        padding-right: var(--sp-space-2, 8px);
+      }
+
+      &--end {
+        padding-right: var(--sp-space-3, 12px);
+        padding-left: var(--sp-space-2, 8px);
+      }
+    }
+
+    // Khung viền Notched Outline
+    .text-field__outline {
+      text-align: left;
+      position: absolute;
+      inset: -5px 0 0;
+      margin: 0;
+      padding: 0 10px;
+      pointer-events: none;
+      border-radius: var(--sp-tf-radius);
+      border: 1px solid var(--sp-tf-border);
+      transition:
+        border-color var(--sp-transition-normal),
+        border-width var(--sp-transition-fast),
+        box-shadow var(--sp-transition-normal);
+      min-width: 0;
+    }
+
+    .text-field__legend {
+      float: unset;
+      width: auto;
+      overflow: hidden;
+      display: block;
+      padding: 0;
+      height: 11px;
+      font-size: 0.75em;
+      visibility: hidden;
+      max-width: 0.01px;
+      transition: max-width var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+      white-space: nowrap;
+
+      &--floating {
+        max-width: 100%;
+        transition: max-width var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+      }
+    }
+
+    &.text-field--floating,
+    &.text-field--autofilled,
+    &:has(input:-webkit-autofill),
+    &:has(input:autofill) {
+      .text-field__legend {
+        max-width: 100%;
+      }
+
+      .text-field__label {
+        left: var(--sp-space-4, 16px) !important;
+      }
+    }
+
+    .text-field__legend-span {
+      padding: 0 5px;
+      display: inline-block;
+      opacity: 0;
+      visibility: visible;
+    }
+
+    .text-field__label {
+      left: var(--sp-space-4, 16px);
+    }
+
+    &.text-field--has-start-adornment:not(.text-field--floating):not(.text-field--autofilled):not(:has(input:-webkit-autofill)):not(:has(input:autofill)) {
+      .text-field__label {
+        left: 42px;
+      }
+    }
+
+    // Focus state
+    &.text-field--focused {
+      .text-field__outline {
+        border-color: var(--sp-tf-accent);
+        border-width: 2px;
+      }
+
+      .text-field__label {
+        font-weight: 700;
+        color: var(--sp-tf-accent);
+      }
+    }
+
+    // Hover state
+    &:not(.text-field--disabled):not(.text-field--focused):hover {
+      .text-field__outline {
+        border-color: var(--sp-tf-border-hover);
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 7. VARIANT: FILLED (Solid Tonal Container)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--variant-filled {
+    .text-field__wrapper {
+      background-color: var(--sp-tf-filled-bg);
+      border-radius: var(--sp-tf-radius) var(--sp-tf-radius) 0 0;
+      overflow: hidden;
+    }
+
+    .text-field__state-layer {
+      position: absolute;
+      inset: 0;
+      background-color: var(--sp-color-text-primary);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--sp-transition-fast);
+    }
+
+    &:not(.text-field--disabled):hover .text-field__state-layer {
+      opacity: 0.04;
+    }
+
+    .text-field__input {
+      &--has-start {
+        padding-left: 0;
+      }
+
+      &--has-end {
+        padding-right: 0;
+      }
+    }
+
+    .text-field__adornment {
+      align-self: flex-end;
+      padding-bottom: var(--sp-space-2, 8px);
+
+      &--start {
+        padding-left: var(--sp-space-4, 16px);
+        padding-right: var(--sp-space-2, 8px);
+      }
+
+      &--end {
+        padding-right: var(--sp-space-4, 16px);
+        padding-left: var(--sp-space-2, 8px);
+      }
+    }
+
+    .text-field__label {
+      left: var(--sp-space-4, 16px);
+    }
+
+    &.text-field--has-start-adornment:not(.text-field--floating) {
+      .text-field__label {
+        left: 42px;
+      }
+    }
+
+    &.text-field--no-label {
+      .text-field__adornment {
+        align-self: center;
+        padding-bottom: 0;
+      }
+    }
+
+    // Active bottom indicator
+    .text-field__indicator {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: var(--sp-tf-border);
+      transition: background-color var(--sp-transition-fast);
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--sp-tf-accent);
+        transform: scaleX(0);
+        transition: transform var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+      }
+    }
+
+    &:not(.text-field--disabled):hover .text-field__indicator {
+      background-color: var(--sp-tf-border-hover);
+    }
+
+    &.text-field--focused {
+      .text-field__indicator::before {
+        transform: scaleX(1);
+      }
+
+      .text-field__label {
+        color: var(--sp-tf-accent);
+      }
+
+      .text-field__state-layer {
+        opacity: 0;
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 8. VARIANT: STANDARD (Minimal Underline)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--variant-standard {
+    .text-field__wrapper {
+      background-color: transparent;
+      border-radius: 0;
+    }
+
+    .text-field__input {
+      &--has-start {
+        padding-left: 0;
+      }
+
+      &--has-end {
+        padding-right: 0;
+      }
+    }
+
+    .text-field__adornment {
+      align-self: flex-start;
+
+      &--start {
+        padding-right: var(--sp-space-2, 8px);
+      }
+
+      &--end {
+        padding-left: var(--sp-space-2, 8px);
+      }
+    }
+
+    .text-field__label {
+      left: 0;
+    }
+
+    &.text-field--has-start-adornment:not(.text-field--floating) {
+      .text-field__label {
+        left: 28px;
+      }
+    }
+
+    .text-field__indicator {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: var(--sp-tf-border);
+      transition: background-color var(--sp-transition-fast);
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: var(--sp-tf-accent);
+        transform: scaleX(0);
+        transition: transform var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1));
+      }
+    }
+
+    &:not(.text-field--disabled):hover .text-field__indicator {
+      background-color: var(--sp-tf-border-hover);
+    }
+
+    &.text-field--focused {
+      .text-field__indicator::before {
+        transform: scaleX(1);
+      }
+
+      .text-field__label {
+        color: var(--sp-tf-accent);
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 9. SIZES (Small: 36px, Medium: 48px, Large: 56px)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // 9.1. Small (36px)
+  &--size-small {
+    .text-field__wrapper {
+      min-height: 36px;
+    }
+
+    .text-field__input {
+      height: 36px;
+      @include typography('body-sm');
+    }
+
+    &.text-field--variant-outlined {
+      .text-field__label {
+        top: 8px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-17px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-filled {
+      .text-field__input {
+        padding: 14px var(--sp-space-3, 12px) 2px;
+      }
+
+      .text-field__label {
+        top: 8px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-5px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-standard {
+      .text-field__input {
+        padding: 14px 0 2px;
+      }
+
+      .text-field__label {
+        top: 14px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-12px) scale(0.75);
+      }
+    }
+  }
+
+  // 9.2. Medium (48px - Standard)
+  &--size-medium {
+    .text-field__wrapper {
+      min-height: 48px;
+    }
+
+    .text-field__input {
+      height: 48px;
+      @include typography('body-md');
+    }
+
+    &.text-field--variant-outlined {
+      .text-field__label {
+        top: 13px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-22px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-filled {
+      .text-field__input {
+        padding: 18px var(--sp-space-4, 16px) 4px;
+      }
+
+      .text-field__label {
+        top: 13px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-7px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-standard {
+      .text-field__input {
+        padding: 18px 0 4px;
+      }
+
+      .text-field__label {
+        top: 18px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-14px) scale(0.75);
+      }
+    }
+  }
+
+  // 9.3. Large (56px - Prominent / Search)
+  &--size-large {
+    .text-field__wrapper {
+      min-height: 56px;
+    }
+
+    .text-field__input {
+      height: 56px;
+      @include typography('body-lg');
+    }
+
+    &.text-field--variant-outlined {
+      .text-field__label {
+        top: 16px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-25px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-filled {
+      .text-field__input {
+        padding: 22px var(--sp-space-5, 20px) 6px;
+      }
+
+      .text-field__label {
+        top: 16px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-8px) scale(0.75);
+      }
+    }
+
+    &.text-field--variant-standard {
+      .text-field__input {
+        padding: 22px 0 6px;
+      }
+
+      .text-field__label {
+        top: 22px;
+      }
+
+      &.text-field--floating .text-field__label,
+      &.text-field--autofilled .text-field__label,
+      &:has(input:-webkit-autofill) .text-field__label,
+      &:has(input:autofill) .text-field__label {
+        transform: translateY(-16px) scale(0.75);
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 10. STATES (Error & Disabled)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // 10.1. Error State
+  &--error {
+    --sp-tf-accent: var(--sp-color-status-error) !important;
+    --sp-tf-border: var(--sp-color-status-error) !important;
+    --sp-tf-border-hover: var(--sp-color-status-error) !important;
+
+    .text-field__label,
+    .text-field__helper-text {
+      color: var(--sp-color-status-error) !important;
+    }
+
+    &.text-field--variant-outlined .text-field__outline {
+      border-color: var(--sp-color-status-error) !important;
+      border-width: 1.5px;
+    }
+
+    &.text-field--variant-filled .text-field__indicator,
+    &.text-field--variant-standard .text-field__indicator {
+      background-color: var(--sp-color-status-error) !important;
+
+      &::before {
+        background-color: var(--sp-color-status-error) !important;
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  // 10.2. Disabled State
+  &--disabled {
+    opacity: 0.45 !important;
+    pointer-events: none !important;
+
+    .text-field__label,
+    .text-field__helper-text,
+    .text-field__adornment,
+    .text-field__input {
+      color: var(--sp-tf-disabled) !important;
+    }
+
+    &.text-field--variant-outlined .text-field__outline {
+      border-color: var(--sp-tf-disabled) !important;
+      border-width: 1px !important;
+    }
+
+    &.text-field--variant-filled .text-field__wrapper,
+    &.text-field--variant-standard .text-field__wrapper {
+      background-color: var(--sp-color-surface-container-low);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 11. ACCESSIBILITY: REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .text-field {
+
+    &__label,
+    &__outline,
+    &__legend,
+    &__indicator,
+    &__indicator::before {
+      transition: none !important;
+    }
+  }
+}

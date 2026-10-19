@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 40 140 120" width="100%" height="100%">
+    <defs>
+        <mask id="drop-mask">
+            <rect width="200" height="200" fill="white" />
+            <path d="M 100 45 C 110 60, 135 85, 135 115 C 135 135, 120 145, 100 145 C 80 145, 65 135, 65 115 C 65 85, 90 60, 100 45 Z" fill="black" stroke="black" stroke-width="10" stroke-linejoin="round"/>
+        </mask>
+    </defs>
+
+    <g fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Tent lines (White) -->
+        <g mask="url(#drop-mask)" stroke="#FFFFFF">
+            <path d="M 100 45 L 35 85 Q 45 95 55 87 Q 65 95 75 85 Q 85 95 100 78" />
+            <path d="M 55 87 Q 75 65 100 45" />
+            <path d="M 75 85 Q 85 65 100 45" />
+
+            <path d="M 100 45 L 165 85 Q 155 95 145 87 Q 135 95 125 85 Q 115 95 100 78" />
+            <path d="M 145 87 Q 125 65 100 45" />
+            <path d="M 125 85 Q 115 65 100 45" />
+        </g>
+
+        <!-- Base curve (Orange, representing the bottom cradle layer) -->
+        <path d="M 65 110 C 45 145, 75 155, 100 155 C 125 155, 155 145, 135 110" stroke="#bb4100" />
+
+        <!-- Drop (Yellow, representing the inner ring) -->
+        <path d="M 100 45 C 110 60, 135 85, 135 115 C 135 135, 120 145, 100 145 C 80 145, 65 135, 65 115 C 65 85, 90 60, 100 45 Z" stroke="#ff7f24" />
+
+        <!-- Play button (Solid White with slightly rounded corners via stroke) -->
+        <path d="M 89 91 L 117 105 L 89 119 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+    </g>
+</svg>

@@ -1,0 +1,108 @@
+/**
+ * @file _account-page.scss
+ * @module Pages/Account/Styles/Main
+ * @description Layout SCSS chính cho trang Account (Tài khoản người dùng) chuẩn Material 3 Expressive.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.account-page {
+  width: 100%;
+  min-height: calc(100vh - var(--sp-space-20));
+  padding: var(--sp-space-6) 0 var(--sp-space-24);
+  color: var(--sp-color-text-primary);
+
+  &__container {
+    @include container;
+  }
+
+  &__header {
+    margin-bottom: var(--sp-space-6);
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    margin-bottom: var(--sp-space-2);
+    @include typography('caption');
+    color: var(--sp-color-text-muted);
+
+    a {
+      color: var(--sp-color-text-secondary);
+      text-decoration: none;
+      transition: color var(--sp-transition-fast);
+
+      &:hover {
+        color: var(--sp-color-brand-primary);
+      }
+    }
+  }
+
+  &__breadcrumb-separator {
+    color: var(--sp-color-text-muted);
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+  }
+
+  &__title {
+    @include typography('h2');
+    color: var(--sp-color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+  }
+
+  &__title-icon {
+    color: var(--sp-color-brand-primary);
+  }
+
+  &__layout {
+    display: flex;
+    gap: var(--sp-space-8);
+    align-items: flex-start;
+
+    @include responsive(tablet-down) {
+      flex-direction: column;
+      gap: var(--sp-space-6);
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Loading Skeleton State */
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: var(--sp-space-4);
+  }
+
+  /* Error State */
+  &__error-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-4);
+    padding: var(--sp-space-12) var(--sp-space-6);
+    text-align: center;
+    border-radius: var(--sp-radius-lg);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+  }
+
+  &__error-icon {
+    color: var(--sp-color-status-error);
+  }
+}

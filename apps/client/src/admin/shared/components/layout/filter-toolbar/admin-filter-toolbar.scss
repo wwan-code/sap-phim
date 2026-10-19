@@ -1,0 +1,147 @@
+/**
+ * @file admin-filter-toolbar.scss
+ * @module Admin/Shared/Components/Layout/FilterToolbar/Styles
+ * @description Stylesheet chuẩn BEM và Material 3 Expressive Design Tokens (--sp-*) cho AdminFilterToolbar.
+ */
+
+.admin-filter-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+  padding-bottom: var(--sp-space-3, 12px);
+  margin-bottom: var(--sp-space-4, 16px);
+
+  &--bordered {
+    border-bottom: 1px solid var(--sp-border-subtle);
+  }
+
+  // ── 1. TABS CONTAINER ────────────────────────────────────────────────────────
+  &__tabs-container {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__tabs-list {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+    padding: var(--sp-space-1, 4px) 0;
+  }
+
+  // ── 2. TAB BUTTON (RED PILL CINEMA STYLE) ──────────────────────────────────
+  &__tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+    padding: var(--sp-space-1, 4px) var(--sp-space-2, 12px);
+    border-radius: var(--sp-radius-md, 12px);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    line-height: var(--sp-line-height-normal, 1.5);
+    color: var(--sp-color-text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    transition:
+      color var(--sp-transition-fast),
+      background-color var(--sp-transition-fast),
+      border-color var(--sp-transition-fast);
+
+    &:hover:not(:disabled):not(&--active) {
+      color: var(--sp-color-text-primary);
+      background-color: var(--sp-color-surface-container-high);
+      border-color: var(--sp-border-subtle);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    // Tab Active State
+    &--active {
+      color: var(--sp-color-on-primary, #ffffff);
+      background-color: var(--sp-color-brand-primary, #e50914);
+      font-weight: var(--sp-font-weight-semibold, 600);
+
+      &:hover:not(:disabled) {
+        background-color: var(--sp-color-brand-primary-hover, #ff1e27);
+        color: var(--sp-color-on-primary, #ffffff);
+      }
+
+      .admin-filter-toolbar__badge {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+      }
+    }
+  }
+
+  &__tab-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  &__tab-label {
+    display: inline-block;
+  }
+
+  // ── 3. PILL BADGE COUNT ─────────────────────────────────────────────────────
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    background-color: var(--sp-color-surface-container-highest);
+    color: var(--sp-color-text-muted);
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+  }
+
+  // ── 4. EXTRA FILTERS SLOT (RIGHT SIDE) ──────────────────────────────────────
+  &__filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    margin-left: auto;
+
+    .select__trigger {
+      width: auto;
+    }
+
+    // Khi trên màn hình nhỏ hoặc bị đẩy xuống hàng mới
+    @media (max-width: 768px) {
+      margin-left: 0;
+      width: 100%;
+      justify-content: flex-start;
+
+      .select__trigger {
+        width: 100%;
+      }
+    }
+  }
+}

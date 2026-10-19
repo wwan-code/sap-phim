@@ -1,0 +1,145 @@
+/**
+ * @file player-shortcuts-overlay.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Bảng hướng dẫn phím tắt bàn phím (Keyboard Shortcuts Modal) chuẩn Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.player-shortcuts-modal {
+  position: absolute;
+  inset: 0;
+  z-index: var(--sp-z-modal, 1000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-space-6, 24px);
+  background-color: var(--sp-overlay-scrim-dark, rgba(7, 8, 10, 0.85));
+  backdrop-filter: blur(10px) saturate(160%);
+  animation: shortcutsFadeIn var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural);
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    width: 100%;
+    background-color: var(--sp-color-surface-container, #12151E);
+    border: 1px solid var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    border-radius: var(--sp-radius-lg, 18px);
+    box-shadow: var(--sp-shadow-modal, 0 20px 50px rgba(0, 0, 0, 0.85));
+    overflow: hidden;
+    animation: shortcutsCardPop var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+    border-bottom: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    background-color: var(--sp-color-surface-container-high, #1B1F2B);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    margin: 0;
+    font-family: var(--sp-font-display, system-ui, sans-serif);
+    font-size: var(--sp-font-heading-h3, 1.15rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-primary, #F4F4F6);
+  }
+
+  &__close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: var(--sp-radius-sm, 6px);
+    background: transparent;
+    color: var(--sp-color-text-muted, #5C6275);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-state-hover, rgba(255, 255, 255, 0.06));
+      color: var(--sp-color-text-primary, #F4F4F6);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    border-radius: var(--sp-radius-sm, 6px);
+    background-color: var(--sp-color-surface-container-low, #0E1017);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.04));
+  }
+
+  &__desc {
+    font-family: var(--sp-font-body, system-ui, sans-serif);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary, #9499A8);
+  }
+
+  &__keys {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+  }
+
+  &__key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 24px;
+    padding: 0 var(--sp-space-2, 8px);
+    font-family: var(--sp-font-mono, monospace);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary, #F4F4F6);
+    background-color: var(--sp-color-surface-container-highest, #242A3B);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--sp-radius-xs, 4px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  &__or {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-muted, #5C6275);
+  }
+}
+
+@keyframes shortcutsFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shortcutsCardPop {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

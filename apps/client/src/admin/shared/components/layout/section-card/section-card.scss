@@ -1,0 +1,91 @@
+.admin-section-card {
+  position: relative;
+  background: var(--sp-color-surface-container, #12151e);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--sp-radius-md, 12px);
+  box-shadow: var(--sp-shadow-flat, 0 2px 8px rgba(0, 0, 0, 0.4));
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--sp-font-display, inherit);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--sp-color-text-primary, #f4f4f6);
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--sp-color-text-secondary, #9499a8);
+  }
+
+  &__extra {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__body {
+    padding: 1.5rem;
+  }
+
+  &--no-padding &__body {
+    padding: 0;
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 0;
+
+    &-line {
+      height: 1.25rem;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 25%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.04) 75%
+      );
+      background-size: 200% 100%;
+      animation: sectionCardSkeletonShimmer 1.5s infinite;
+      border-radius: 4px;
+
+      &--short {
+        width: 60%;
+      }
+    }
+  }
+}
+
+@keyframes sectionCardSkeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" id="app-theme-color" content="#0b0d14" />
+
+  <style>
+    html,
+    body {
+      background-color: #191b24;
+      color: #ece1db;
+    }
+
+    html[data-theme="light"],
+    html[data-theme="light"] body {
+      background-color: #f5f5f5 !important;
+      color: #212121 !important;
+    }
+
+    html[data-theme="dark"],
+    html[data-theme="dark"] body {
+      background-color: #191b24 !important;
+      color: #ece1db !important;
+    }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var pref = localStorage.getItem('sap-phim-theme') || 'system';
+        var theme = pref;
+        if (pref === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+        var metaTheme = document.getElementById('app-theme-color') || document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', theme === 'dark' ? '#0b0d14' : '#fcfcff');
+        }
+      } catch (e) { }
+    })();
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <title>Sạp Phim - Xem phim online chất lượng cao</title>
+  <meta name="description"
+    content="Khám phá phim trực tuyến chất lượng cao, cập nhật nhanh, tối ưu cho mobile và trải nghiệm xem mượt tại Sạp Phim." />
+  <meta name="keywords" content="phim, xem phim, phim online, streaming phim, xem phim, vietsub phim" />
+  <meta name="author" content="Sạp Phim Team" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sạp Phim - Xem phim online chất lượng cao" />
+  <meta property="og:description"
+    content="Khám phá phim trực tuyến chất lượng cao, cập nhật nhanh, tối ưu cho mobile và trải nghiệm xem mượt tại Sạp Phim." />
+  <meta property="og:image" content="/images/placeholder-banner.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sạp Phim - Xem phim online chất lượng cao" />
+  <meta name="twitter:description"
+    content="Khám phá phim trực tuyến chất lượng cao, cập nhật nhanh, tối ưu cho mobile và trải nghiệm xem mượt tại Sạp Phim." />
+  <meta name="twitter:image" content="/images/placeholder-banner.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script type="module" crossorigin src="/assets/js/index-DIPCFBt5.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-react-C1iXgBqQ.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-redux-DgzCsNoc.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-animation-BAGnmlo2.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-icons-BfnwntAZ.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-tanstack-N7ya-vim.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/chunk-auth-Dm6ci6s9.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-floating-Dztg_0cA.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor-realtime-dm1FmSOd.js">
+  <link rel="stylesheet" crossorigin href="/assets/css/chunk-auth-O7tXCWR6.css">
+  <link rel="stylesheet" crossorigin href="/assets/css/index-BcqY19LY.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <div id="modal-root"></div>
+</body>
+
+</html>

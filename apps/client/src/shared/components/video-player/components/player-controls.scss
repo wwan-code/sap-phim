@@ -1,0 +1,929 @@
+/**
+ * @file player-controls.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Định kiểu thanh điều khiển Video Player, Seekbar Inline và Menu Cài đặt đa cấp chuẩn Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.player-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-2);
+  padding: 0 var(--sp-space-5) var(--sp-space-4);
+  background: var(--sp-vp-bg-controls-gradient, linear-gradient(180deg, rgba(7, 8, 10, 0) 0%, rgba(7, 8, 10, 0.75) 45%, rgba(7, 8, 10, 0.95) 100%));
+  z-index: calc(var(--sp-z-docked) + 10);
+  transition: opacity var(--sp-transition-normal), transform var(--sp-transition-normal);
+
+  &--visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  &--hidden {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+
+  // ════════════════════════════════════════
+  // 1. THANH TIMELINE INLINE (ẢNH MOCKUP 1)
+  // ════════════════════════════════════════
+  &__timeline {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    user-select: none;
+    position: relative;
+    padding: 2px 0;
+  }
+
+  &__seekbar-container {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__time-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    margin-left: var(--sp-space-2);
+    user-select: none;
+  }
+
+  &__time-separator {
+    color: var(--sp-vp-color-text-muted, rgba(255, 255, 255, 0.45));
+    margin: 0 1px;
+  }
+
+  &__time {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+
+    &--current {
+      min-width: 50px;
+      text-align: left;
+    }
+
+    &--duration {
+      min-width: 50px;
+      text-align: left;
+      color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+    }
+  }
+
+  // ════════════════════════════════════════
+  // 2. THANH CÁC NÚT ĐIỀU HƯỚNG
+  // ════════════════════════════════════════
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+  }
+
+  &__group {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+
+    &--right {
+      gap: 20px;
+    }
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--sp-vp-btn-size, 38px);
+    height: var(--sp-vp-btn-size, 38px);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-icon, #ffffff);
+    border-radius: var(--sp-vp-btn-radius, var(--sp-radius-full));
+    cursor: pointer;
+    transition: color var(--sp-transition-fast), background-color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-vp-color-icon-hover, var(--sp-color-brand-primary, #E50914));
+      background-color: var(--sp-vp-bg-btn-hover, rgba(255, 255, 255, 0.08));
+    }
+
+    &:active {
+      background-color: var(--sp-vp-bg-btn-active, rgba(255, 255, 255, 0.14));
+    }
+
+    &--active {
+      color: var(--sp-vp-color-brand, #E50914);
+    }
+
+    &--sub-active {
+      color: var(--sp-vp-color-brand, #E50914);
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 5px;
+        width: 14px;
+        height: 2px;
+        border-radius: 1px;
+        background-color: currentColor;
+      }
+    }
+
+    &--highlight {
+      color: var(--sp-vp-color-brand, #E50914);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  // ── Đường kẻ dọc phân cách (Mockup 1) ──
+  &__divider {
+    width: 1px;
+    height: 18px;
+    background-color: rgba(255, 255, 255, 0.25);
+    margin: 0 var(--sp-space-2);
+  }
+
+  // ── Âm lượng slider (Khớp 100% Mockup) ──
+  &__volume-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &:hover,
+    &:focus-within {
+      .player-controls__slider-wrapper {
+        width: 88px;
+        opacity: 1;
+        pointer-events: auto;
+        margin-left: var(--sp-space-2);
+      }
+    }
+  }
+
+  &__slider-wrapper {
+    width: 0;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    transition: width var(--sp-transition-normal), opacity var(--sp-transition-normal), margin-left var(--sp-transition-normal);
+    display: flex;
+    align-items: center;
+    height: 38px;
+
+    &--open {
+      width: 88px;
+      opacity: 1;
+      pointer-events: auto;
+      margin-left: var(--sp-space-2);
+    }
+  }
+
+  &__volume-slider {
+    width: 80px;
+    height: 20px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    // ── Track Webkit (Chrome / Edge / Safari) ──
+    &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      border-radius: var(--sp-radius-full, 9999px);
+      border: none;
+      background: linear-gradient(to right,
+          #ffffff 0%,
+          #ffffff var(--volume-percent, 100%),
+          rgba(255, 255, 255, 0.28) var(--volume-percent, 100%),
+          rgba(255, 255, 255, 0.28) 100%);
+    }
+
+    // ── Thumb Webkit (Chrome / Edge / Safari) ──
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: none;
+      margin-top: -4px; // Căn giữa chính xác trên track 4px: (4 - 12) / 2 = -4px
+      cursor: pointer;
+      box-shadow: none;
+      transition: transform var(--sp-transition-fast);
+    }
+
+    &:hover {
+      &::-webkit-slider-thumb {
+        transform: scale(1.15);
+      }
+    }
+
+    // ── Track Firefox ──
+    &::-moz-range-track {
+      width: 100%;
+      height: 4px;
+      border-radius: var(--sp-radius-full, 9999px);
+      background-color: rgba(255, 255, 255, 0.28);
+      border: none;
+    }
+
+    &::-moz-range-progress {
+      height: 4px;
+      border-radius: var(--sp-radius-full, 9999px);
+      background-color: #ffffff;
+    }
+
+    // ── Thumb Firefox ──
+    &::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: none;
+      cursor: pointer;
+      box-shadow: none;
+      transition: transform var(--sp-transition-fast);
+    }
+
+    &:hover {
+      &::-moz-range-thumb {
+        transform: scale(1.15);
+      }
+    }
+
+    @include focus-ring;
+  }
+}
+
+// ════════════════════════════════════════
+// THANH TUA SEEKBAR (CHUẨN TOKEN --sp-vp-*)
+// ════════════════════════════════════════
+.player-seekbar {
+  position: relative;
+  width: 100%;
+  height: var(--sp-vp-timeline-height, 20px);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+
+  @include focus-ring;
+
+  &__track {
+    position: relative;
+    width: 100%;
+    height: var(--sp-vp-seekbar-height, 4px);
+    background-color: var(--sp-vp-seekbar-track-bg, rgba(255, 255, 255, 0.22));
+    border-radius: var(--sp-radius-full);
+    transition: height var(--sp-transition-fast);
+  }
+
+  &--dragging,
+  &:hover {
+    .player-seekbar__track {
+      height: var(--sp-vp-seekbar-height-hover, 5px);
+    }
+
+    .player-seekbar__thumb {
+      box-shadow: var(--sp-vp-seekbar-thumb-shadow, 0 0 10px rgba(255, 255, 255, 0.85));
+      transform: translateY(-50%) scale(1.15);
+    }
+  }
+
+  &--dragging {
+    cursor: grabbing;
+
+    .player-seekbar__thumb {
+      box-shadow: var(--sp-vp-seekbar-thumb-shadow-active, 0 0 12px rgba(255, 255, 255, 0.95));
+      transform: translateY(-50%) scale(1.2);
+    }
+  }
+
+  &__buffered {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--sp-vp-seekbar-track-buffered, rgba(255, 255, 255, 0.35));
+    border-radius: var(--sp-radius-full);
+    pointer-events: none;
+  }
+
+  &__played {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--sp-vp-seekbar-track-played, #ffffff);
+    border-radius: var(--sp-radius-full);
+    pointer-events: none;
+  }
+
+  // ── Con trỏ hình tròn 12px đồng bộ với thanh volume ──
+  &__thumb {
+    position: absolute;
+    right: -6px; // (12 / 2 = 6px) để tâm con trỏ nằm chính xác tại điểm cuối của played track
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--sp-vp-seekbar-thumb-size, 12px);
+    height: var(--sp-vp-seekbar-thumb-size, 12px);
+    border-radius: 50%;
+    background-color: var(--sp-vp-seekbar-thumb-bg, #ffffff);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    transition: transform var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+  }
+
+  &__hover-indicator {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background-color: rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  &__chapter-marker {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background-color: var(--sp-color-surface-dim, #050608);
+    transform: translateX(-50%);
+    z-index: 2;
+    pointer-events: none;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+  }
+
+  &__time-tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--sp-space-1, 4px) var(--sp-space-2, 8px);
+    background-color: var(--sp-vp-bg-sprite-time, rgba(7, 8, 10, 0.9));
+    border: 1px solid var(--sp-vp-border-menu, rgba(255, 255, 255, 0.14));
+    border-radius: var(--sp-radius-xs, 4px);
+    pointer-events: none;
+    z-index: var(--sp-z-tooltip, 1400);
+    backdrop-filter: blur(8px);
+    box-shadow: var(--sp-shadow-elevated, 0 8px 24px rgba(0, 0, 0, 0.6));
+  }
+
+  &__tooltip-chapter {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-brand-primary, #E50914);
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__tooltip-time {
+    font-family: var(--sp-font-mono, monospace);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+  }
+}
+
+// ════════════════════════════════════════
+// MENU CÀI ĐẶT ĐA CẤP (ẢNH MOCKUP 2)
+// ════════════════════════════════════════
+.player-settings {
+  position: relative;
+
+  &__btn {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: visible;
+    border-radius: var(--sp-radius-full);
+    transition: background-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+
+      .player-settings__hex-icon:not(.player-settings__hex-icon--open) {
+        color: var(--sp-color-brand-primary, #E50914);
+        transform: rotate(15deg);
+      }
+    }
+
+    &--open {
+      background-color: rgba(229, 9, 20, 0.12);
+      box-shadow: 0 0 14px rgba(229, 9, 20, 0.35);
+    }
+  }
+
+  &__trigger-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+  }
+
+  &__hex-icon {
+    display: block;
+    color: var(--sp-vp-color-icon, #ffffff);
+    transform-origin: center center;
+    transition: transform var(--sp-motion-duration-medium) var(--sp-motion-easing-neural),
+      color var(--sp-transition-fast),
+      filter var(--sp-transition-fast);
+
+    &--open {
+      transform: rotate(60deg);
+      color: var(--sp-color-brand-primary, #E50914);
+      filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.65));
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    height: 13px;
+    min-width: 22px;
+    padding: 0 4px;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 8.5px;
+    font-weight: 700;
+    line-height: 13px;
+    border-radius: var(--sp-radius-full);
+    letter-spacing: -0.2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+    // Viền knockout màu tối tạo khoảng cách tách rời với stroke của nut
+    box-shadow: 0 0 0 1.5px #07080a;
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;
+  }
+
+  &__popover {
+    position: absolute;
+    min-width: var(--sp-vp-menu-min-width, 240px);
+    background: var(--sp-vp-glass-bg, rgba(18, 21, 30, 0.78));
+    border: 1px solid var(--sp-vp-glass-border, rgba(255, 255, 255, 0.12));
+    border-radius: var(--sp-vp-menu-radius, var(--sp-radius-md));
+    box-shadow: var(--sp-vp-glass-shadow, 0 16px 40px rgba(0, 0, 0, 0.75));
+    backdrop-filter: var(--sp-vp-glass-blur-deep, blur(24px) saturate(190%));
+    -webkit-backdrop-filter: var(--sp-vp-glass-blur-deep, blur(24px) saturate(190%));
+    overflow: hidden;
+    max-height: 360px;
+    display: flex;
+    flex-direction: column;
+    z-index: var(--sp-z-tooltip);
+    transform-origin: bottom right;
+    will-change: transform, opacity;
+  }
+
+  &__view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 360px;
+    overflow: hidden;
+
+    &--slide-forward {
+      animation: sp-view-slide-forward 220ms var(--sp-motion-easing-neural) both;
+    }
+
+    &--slide-backward {
+      animation: sp-view-slide-backward 220ms var(--sp-motion-easing-neural) both;
+    }
+  }
+
+  &__header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: var(--sp-space-2) var(--sp-space-3);
+  }
+
+  &__title {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+  }
+
+  &__back-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: var(--sp-space-3) var(--sp-space-3);
+    border: none;
+    border-bottom: 1px solid var(--sp-vp-border-divider, rgba(255, 255, 255, 0.08));
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-semibold);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast);
+    width: 100%;
+
+    &:hover {
+      background-color: var(--sp-vp-bg-menu-hover, rgba(255, 255, 255, 0.12));
+    }
+  }
+
+  &__body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    padding: var(--sp-space-1) 0 var(--sp-space-2);
+
+    // Scrollbar tùy biến mỏng mịn chuẩn Material 3 Expressive
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--sp-radius-full, 9999px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+    }
+  }
+
+  &__list,
+  &__options {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--sp-space-3);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--sp-font-body);
+    transition: background-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-vp-bg-menu-hover, rgba(255, 255, 255, 0.08));
+    }
+  }
+
+  &__item-label {
+    font-size: var(--sp-font-body-sm);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    font-weight: var(--sp-font-weight-medium);
+  }
+
+  &__item-right {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+  }
+
+  &__item-value {
+    font-size: var(--sp-font-body-sm);
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+    padding: 0 var(--sp-space-3);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-vp-bg-menu-hover, rgba(255, 255, 255, 0.08));
+      color: var(--sp-vp-color-text-primary, #ffffff);
+    }
+
+    &--active {
+      color: var(--sp-vp-color-text-primary, #ffffff);
+      font-weight: var(--sp-font-weight-semibold);
+      background-color: var(--sp-vp-bg-menu-active, rgba(255, 255, 255, 0.12));
+
+      svg {
+        color: var(--sp-vp-color-accent, #7c5dfa);
+      }
+    }
+  }
+
+  &__option-content {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: var(--sp-radius-full, 9999px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: inline-block;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  &__section-divider {
+    height: 1px;
+    background-color: var(--sp-vp-border-divider, rgba(255, 255, 255, 0.08));
+    margin: var(--sp-space-2) var(--sp-space-3);
+  }
+
+  &__section-title {
+    padding: var(--sp-space-1) var(--sp-space-4);
+    font-size: var(--sp-font-micro, 11px);
+    color: var(--sp-vp-color-text-muted, rgba(255, 255, 255, 0.45));
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: var(--sp-font-weight-semibold, 600);
+
+    &--sub {
+      color: var(--sp-color-brand-primary, #E50914);
+      margin-top: var(--sp-space-1);
+    }
+  }
+
+  &__reset-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2, 8px);
+    width: calc(100% - var(--sp-space-6, 24px));
+    margin: var(--sp-space-2, 8px) auto var(--sp-space-1, 4px);
+    padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--sp-vp-border-divider, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-sm, 6px);
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.65));
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 12px);
+    font-weight: var(--sp-font-weight-medium, 500);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast), border-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: rgba(229, 9, 20, 0.12);
+      border-color: rgba(229, 9, 20, 0.4);
+      color: var(--sp-color-brand-primary, #E50914);
+    }
+  }
+}
+
+// ════════════════════════════════════════
+// SUBTITLE MENU (POPOVER CC RIÊNG BIỆT)
+// ════════════════════════════════════════
+.player-subtitle-menu {
+  position: relative;
+
+  &__customize-item {
+    width: 100%;
+    margin-top: var(--sp-space-1, 4px);
+    border-radius: 0;
+    padding: 0 var(--sp-space-4);
+  }
+}
+
+// ════════════════════════════════════════
+// DROPDOWN PHỤ ĐỀ / CHẤT LƯỢNG ĐỘC LẬP
+// ════════════════════════════════════════
+.player-selector {
+  position: relative;
+
+  &__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1);
+    height: var(--sp-vp-btn-size, 38px);
+    padding: 0 var(--sp-space-3);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-icon, #ffffff);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    border-radius: var(--sp-vp-btn-radius, var(--sp-radius-full));
+    cursor: pointer;
+    transition: color var(--sp-transition-fast), background-color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-vp-color-icon-hover, var(--sp-color-brand-primary, #E50914));
+      background-color: var(--sp-vp-bg-btn-hover, rgba(255, 255, 255, 0.08));
+    }
+  }
+
+  &__label {
+    white-space: nowrap;
+  }
+
+  &__menu {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    right: 0;
+    min-width: 200px;
+    background-color: var(--sp-vp-bg-menu, #141722);
+    border: 1px solid var(--sp-vp-border-menu, rgba(255, 255, 255, 0.12));
+    border-radius: var(--sp-vp-menu-radius, var(--sp-radius-md));
+    padding: var(--sp-space-2) 0;
+    box-shadow: var(--sp-vp-shadow-menu, 0 16px 40px rgba(0, 0, 0, 0.85));
+    backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    z-index: var(--sp-z-tooltip);
+    animation: sp-menu-pop var(--sp-transition-fast);
+  }
+
+  &__menu-header {
+    font-size: var(--sp-font-caption);
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-vp-color-text-muted, rgba(255, 255, 255, 0.45));
+    padding: var(--sp-space-2) var(--sp-space-4);
+    border-bottom: 1px solid var(--sp-vp-border-divider, rgba(255, 255, 255, 0.06));
+    margin-bottom: var(--sp-space-1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 0 var(--sp-space-4);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-vp-bg-menu-hover, rgba(255, 255, 255, 0.08));
+      color: var(--sp-vp-color-text-primary, #ffffff);
+    }
+
+    &--active {
+      color: var(--sp-vp-color-text-primary, #ffffff);
+      font-weight: var(--sp-font-weight-semibold);
+      background-color: var(--sp-vp-bg-menu-active, rgba(255, 255, 255, 0.12));
+
+      svg {
+        color: var(--sp-vp-color-accent, #7c5dfa);
+      }
+    }
+  }
+}
+
+// ════════════════════════════════════════
+// RESPONSIVE 4 TẦNG: SCALING CHO CONTROLS
+// ════════════════════════════════════════
+.video-player--tier-ultrawide {
+  .player-controls {
+    padding: 0 var(--sp-space-8) var(--sp-space-6);
+    gap: var(--sp-space-3);
+
+    &__bar {
+      height: 52px;
+    }
+
+    &__time {
+      font-size: var(--sp-font-body-md);
+    }
+
+    &__btn {
+      width: 48px;
+      height: 48px;
+
+      svg {
+        transform: scale(1.15);
+      }
+    }
+  }
+}
+
+.video-player--tier-tablet {
+  .player-controls {
+    padding: 0 var(--sp-space-4) var(--sp-space-3);
+
+    &__btn {
+      width: 42px;
+      height: 42px;
+    }
+
+    &__group--right {
+      gap: 14px;
+    }
+  }
+}
+
+@keyframes sp-menu-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sp-view-slide-forward {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sp-view-slide-backward {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,227 @@
+/**
+ * @file subscription-grant-drawer.scss
+ * @module Admin/Modules/Subscriptions/Styles/SubscriptionGrantDrawer
+ * @description Styling cho Drawer cấp quyền VIP thủ công cho thành viên.
+ */
+
+.subscription-grant-drawer {
+  &__section {
+    margin-bottom: var(--sp-space-6, 24px);
+
+    &-title {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-2, 8px);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-bold, 700);
+      color: var(--sp-color-text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--sp-space-3, 12px);
+
+      svg {
+        color: var(--sp-color-brand-accent);
+      }
+    }
+  }
+
+  // ── Async User Search Box ──
+  &__user-search {
+    position: relative;
+    margin-bottom: var(--sp-space-3, 12px);
+
+    &-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: var(--sp-z-tooltip, 1400);
+      background-color: var(--sp-color-surface-container-high);
+      border: 1px solid var(--sp-border-strong);
+      border-radius: var(--sp-radius-md, 12px);
+      box-shadow: var(--sp-shadow-elevated);
+      max-height: 240px;
+      overflow-y: auto;
+      padding: var(--sp-space-2, 8px);
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-3, 12px);
+      padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+      border-radius: var(--sp-radius-sm, 6px);
+      cursor: pointer;
+      transition: background-color var(--sp-transition-fast);
+
+      &:hover {
+        background-color: var(--sp-color-surface-hover);
+      }
+    }
+
+    &-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+
+      .user-name {
+        font-size: var(--sp-font-body-sm, 0.875rem);
+        font-weight: var(--sp-font-weight-semibold, 600);
+        color: var(--sp-color-text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .user-sub {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &-empty {
+      padding: var(--sp-space-4, 16px);
+      text-align: center;
+      font-size: var(--sp-font-caption, 0.75rem);
+      color: var(--sp-color-text-muted);
+    }
+  }
+
+  // ── Selected User Card ──
+  &__selected-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-strong);
+    border-radius: var(--sp-radius-md, 12px);
+    margin-bottom: var(--sp-space-4, 16px);
+
+    &-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-3, 12px);
+    }
+
+    &-info {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-size: var(--sp-font-body-sm, 0.875rem);
+        font-weight: var(--sp-font-weight-bold, 700);
+        color: var(--sp-color-text-primary);
+      }
+
+      .sub {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-secondary);
+      }
+    }
+  }
+
+  // ── Plan Selection Cards ──
+  &__plan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: var(--sp-space-3, 12px);
+    margin-bottom: var(--sp-space-4, 16px);
+  }
+
+  &__plan-card {
+    position: relative;
+    padding: var(--sp-space-3, 12px);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--sp-transition-normal);
+
+    &:hover {
+      border-color: var(--sp-border-strong);
+      background-color: var(--sp-color-surface-container-high);
+    }
+
+    &--selected {
+      border-color: var(--sp-color-brand-accent);
+      background-color: rgba(124, 93, 250, 0.08);
+      box-shadow: 0 0 12px rgba(124, 93, 250, 0.25);
+    }
+
+    &-icon {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto var(--sp-space-2, 8px);
+      border-radius: var(--sp-radius-md, 12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-name {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-bold, 700);
+      color: var(--sp-color-text-primary);
+      margin-bottom: 2px;
+    }
+
+    &-tier {
+      font-size: var(--sp-font-micro, 0.6875rem);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--sp-color-text-muted);
+    }
+  }
+
+  // ── Quick Duration Chips ──
+  &__duration-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-space-2, 8px);
+    margin-bottom: var(--sp-space-3, 12px);
+  }
+
+  &__duration-chip {
+    padding: 6px 14px;
+    border-radius: var(--sp-radius-full, 9999px);
+    border: 1px solid var(--sp-border-subtle);
+    background-color: var(--sp-color-surface-container);
+    color: var(--sp-color-text-secondary);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-text-primary);
+      border-color: var(--sp-border-strong);
+    }
+
+    &--active {
+      background-color: var(--sp-color-brand-accent);
+      color: var(--sp-color-on-primary, #ffffff);
+      border-color: var(--sp-color-brand-accent);
+      box-shadow: 0 0 10px rgba(124, 93, 250, 0.3);
+    }
+  }
+
+  // ── Notice Alert ──
+  &__notice {
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+    background-color: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: var(--sp-radius-md, 12px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-status-info, #3b82f6);
+    line-height: var(--sp-line-height-normal);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-space-2, 8px);
+  }
+}

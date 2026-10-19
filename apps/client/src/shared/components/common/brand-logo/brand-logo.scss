@@ -1,0 +1,93 @@
+/**
+ * @file brand-logo.scss
+ * @module Components/Common/BrandLogo/Styles
+ * @description SCSS styles cho SVG BrandLogo Sạp Phim chuẩn Material 3 Expressive và hệ thống Token --sp-*.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  height: auto;
+  user-select: none;
+  overflow: visible;
+  transition: transform var(--sp-transition-fast), filter var(--sp-transition-fast);
+
+  &__badge {
+    fill: none;
+  }
+
+  &__ic-white {
+    fill: var(--sp-color-text-primary);
+    transition: fill var(--sp-transition-normal);
+  }
+
+  &__ic-roof {
+    stroke: var(--sp-color-text-primary);
+    transition: stroke var(--sp-transition-normal);
+  }
+
+  &__ic-play {
+    fill: var(--sp-color-text-primary);
+    stroke: var(--sp-color-text-primary);
+    transition: fill var(--sp-transition-normal), stroke var(--sp-transition-normal);
+  }
+
+  &__ic-spark {
+    fill: var(--sp-color-brand-primary-hover);
+    transition: fill var(--sp-transition-normal);
+  }
+
+  &__ic-base {
+    stroke: var(--sp-color-brand-primary-hover);
+    transition: stroke var(--sp-transition-normal);
+  }
+
+  &__ic-drop {
+    stroke: var(--sp-color-brand-primary);
+    transition: stroke var(--sp-transition-normal);
+  }
+
+  &__txt-cream {
+    fill: var(--sp-color-text-primary);
+    transition: fill var(--sp-transition-normal);
+  }
+
+  &__txt-gold {
+    fill: var(--sp-color-brand-primary);
+    transition: fill var(--sp-transition-normal);
+  }
+
+  &__txt-tag {
+    fill: var(--sp-color-text-secondary);
+    transition: fill var(--sp-transition-normal);
+  }
+
+  &__spark-accent {
+    fill: var(--sp-color-brand-primary);
+    transition: fill var(--sp-transition-normal);
+  }
+
+  &__tagline-decor {
+    stroke: var(--sp-color-brand-primary);
+    transition: stroke var(--sp-transition-normal);
+  }
+
+  // Modifiers
+  &--compact {
+    .brand-logo__tagline-group {
+      display: none;
+    }
+  }
+
+  &--icon-only {
+    .brand-logo__wordmark,
+    .brand-logo__heart,
+    .brand-logo__tagline-group {
+      display: none;
+    }
+  }
+}

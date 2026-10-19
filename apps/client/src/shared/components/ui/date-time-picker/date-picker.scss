@@ -1,0 +1,160 @@
+/**
+ * @file date-picker.scss
+ * @module Components/UI/DateTimePicker/DatePickerStyles
+ * @description SCSS styles cho DatePicker popover desktop & modal bottom sheet mobile (Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.date-picker {
+  display: inline-block;
+
+  &--full-width {
+    display: block;
+    width: 100%;
+  }
+
+  &__calendar-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    color: var(--sp-color-text-secondary);
+    transition: color var(--sp-transition-fast);
+
+    &:hover:not(&--disabled) {
+      color: var(--sp-color-brand-primary);
+    }
+
+    &--disabled {
+      cursor: default;
+      color: var(--sp-color-text-muted);
+    }
+  }
+
+  // ─── Desktop Popover ────────────────────────────────────────────────────────
+  &__popover {
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    box-shadow: var(--sp-shadow-elevated);
+    border-radius: var(--sp-radius-lg, 18px);
+    z-index: var(--sp-z-modal, 1000);
+    overflow: hidden;
+    outline: none;
+    pointer-events: auto;
+  }
+
+  // ─── Action Bar ─────────────────────────────────────────────────────────────
+  &__actions {
+    @include flex-between;
+    padding: var(--sp-space-2_5, 10px) var(--sp-space-4, 16px);
+    border-top: 1px solid var(--sp-border-subtle);
+    background-color: var(--sp-color-surface-container);
+  }
+
+  &__action-btn {
+    background: transparent;
+    border: none;
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    padding: var(--sp-space-1_5, 6px) var(--sp-space-3, 12px);
+    border-radius: var(--sp-radius-md, 12px);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &--clear {
+      color: var(--sp-color-text-muted);
+
+      &:hover {
+        color: var(--sp-color-status-error);
+        background-color: rgba(239, 68, 68, 0.1);
+      }
+    }
+
+    &--today {
+      color: var(--sp-color-text-secondary);
+
+      &:hover {
+        color: var(--sp-color-text-primary);
+        background-color: var(--sp-color-surface-hover);
+      }
+    }
+
+    &--confirm {
+      color: var(--sp-color-brand-primary);
+      font-weight: var(--sp-font-weight-semibold);
+
+      &:hover {
+        background-color: rgba(229, 9, 20, 0.12);
+      }
+    }
+  }
+
+  // ─── Mobile Bottom Sheet Modal ──────────────────────────────────────────────
+  &__bottom-sheet {
+    background-color: var(--sp-color-surface-container-high);
+    border-top: 1px solid var(--sp-border-subtle);
+    box-shadow: var(--sp-shadow-modal);
+    border-radius: var(--sp-radius-xl, 28px) var(--sp-radius-xl, 28px) 0 0;
+    overflow: hidden;
+    outline: none;
+    pointer-events: auto;
+    width: 100%;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__handlebar {
+    width: 40px;
+    height: 4px;
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: var(--sp-color-text-muted);
+    opacity: 0.4;
+    margin: var(--sp-space-3, 12px) auto var(--sp-space-1, 4px);
+    flex-shrink: 0;
+  }
+
+  &__sheet-header {
+    @include flex-between;
+    padding: var(--sp-space-2, 8px) var(--sp-space-4, 16px);
+    border-bottom: 1px solid var(--sp-border-subtle);
+  }
+
+  &__sheet-title {
+    font-family: var(--sp-font-display);
+    font-size: var(--sp-font-body-md);
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__sheet-close {
+    background: transparent;
+    border: none;
+    color: var(--sp-color-text-secondary);
+    padding: var(--sp-space-1, 4px);
+    border-radius: var(--sp-radius-full, 9999px);
+    cursor: pointer;
+    @include flex-center;
+
+    &:hover {
+      background-color: var(--sp-color-surface-hover);
+      color: var(--sp-color-text-primary);
+    }
+  }
+
+  &__modal-body {
+    padding: 0 !important;
+
+    & > * {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 0;
+      box-shadow: none;
+      background: transparent;
+      border: none;
+    }
+  }
+}

@@ -1,0 +1,529 @@
+/**
+ * @file _auth-pages.scss
+ * @module Pages/Auth/Styles
+ * @description SCSS styles dùng chung cho các trang Xác thực (Login, Register, Forgot Password, Reset Password, Verify Email) hỗ trợ hoàn hảo Dual-Theme (Light & Dark) chuẩn Material 3 Expressive.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ==========================================================================
+// 1. BASE AUTH FORM STYLES
+// ==========================================================================
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2);
+    margin-bottom: var(--sp-space-6);
+  }
+
+  &__title {
+    @include typography('h2');
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-color-text-primary);
+    line-height: var(--sp-line-height-heading);
+    margin: 0;
+    transition: color var(--sp-transition-normal);
+  }
+
+  &__subtitle {
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+    line-height: var(--sp-line-height-normal);
+    margin: 0;
+    transition: color var(--sp-transition-normal);
+  }
+
+  &__banner-error {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: var(--sp-space-3) var(--sp-space-4);
+    background-color: rgba(239, 68, 68, 0.12);
+    border: 1px solid var(--sp-color-status-error);
+    border-radius: var(--sp-radius-md);
+    color: var(--sp-color-status-error);
+    @include typography('body-sm');
+    font-weight: var(--sp-font-weight-medium);
+    margin-bottom: var(--sp-space-5);
+  }
+
+  html[data-theme='light'] &__banner-error {
+    background-color: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #DC2626;
+  }
+
+  &__banner-success {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: var(--sp-space-3) var(--sp-space-4);
+    background-color: rgba(16, 185, 129, 0.12);
+    border: 1px solid var(--sp-color-status-success);
+    border-radius: var(--sp-radius-md);
+    color: var(--sp-color-status-success);
+    @include typography('body-sm');
+    font-weight: var(--sp-font-weight-medium);
+    margin-bottom: var(--sp-space-5);
+  }
+
+  html[data-theme='light'] &__banner-success {
+    background-color: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #059669;
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4);
+  }
+
+  &__input-icon {
+    color: var(--sp-color-text-muted);
+    transition: color var(--sp-transition-fast);
+  }
+
+  &__options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--sp-space-2);
+  }
+
+  &__checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+    cursor: pointer;
+    user-select: none;
+    transition: color var(--sp-transition-fast);
+
+    input[type='checkbox'] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--sp-color-brand-primary);
+      cursor: pointer;
+    }
+  }
+
+  &__terms-label {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: var(--sp-space-2);
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+    cursor: pointer;
+    user-select: none;
+    margin-top: var(--sp-space-2);
+
+    input[type='checkbox'] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--sp-color-brand-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    a {
+      color: var(--sp-color-brand-primary);
+      text-decoration: none;
+      font-weight: var(--sp-font-weight-medium);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__forgot-link {
+    @include typography('body-sm');
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-brand-primary);
+    text-decoration: none;
+    transition: color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-brand-primary-hover);
+      text-decoration: underline;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3);
+    margin-top: var(--sp-space-6);
+  }
+
+  &__submit-btn {
+    height: 48px;
+    border-radius: var(--sp-radius-md);
+    font-weight: var(--sp-font-weight-semibold);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-1);
+    margin-top: var(--sp-space-6);
+    @include typography('body-sm');
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__footer-link {
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-brand-primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ==========================================================================
+// 2. SOCIAL BUTTONS
+// ==========================================================================
+.auth-social {
+  width: 100%;
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    margin: var(--sp-space-6) 0;
+  }
+
+  &__divider-line {
+    flex: 1;
+    height: 1px;
+    background-color: var(--sp-border-subtle);
+  }
+
+  html[data-theme='light'] &__divider-line {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &__divider-text {
+    @include typography('caption');
+    color: var(--sp-color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-space-2);
+  }
+
+  &__btn {
+    height: 44px;
+    border-radius: var(--sp-radius-md);
+    font-weight: var(--sp-font-weight-medium);
+  }
+}
+
+// ==========================================================================
+// 3. PASSWORD STRENGTH BAR & CHECKLIST
+// ==========================================================================
+.password-strength {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-1);
+  margin-top: 4px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include typography('caption');
+  }
+
+  &__title {
+    color: var(--sp-color-text-muted);
+  }
+
+  &__label {
+    font-weight: var(--sp-font-weight-semibold);
+
+    &--weak {
+      color: var(--sp-color-status-error);
+    }
+
+    &--fair {
+      color: var(--sp-color-status-warning);
+    }
+
+    &--good {
+      color: var(--sp-color-status-info);
+    }
+
+    &--strong {
+      color: var(--sp-color-status-success);
+    }
+  }
+
+  &__bar-wrapper {
+    height: 4px;
+    background-color: var(--sp-color-surface-container-highest);
+    border-radius: var(--sp-radius-full);
+    overflow: hidden;
+  }
+
+  html[data-theme='light'] &__bar-wrapper {
+    background-color: #E2E6EF;
+  }
+
+  &__bar {
+    height: 100%;
+    border-radius: inherit;
+    transition: width var(--sp-transition-normal), background-color var(--sp-transition-normal);
+
+    &--weak {
+      background-color: var(--sp-color-status-error);
+    }
+
+    &--fair {
+      background-color: var(--sp-color-status-warning);
+    }
+
+    &--good {
+      background-color: var(--sp-color-status-info);
+    }
+
+    &--strong {
+      background-color: var(--sp-color-status-success);
+    }
+  }
+
+  &__criteria-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--sp-space-2) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__criterion {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    @include typography('micro');
+    color: var(--sp-color-text-muted);
+    transition: color var(--sp-transition-fast);
+
+    &--met {
+      color: var(--sp-color-text-primary);
+    }
+  }
+
+  &__icon--success {
+    color: var(--sp-color-status-success);
+  }
+
+  &__icon--unmet {
+    color: var(--sp-color-text-muted);
+  }
+}
+
+// ==========================================================================
+// 4. MFA VERIFY STEP
+// ==========================================================================
+.mfa-verify-step {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--sp-space-2);
+    margin-bottom: var(--sp-space-6);
+  }
+
+  &__icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--sp-radius-full);
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sp-color-brand-primary);
+    box-shadow: var(--sp-shadow-flat);
+    margin-bottom: var(--sp-space-2);
+  }
+
+  html[data-theme='light'] &__icon-wrapper {
+    background-color: #F1F3F9;
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+}
+
+// ==========================================================================
+// 5. EMAIL SENT FEEDBACK CARD
+// ==========================================================================
+.email-sent-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+
+  &__icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--sp-radius-full);
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sp-color-brand-primary);
+    box-shadow: var(--sp-shadow-flat);
+    margin-bottom: var(--sp-space-4);
+  }
+
+  html[data-theme='light'] &__icon-wrapper {
+    background-color: #F1F3F9;
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  &__email-highlight {
+    color: var(--sp-color-text-primary);
+    font-weight: var(--sp-font-weight-semibold);
+  }
+
+  &__quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--sp-space-3);
+    margin: var(--sp-space-5) 0;
+    width: 100%;
+  }
+
+  &__provider-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: var(--sp-space-2) var(--sp-space-4);
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md);
+    color: var(--sp-color-text-primary);
+    text-decoration: none;
+    @include typography('body-sm');
+    font-weight: var(--sp-font-weight-medium);
+    transition: all var(--sp-transition-fast);
+
+    &:hover {
+      border-color: var(--sp-color-brand-primary);
+      background-color: var(--sp-color-surface-hover);
+      transform: translateY(-1px);
+    }
+  }
+
+  html[data-theme='light'] &__provider-link {
+    background-color: #F8F9FC;
+    border-color: rgba(0, 0, 0, 0.08);
+
+    &:hover {
+      background-color: #F1F3F9;
+      border-color: var(--sp-color-brand-primary);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3);
+    width: 100%;
+    margin-top: var(--sp-space-2);
+  }
+
+  &__back-link {
+    text-decoration: none;
+    width: 100%;
+  }
+}
+
+// ==========================================================================
+// 6. VERIFY EMAIL PAGE STATE STYLES
+// ==========================================================================
+.verify-email-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+
+  &__status-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: var(--sp-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--sp-space-4);
+    box-shadow: var(--sp-shadow-flat);
+
+    &--loading {
+      background-color: var(--sp-color-surface-container-high);
+      color: var(--sp-color-brand-primary);
+      border: 1px solid var(--sp-border-subtle);
+    }
+
+    &--success {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--sp-color-status-success);
+      border: 1px solid var(--sp-color-status-success);
+    }
+
+    &--error {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: var(--sp-color-status-error);
+      border: 1px solid var(--sp-color-status-error);
+    }
+  }
+
+  html[data-theme='light'] &__status-icon {
+    &--loading {
+      background-color: #F1F3F9;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+    &--success {
+      background-color: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: #059669;
+    }
+    &--error {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #DC2626;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3);
+    width: 100%;
+    margin-top: var(--sp-space-6);
+  }
+}

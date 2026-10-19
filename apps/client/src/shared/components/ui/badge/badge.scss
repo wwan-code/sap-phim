@@ -1,0 +1,370 @@
+/**
+ * @file badge.scss
+ * @module Components/UI/Badge/Styles
+ * @description SCSS styles cho Badge component (chuẩn BEM, Material 3 Expressive, Anchored Placement, Pulse Animation và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. WRAPPER BLOCK (.badge-wrapper)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.badge-wrapper {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  flex-shrink: 0;
+
+  // Khi badge nằm trong wrapper (Anchored Mode)
+  > .badge {
+    position: absolute;
+    z-index: var(--sp-z-docked, 10);
+    box-shadow: 0 0 0 2px var(--sp-color-surface-base, #07080A);
+    pointer-events: none;
+    animation: sp-badge-pop 0.16s var(--sp-motion-easing-neural) forwards;
+
+    // ─── Rectangular Placements ─────────────────────────────────────────────
+    &.badge--pos-top-right {
+      top: 0;
+      right: 0;
+      transform: translate(50%, -50%);
+      transform-origin: 100% 0%;
+    }
+
+    &.badge--pos-top-left {
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      transform-origin: 0% 0%;
+    }
+
+    &.badge--pos-bottom-right {
+      bottom: 0;
+      right: 0;
+      transform: translate(50%, 50%);
+      transform-origin: 100% 100%;
+    }
+
+    &.badge--pos-bottom-left {
+      bottom: 0;
+      left: 0;
+      transform: translate(-50%, 50%);
+      transform-origin: 0% 100%;
+    }
+
+    // ─── Circular Overlap Offsets (Dành cho Avatar hình tròn) ────────────────
+    &.badge--overlap-circular {
+      &.badge--pos-top-right {
+        top: 14%;
+        right: 14%;
+      }
+
+      &.badge--pos-top-left {
+        top: 14%;
+        left: 14%;
+      }
+
+      &.badge--pos-bottom-right {
+        bottom: 14%;
+        right: 14%;
+      }
+
+      &.badge--pos-bottom-left {
+        bottom: 14%;
+        left: 14%;
+      }
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. MAIN BADGE BLOCK (.badge)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.badge {
+  // ─── Design Tokens Mapped ──────────────────────────────────────────────────
+  --badge-bg: var(--sp-color-surface-container-highest);
+  --badge-color: var(--sp-color-text-primary);
+  --badge-border: transparent;
+  --badge-height: 22px;
+  --badge-padding-x: var(--sp-space-2, 8px);
+  --badge-font-size: var(--sp-font-caption);
+  --badge-dot-size: 8px;
+  --badge-pulse-color: var(--sp-color-brand-primary);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sp-font-body);
+  font-weight: var(--sp-font-weight-bold);
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  border: 1px solid var(--badge-border);
+  background-color: var(--badge-bg);
+  color: var(--badge-color);
+  transition:
+    transform var(--sp-transition-fast) var(--sp-motion-easing-neural),
+    opacity var(--sp-transition-fast),
+    background-color var(--sp-transition-fast);
+
+  &--standalone {
+    animation: sp-badge-pop 0.16s var(--sp-motion-easing-neural) forwards;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3. TYPES (Dot, Count, Label)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--type-dot {
+    width: var(--badge-dot-size);
+    height: var(--badge-dot-size);
+    min-width: var(--badge-dot-size);
+    border-radius: var(--sp-radius-full, 9999px) !important;
+    padding: 0 !important;
+  }
+
+  &--type-count {
+    min-width: var(--badge-height);
+    height: var(--badge-height);
+    padding: 0 var(--sp-space-1_5, 6px);
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-micro);
+  }
+
+  &--type-label {
+    height: var(--badge-height);
+    padding: 0 var(--badge-padding-x);
+    font-size: var(--badge-font-size);
+    gap: var(--sp-space-1, 4px);
+  }
+
+  &__icon-wrapper {
+    @include flex-center;
+    line-height: 0;
+
+    svg {
+      width: 1.15em;
+      height: 1.15em;
+      flex-shrink: 0;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 4. SHAPES (Radius)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--radius-full {
+    border-radius: var(--sp-radius-full, 9999px);
+  }
+
+  &--radius-rounded {
+    border-radius: var(--sp-radius-sm, 6px);
+  }
+
+  &--radius-square {
+    border-radius: var(--sp-radius-none, 0px);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 5. SIZES (Small: 18px, Medium: 22px, Large: 26px)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--size-small {
+    --badge-height: 18px;
+    --badge-padding-x: 6px;
+    --badge-font-size: 11px;
+    --badge-dot-size: 6px;
+  }
+
+  &--size-medium {
+    --badge-height: 22px;
+    --badge-padding-x: 8px;
+    --badge-font-size: var(--sp-font-caption);
+    --badge-dot-size: 8px;
+  }
+
+  &--size-large {
+    --badge-height: 26px;
+    --badge-padding-x: 10px;
+    --badge-font-size: var(--sp-font-body-sm);
+    --badge-dot-size: 10px;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 6. VARIANTS (Material 3 Tonal Color Architecture & Cinema Dark Mode)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--variant-primary {
+    --badge-bg: rgba(229, 9, 20, 0.14);
+    --badge-color: #ff4d55;
+    --badge-border: rgba(229, 9, 20, 0.3);
+    --badge-pulse-color: var(--sp-color-brand-primary);
+
+    .badge-wrapper > & {
+      --badge-bg: var(--sp-color-brand-primary);
+      --badge-color: var(--sp-color-on-primary, #FFFFFF);
+      --badge-border: transparent;
+    }
+  }
+
+  &--variant-accent {
+    --badge-bg: rgba(124, 93, 250, 0.15);
+    --badge-color: #a78bfa;
+    --badge-border: rgba(124, 93, 250, 0.3);
+    --badge-pulse-color: var(--sp-color-brand-accent);
+
+    .badge-wrapper > & {
+      --badge-bg: var(--sp-color-brand-accent);
+      --badge-color: var(--sp-color-on-primary, #FFFFFF);
+      --badge-border: transparent;
+    }
+  }
+
+  &--variant-success {
+    --badge-bg: rgba(16, 185, 129, 0.12);
+    --badge-color: #34d399;
+    --badge-border: rgba(16, 185, 129, 0.25);
+    --badge-pulse-color: var(--sp-color-status-success);
+
+    .badge-wrapper > & {
+      --badge-bg: var(--sp-color-status-success);
+      --badge-color: #FFFFFF;
+      --badge-border: transparent;
+    }
+  }
+
+  &--variant-warning {
+    --badge-bg: rgba(245, 158, 11, 0.12);
+    --badge-color: #fbbf24;
+    --badge-border: rgba(245, 158, 11, 0.25);
+    --badge-pulse-color: var(--sp-color-status-warning);
+
+    .badge-wrapper > & {
+      --badge-bg: var(--sp-color-status-warning);
+      --badge-color: var(--sp-color-surface-base, #07080A);
+      --badge-border: transparent;
+    }
+  }
+
+  &--variant-error {
+    --badge-bg: rgba(239, 68, 68, 0.12);
+    --badge-color: #f87171;
+    --badge-border: rgba(239, 68, 68, 0.25);
+    --badge-pulse-color: var(--sp-color-status-error);
+
+    .badge-wrapper > & {
+      --badge-bg: var(--sp-color-status-error);
+      --badge-color: #FFFFFF;
+      --badge-border: transparent;
+    }
+  }
+
+  &--variant-info {
+    --badge-bg: rgba(59, 130, 246, 0.12);
+    --badge-color: #60a5fa;
+    --badge-border: rgba(59, 130, 246, 0.25);
+    --badge-pulse-color: var(--sp-color-status-info);
+
+    .badge-wrapper > & {
+      --badge-bg: var(--sp-color-status-info);
+      --badge-color: #FFFFFF;
+      --badge-border: transparent;
+    }
+  }
+
+  &--variant-premium {
+    background: linear-gradient(135deg, #FFB800, #FF5500) !important;
+    color: #07080A !important;
+    font-weight: var(--sp-font-weight-extrabold);
+    letter-spacing: 0.04em;
+    box-shadow: 0 2px 10px rgba(255, 184, 0, 0.4);
+    --badge-pulse-color: #FFB800;
+  }
+
+  &--variant-neutral,
+  &--variant-default {
+    --badge-bg: var(--sp-color-surface-container-high);
+    --badge-color: var(--sp-color-text-secondary);
+    --badge-border: var(--sp-border-subtle);
+    --badge-pulse-color: var(--sp-color-text-secondary);
+  }
+
+  &--variant-outline {
+    --badge-bg: transparent;
+    --badge-color: var(--sp-color-text-primary);
+    --badge-border: var(--sp-border-strong);
+    --badge-pulse-color: var(--sp-color-brand-primary);
+  }
+
+  &--variant-muted {
+    --badge-bg: rgba(255, 255, 255, 0.04);
+    --badge-color: var(--sp-color-text-muted);
+    --badge-border: var(--sp-border-subtle);
+    --badge-pulse-color: var(--sp-color-text-muted);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 7. PULSE ANIMATION (Radar Pulse Ripple)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--pulse {
+    position: relative;
+
+    &.badge--type-dot::after,
+    .badge-wrapper &::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      border: 1.5px solid var(--badge-pulse-color);
+      animation: sp-badge-pulse-ring 1.8s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+      pointer-events: none;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. KEYFRAMES
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes sp-badge-pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sp-badge-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 9. ACCESSIBILITY: REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-wrapper > .badge,
+  .badge,
+  .badge--pulse::after {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,494 @@
+/**
+ * @file job-progress-widget.scss
+ * @module Widgets/JobProgressWidget/Styles
+ * @description SCSS styles cho JobProgressWidget — Material 3 Expressive, Solid Tonal Layers,
+ *              Neural Motion, 100% Design Tokens (--sp-*), BEM Convention. Zero glassmorphism.
+ *              Đã được refactor sang dạng Stacked List.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// KEYFRAMES
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-indicator {
+  0% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(229, 9, 20, 0.7); }
+  70% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 4px rgba(229, 9, 20, 0); }
+  100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(229, 9, 20, 0); }
+}
+
+@keyframes widget-float-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ROOT WIDGET CONTAINER
+// ─────────────────────────────────────────────────────────────────────────────
+
+.job-progress-widget {
+  @include surface('container-low');
+  border-radius: var(--sp-radius-lg);
+  border: 1px solid var(--sp-border-subtle);
+  box-shadow: var(--sp-elevation-2);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  @include transition-normal(border-color, box-shadow, transform, opacity);
+
+  // ── Floating Mode Modifier ──────────────────────────────────────────────
+  &--floating {
+    position: fixed;
+    bottom: var(--sp-space-6, 24px);
+    right: var(--sp-space-6, 24px);
+    z-index: 900;
+    width: 380px;
+    max-width: calc(100vw - 48px);
+    box-shadow: var(--sp-shadow-modal);
+    animation: widget-float-in var(--sp-motion-duration-slow, 350ms) var(--sp-motion-easing-neural) forwards;
+    background-color: var(--sp-color-surface-container-high); // Giống sap-anime
+    border: 1px solid var(--sp-border-strong);
+
+    @include responsive(mobile) {
+      bottom: var(--sp-space-4, 16px);
+      right: var(--sp-space-4, 16px);
+      left: var(--sp-space-4, 16px);
+      width: auto;
+      max-width: none;
+    }
+  }
+
+  // ── Minimized Pill Modifier ─────────────────────────────────────────────
+  &--minimized {
+    border-radius: var(--sp-radius-full);
+    width: auto;
+    max-width: 380px;
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-strong);
+    padding: var(--sp-space-2) var(--sp-space-3);
+
+    @include responsive(mobile) {
+      left: auto;
+      right: var(--sp-space-3, 12px);
+      bottom: var(--sp-space-3, 12px);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MINIMIZED PILL VIEW
+// ─────────────────────────────────────────────────────────────────────────────
+
+.job-progress-widget__minimized-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-space-3);
+  width: 100%;
+}
+
+.job-progress-widget__minimized-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2);
+  min-width: 0;
+  flex: 1;
+}
+
+.job-progress-widget__minimized-title {
+  @include typography('caption');
+  font-weight: var(--sp-font-weight-semibold);
+  color: var(--sp-color-text-primary);
+  @include text-truncate(1);
+  flex: 1;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HEADER
+// ─────────────────────────────────────────────────────────────────────────────
+
+.job-progress-widget__header {
+  @include flex-between;
+  gap: var(--sp-space-3);
+  padding: var(--sp-space-3) var(--sp-space-4);
+  border-bottom: 1px solid var(--sp-border-subtle);
+  background-color: var(--sp-color-surface-container-highest);
+  @include transition-fast(background-color);
+
+  &:hover {
+    background-color: var(--sp-state-hover);
+  }
+}
+
+.job-progress-widget__header-content {
+  @include flex-column;
+  gap: var(--sp-space-1);
+  min-width: 0;
+  flex: 1;
+}
+
+.job-progress-widget__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2);
+  min-width: 0;
+}
+
+.job-progress-widget__pulse-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--sp-color-brand-primary);
+  animation: pulse-indicator 2s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+.job-progress-widget__title {
+  @include typography('body-sm');
+  font-weight: var(--sp-font-weight-semibold);
+  color: var(--sp-color-text-primary);
+  @include text-truncate(1);
+  min-width: 0;
+  flex: 1;
+}
+
+.job-progress-widget__reconnect-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-1);
+  @include typography('micro');
+  color: var(--sp-color-status-warning);
+  font-weight: var(--sp-font-weight-medium);
+
+  svg { flex-shrink: 0; }
+}
+
+.job-progress-widget__header-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.job-progress-widget__action-btn {
+  @include flex-center;
+  @include focus-ring(var(--sp-color-brand-accent), 2px);
+  width: var(--sp-space-6, 24px);
+  height: var(--sp-space-6, 24px);
+  border-radius: var(--sp-radius-full);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--sp-color-text-secondary);
+  cursor: pointer;
+  @include transition-fast(background-color, border-color, color);
+
+  &:hover {
+    background-color: var(--sp-state-hover);
+    color: var(--sp-color-text-primary);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BODY (Stacked List)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.job-progress-widget__body {
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
+  overflow-y: auto;
+  
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--sp-border-strong);
+    border-radius: var(--sp-radius-full);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// JOB ITEM
+// ─────────────────────────────────────────────────────────────────────────────
+
+.job-progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-2);
+  padding: var(--sp-space-3) var(--sp-space-4);
+  border-bottom: 1px solid var(--sp-border-subtle);
+  background-color: transparent;
+  @include transition-normal(background-color);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  // Token Override per status
+  --_item-color: var(--sp-color-brand-primary);
+  
+  &--error {
+    --_item-color: var(--sp-color-status-error);
+    background-color: rgba(239, 68, 68, 0.05);
+  }
+
+  &--completed {
+    --_item-color: var(--sp-color-status-success);
+    background-color: rgba(16, 185, 129, 0.08);
+    border-left: 3px solid var(--sp-color-status-success);
+  }
+}
+
+.job-progress-item__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-space-3);
+}
+
+.job-progress-item__title {
+  @include typography('caption');
+  font-weight: var(--sp-font-weight-semibold);
+  color: var(--sp-color-text-primary);
+  @include text-truncate(1);
+  flex: 1;
+}
+
+.job-progress-item__percentage {
+  @include typography('micro');
+  font-weight: var(--sp-font-weight-bold);
+  color: var(--_item-color);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.job-progress-item__track {
+  width: 100%;
+  height: 4px;
+  background-color: var(--sp-color-surface-container-high);
+  border-radius: var(--sp-radius-full);
+  overflow: hidden;
+}
+
+.job-progress-item__fill {
+  height: 100%;
+  border-radius: var(--sp-radius-full);
+  background-color: var(--_item-color);
+  min-width: 2px;
+}
+
+.job-progress-item__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-space-2);
+}
+
+.job-progress-item__stage {
+  @include typography('micro');
+  color: var(--sp-color-text-muted);
+  @include text-truncate(1);
+}
+
+.job-progress-item__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-2);
+  flex-shrink: 0;
+}
+
+.job-progress-item__open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-1);
+  padding: 2px var(--sp-space-2);
+  border-radius: var(--sp-radius-sm);
+  background-color: var(--sp-color-surface-container-high);
+  border: 1px solid var(--sp-border-subtle);
+  color: var(--sp-color-brand-accent);
+  font-family: var(--sp-font-body);
+  font-size: var(--sp-font-micro);
+  font-weight: var(--sp-font-weight-medium);
+  cursor: pointer;
+  @include transition-fast(background-color, border-color, color);
+
+  &:hover {
+    background-color: var(--sp-color-brand-accent);
+    color: var(--sp-color-on-primary);
+    border-color: var(--sp-color-brand-accent);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.job-progress-item__dismiss-btn {
+  @include flex-center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--sp-radius-full);
+  background: transparent;
+  border: none;
+  color: var(--sp-color-text-muted);
+  cursor: pointer;
+  @include transition-fast(color, background-color);
+
+  &:hover {
+    background-color: var(--sp-state-hover);
+    color: var(--sp-color-status-error);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FAILURES & ACTIONS (Giữ nguyên cấu trúc)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.job-progress-item__failures-wrap {
+  margin-top: var(--sp-space-1);
+}
+
+.job-progress-widget__failures {
+  @include flex-column;
+  gap: var(--sp-space-2);
+  background-color: var(--sp-color-surface-container);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--sp-radius-md);
+  overflow: hidden;
+}
+
+.job-progress-widget__failures-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2);
+  width: 100%;
+  padding: var(--sp-space-2) var(--sp-space-3);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  @include typography('caption');
+  color: var(--sp-color-status-error);
+  font-weight: var(--sp-font-weight-semibold);
+  text-align: left;
+  @include transition-fast(background-color);
+
+  >span { flex: 1; }
+
+  &:hover { background-color: var(--sp-state-hover); }
+  &[aria-expanded='true'] {
+    background-color: rgba(239, 68, 68, 0.06);
+    border-bottom: 1px solid rgba(239, 68, 68, 0.15);
+  }
+}
+
+.job-progress-widget__copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-1);
+  padding: 2px var(--sp-space-2);
+  border-radius: var(--sp-radius-sm);
+  background-color: var(--sp-color-surface-container-high);
+  border: 1px solid var(--sp-border-subtle);
+  color: var(--sp-color-text-secondary);
+  cursor: pointer;
+  @include typography('micro');
+
+  &:hover {
+    background-color: var(--sp-color-surface-container-highest);
+    color: var(--sp-color-text-primary);
+    border-color: var(--sp-border-strong);
+  }
+}
+
+.job-progress-widget__failures-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-space-2) var(--sp-space-3) var(--sp-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-2);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.job-progress-widget__failure-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-space-2);
+}
+
+.job-progress-widget__failure-item-icon {
+  color: var(--sp-color-status-error);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.job-progress-widget__failure-item-content {
+  @include flex-column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.job-progress-widget__failure-type {
+  @include typography('micro');
+  font-weight: var(--sp-font-weight-semibold);
+  color: var(--sp-color-status-error);
+  text-transform: uppercase;
+}
+
+.job-progress-widget__failure-message {
+  @include typography('caption');
+  color: var(--sp-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.job-progress-widget__failure-file {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-font-micro);
+  color: var(--sp-color-text-muted);
+  background-color: var(--sp-color-surface-container-high);
+  padding: 1px var(--sp-space-1);
+  border-radius: var(--sp-radius-xs);
+  border: 1px solid var(--sp-border-subtle);
+  overflow-wrap: anywhere;
+}
+
+.job-progress-item__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-space-2);
+  padding-top: var(--sp-space-1);
+}
+
+.job-progress-item__native-progress {
+  display: block;
+  width: 100%;
+  height: var(--sp-space-1);
+  appearance: none;
+  border: 0;
+  overflow: hidden;
+  border-radius: var(--sp-radius-full);
+  background: var(--sp-color-surface-container-highest);
+  accent-color: var(--sp-color-brand-primary);
+  &::-webkit-progress-bar { background: var(--sp-color-surface-container-highest); }
+  &::-webkit-progress-value { background: var(--sp-color-brand-primary); transition: width var(--sp-motion-duration-slow) var(--sp-motion-easing-neural); }
+  &::-moz-progress-bar { background: var(--sp-color-brand-primary); }
+}
+.job-progress-item__error-message { color: var(--sp-color-status-error); font-size: var(--sp-font-caption); margin: var(--sp-space-2) 0 0; }
+@media (prefers-reduced-motion: reduce) { .job-progress-item__native-progress::-webkit-progress-value { transition: none; } }

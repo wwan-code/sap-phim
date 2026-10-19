@@ -1,0 +1,288 @@
+/**
+ * @file _variables.scss
+ * @module Styles/Abstract/Variables
+ * @description Sạp Phim Design System - Semantic CSS Custom Properties (The Aesthetic OS).
+ * Hỗ trợ Dual-Theme: Dark Mode (Obsidian Cinema) & Light Mode (Material 3 Expressive).
+ * Toàn bộ biến tuân thủ tiền tố: --sp-*
+ */
+
+:root,
+[data-theme='dark'] {
+    /* ==========================================================================
+     1. COLOR TOKENS - DARK THEME (True OLED / Jet Black & M3 Tonal Palette)
+     ========================================================================== */
+
+    /* Surface Hierarchy (True OLED Pitch Black & Neutral Grayscale Containers) */
+    --sp-color-surface-dim: #000000;
+    --sp-color-surface-base: #000000;
+    --sp-color-surface: #000000;
+    --sp-color-surface-bright: #2C2C2C;
+    --sp-color-surface-elevated: #141414;
+    --sp-color-surface-container-lowest: #000000;
+    --sp-color-surface-container-low: #0C0C0C;
+    --sp-color-surface-container: #141414;
+    --sp-color-surface-container-high: #1C1C1C;
+    --sp-color-surface-container-highest: #262626;
+
+    /* Interactive Surface States */
+    --sp-color-surface-hover: #1C1C1C;
+    --sp-color-surface-active: #262626;
+
+    /* Text & Semantic Contrast (Luminescent Soft White) */
+    --sp-color-text-primary: #F5F5F7;
+    --sp-color-text-secondary: #A1A1A6;
+    --sp-color-text-muted: #6E6E73;
+    --sp-color-text-inverse: #000000;
+    --sp-color-on-surface: #F5F5F7;
+    --sp-color-on-surface-variant: #A1A1A6;
+    --sp-color-on-primary: #FFFFFF;
+
+    /* Structural Outlines & Borders */
+    --sp-color-outline: #86868B;
+    --sp-color-outline-variant: #2E2E32;
+    --sp-border-subtle: color-mix(in srgb, #F5F5F7 8%, transparent);
+    --sp-border-strong: color-mix(in srgb, #F5F5F7 16%, transparent);
+    --sp-border-focus: var(--sp-color-brand-primary);
+
+    /* State Layer Opacities (Material 3 State Standard) */
+    --sp-state-hover: rgba(245, 245, 247, 0.06);
+    --sp-state-focus: rgba(245, 245, 247, 0.10);
+    --sp-state-active: rgba(245, 245, 247, 0.14);
+    --sp-state-dragged: rgba(245, 245, 247, 0.18);
+
+    /* Brand & Accent */
+    --sp-color-brand-primary: #E50914;
+    --sp-color-brand-primary-hover: #FF1E27;
+    --sp-color-brand-accent: #7C5DFA;
+    --sp-color-brand-accent-hover: #9277FF;
+    --sp-color-brand-surface: rgba(124, 93, 250, 0.12);
+    --sp-border-active: #3f3f46;
+
+    /* Neural AI & Ambient Glow */
+    --sp-color-ai-glow: rgba(124, 93, 250, 0.45);
+    --sp-color-ai-pulse: #00F5D4;
+    --sp-ambient-primary: 124, 93, 250;
+    --sp-ambient-secondary: 229, 9, 20;
+
+    /* Status Colors */
+    --sp-color-status-success: #10B981;
+    --sp-color-status-warning: #F59E0B;
+    --sp-color-status-error: #EF4444;
+    --sp-color-status-info: #3B82F6;
+    --sp-color-rating-star: #FFB800;
+
+    /* Overlays & Cinematic Gradients */
+    --sp-overlay-scrim-dark: rgba(0, 0, 0, 0.92);
+    --sp-overlay-scrim-medium: rgba(0, 0, 0, 0.70);
+    --sp-overlay-scrim-light: rgba(0, 0, 0, 0.40);
+    --sp-overlay-hero-gradient: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.75) 60%, #000000 100%);
+    --sp-overlay-glass: rgba(20, 20, 20, 0.80);
+
+    /* Elevation & Soft Shadows */
+    --sp-shadow-flat: 0 2px 8px rgba(0, 0, 0, 0.60);
+    --sp-shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.80);
+    --sp-shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.95);
+    --sp-shadow-float: 0 16px 40px -10px rgba(0, 0, 0, 0.5);
+    --sp-shadow-glow-brand: 0 0 24px rgba(229, 9, 20, 0.45);
+    --sp-shadow-glow-ambient: 0 0 32px rgba(124, 93, 250, 0.38);
+    --sp-shadow-glow-ai-pulse: 0 0 28px rgba(0, 245, 212, 0.45);
+
+    --sp-elevation-0: none;
+    --sp-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.25), 0 1px 2px 0 rgba(0, 0, 0, 0.40);
+    --sp-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.25), 0 1px 2px 0 rgba(0, 0, 0, 0.40);
+    --sp-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.28), 0 1px 3px 0 rgba(0, 0, 0, 0.45);
+    --sp-elevation-4: 0 6px 12px 4px rgba(0, 0, 0, 0.30), 0 2px 4px 0 rgba(0, 0, 0, 0.50);
+
+    /* ==========================================================================
+     2. SHARED TYPOGRAPHY TOKENS
+     ========================================================================== */
+    --sp-font-display: 'Sora', 'Outfit', system-ui, -apple-system, sans-serif;
+    --sp-font-body: 'Plus Jakarta Sans', 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+    --sp-font-mono: 'JetBrains Mono', monospace;
+
+    --sp-font-weight-regular: 400;
+    --sp-font-weight-medium: 500;
+    --sp-font-weight-semibold: 600;
+    --sp-font-weight-bold: 700;
+    --sp-font-weight-extrabold: 800;
+
+    --sp-font-display-hero: clamp(2.5rem, 5vw + 1rem, 4.5rem);
+    --sp-font-display-h1: clamp(2rem, 3.5vw + 0.8rem, 3.2rem);
+    --sp-font-display-h2: clamp(1.5rem, 2.5vw + 0.5rem, 2.2rem);
+    --sp-font-heading-h3: clamp(1.25rem, 1.8vw + 0.4rem, 1.6rem);
+    --sp-font-heading-h4: clamp(1.125rem, 1.2vw + 0.35rem, 1.375rem);
+    --sp-font-body-lg: 1.125rem;
+    --sp-font-body-md: 1rem;
+    --sp-font-body-sm: 0.875rem;
+    --sp-font-caption: 0.75rem;
+    --sp-font-micro: 0.6875rem;
+
+    --sp-line-height-tight: 1.15;
+    --sp-line-height-heading: 1.25;
+    --sp-line-height-normal: 1.5;
+    --sp-line-height-relaxed: 1.65;
+
+    /* ==========================================================================
+     3. SPATIAL & SPACING TOKENS (Material 3 Grid & Layout)
+     ========================================================================== */
+    --sp-space-0: 0px;
+    --sp-space-1: 4px;
+    --sp-space-2: 8px;
+    --sp-space-3: 12px;
+    --sp-space-4: 16px;
+    --sp-space-5: 20px;
+    --sp-space-6: 24px;
+    --sp-space-7: 28px;
+    --sp-space-8: 32px;
+    --sp-space-9: 36px;
+    --sp-space-10: 40px;
+    --sp-space-11: 44px;
+    --sp-space-12: 48px;
+    --sp-space-13: 52px;
+    --sp-space-14: 56px;
+    --sp-space-15: 60px;
+    --sp-space-16: 64px;
+    --sp-space-17: 68px;
+    --sp-space-18: 72px;
+    --sp-space-19: 76px;
+    --sp-space-20: 80px;
+    --sp-space-24: 96px;
+
+    --sp-radius-none: 0px;
+    --sp-radius-xs: 4px;
+    --sp-radius-sm: 6px;
+    --sp-radius-md: 12px;
+    --sp-radius-lg: 18px;
+    --sp-radius-xl: 28px;
+    --sp-radius-full: 9999px;
+
+    /* Layout Constraints */
+    --sp-container-max-width: 1900px;
+    --sp-container-padding: 24px;
+    --sp-container-padding-mobile: 16px;
+
+    /* Z-Index Hierarchy */
+    --sp-z-deep: -1;
+    --sp-z-base: 0;
+    --sp-z-docked: 10;
+    --sp-z-sticky: 100;
+    --sp-z-header: 500;
+    --sp-z-overlay: 800;
+    --sp-z-modal: 1000;
+    --sp-z-toast: 1200;
+    --sp-z-tooltip: 1400;
+
+    /* ==========================================================================
+     4. NEURAL MOTION & ANIMATION TOKENS
+     ========================================================================== */
+    --sp-motion-easing-neural: cubic-bezier(0.16, 1, 0.3, 1);
+    --sp-motion-easing-cinematic: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --sp-motion-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --sp-motion-easing-invisible: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sp-motion-duration-fast: 150ms;
+    --sp-motion-duration-medium: 250ms;
+    --sp-motion-duration-slow: 400ms;
+    --sp-motion-duration-cinematic: 800ms;
+
+    --sp-transition-fast: var(--sp-motion-duration-fast) var(--sp-motion-easing-invisible);
+    --sp-transition-normal: var(--sp-motion-duration-medium) var(--sp-motion-easing-invisible);
+    --sp-transition-expressive: var(--sp-motion-duration-slow) var(--sp-motion-easing-neural);
+}
+
+/* ==========================================================================
+   LIGHT THEME OVERRIDES (Material 3 Expressive Tonal Hierarchy)
+   Triggered via [data-theme='light']
+   ========================================================================== */
+[data-theme='light'] {
+    /* Surface Hierarchy (Slate-Tinted M3 Tonal Palette) */
+    --sp-color-surface-dim: #D8DCED;
+    --sp-color-surface-base: #F8F9FD;
+    --sp-color-surface: #F8F9FD;
+    --sp-color-surface-bright: #FFFFFF;
+    --sp-color-surface-elevated: #FFFFFF;
+    --sp-color-surface-container-lowest: #FFFFFF;
+    --sp-color-surface-container-low: #F1F3F9;
+    --sp-color-surface-container: #E8EBF2;
+    --sp-color-surface-container-high: #E2E6EF;
+    --sp-color-surface-container-highest: #DFE3EC;
+
+    /* Interactive Surface States */
+    --sp-color-surface-hover: #E2E6EF;
+    --sp-color-surface-active: #D5DCED;
+
+    /* Text & Semantic Contrast (M3 Slate Contrast) */
+    --sp-color-text-primary: #141724;
+    --sp-color-text-secondary: #45495D;
+    --sp-color-text-muted: #71768E;
+    --sp-color-text-inverse: #EFF0FC;
+    --sp-color-on-surface: #141724;
+    --sp-color-on-surface-variant: #45495D;
+    --sp-color-on-primary: #FFFFFF;
+
+    /* Structural Outlines & Borders */
+    --sp-color-outline: #757A90;
+    --sp-color-outline-variant: #C5C8DA;
+    --sp-border-subtle: color-mix(in srgb, #141724 10%, transparent);
+    --sp-border-strong: color-mix(in srgb, #141724 18%, transparent);
+    --sp-border-focus: var(--sp-color-brand-primary);
+
+    /* State Layer Opacities */
+    --sp-state-hover: rgba(20, 23, 36, 0.05);
+    --sp-state-focus: rgba(20, 23, 36, 0.10);
+    --sp-state-active: rgba(20, 23, 36, 0.12);
+    --sp-state-dragged: rgba(20, 23, 36, 0.15);
+
+    /* Brand & Accent (Calibrated for Light Backgrounds) */
+    --sp-color-brand-primary: #E50914;
+    --sp-color-brand-primary-hover: #C80711;
+    --sp-color-brand-accent: #6C47FF;
+    --sp-color-brand-accent-hover: #5A32EE;
+    --sp-color-brand-surface: rgba(108, 71, 255, 0.1);
+    --sp-border-active: #C5C8DA;
+
+    /* Status Colors (Accessible Contrast on Light Surfaces) */
+    --sp-color-status-success: #059669;
+    --sp-color-status-warning: #D97706;
+    --sp-color-status-error: #DC2626;
+    --sp-color-status-info: #2563EB;
+    --sp-color-rating-star: #E59800;
+
+    /* Overlays & Light Gradients */
+    --sp-overlay-scrim-dark: rgba(20, 23, 36, 0.65);
+    --sp-overlay-scrim-medium: rgba(20, 23, 36, 0.40);
+    --sp-overlay-scrim-light: rgba(20, 23, 36, 0.15);
+    --sp-overlay-hero-gradient: linear-gradient(180deg, rgba(248, 249, 253, 0) 0%, rgba(248, 249, 253, 0.75) 60%, #F8F9FD 100%);
+    --sp-overlay-glass: rgba(255, 255, 255, 0.85);
+
+    /* Elevation & Soft Ambient Shadows (Slate-Diffused Light Theme) */
+    --sp-shadow-flat: 0 1px 3px rgba(20, 23, 36, 0.06), 0 1px 2px rgba(20, 23, 36, 0.03);
+    --sp-shadow-elevated: 0 4px 16px rgba(20, 23, 36, 0.08), 0 2px 6px rgba(20, 23, 36, 0.04);
+    --sp-shadow-modal: 0 12px 36px rgba(20, 23, 36, 0.12), 0 4px 12px rgba(20, 23, 36, 0.06);
+    --sp-shadow-float: 0 12px 32px -8px rgba(20, 23, 36, 0.15);
+    --sp-shadow-glow-brand: 0 0 20px rgba(229, 9, 20, 0.20);
+    --sp-shadow-glow-ambient: 0 0 25px rgba(108, 71, 255, 0.18);
+    --sp-shadow-glow-ai-pulse: 0 0 20px rgba(0, 150, 136, 0.22);
+
+    --sp-elevation-0: none;
+    --sp-elevation-1: 0 1px 3px 0 rgba(20, 23, 36, 0.08), 0 1px 2px -1px rgba(20, 23, 36, 0.06);
+    --sp-elevation-2: 0 3px 6px -1px rgba(20, 23, 36, 0.10), 0 2px 4px -2px rgba(20, 23, 36, 0.05);
+    --sp-elevation-3: 0 8px 16px -2px rgba(20, 23, 36, 0.10), 0 4px 6px -4px rgba(20, 23, 36, 0.05);
+    --sp-elevation-4: 0 16px 24px -2px rgba(20, 23, 36, 0.12), 0 6px 10px -4px rgba(20, 23, 36, 0.05);
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+
+    :root,
+    [data-theme='dark'],
+    [data-theme='light'] {
+        --sp-motion-duration-fast: 0ms;
+        --sp-motion-duration-medium: 0ms;
+        --sp-motion-duration-slow: 0ms;
+        --sp-motion-duration-cinematic: 0ms;
+        --sp-transition-fast: 0ms;
+        --sp-transition-normal: 0ms;
+        --sp-transition-expressive: 0ms;
+    }
+}

@@ -1,0 +1,133 @@
+/**
+ * @file bottom-nav.scss
+ * @module Components/Layout/BottomNav/BottomNavStyles
+ * @description SCSS styles cho Bottom Navigation trên thiết bị di động chuẩn Material 3 Expressive, Solid Tonal Surface, Full Pill Badge Navigation và Tokens --sp-*.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.app-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: calc(var(--sp-space-16, 64px) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: var(--sp-z-sticky, 100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Solid Tonal Surface (100% Không Glassmorphism) */
+  background-color: var(--sp-color-surface-container-low, #0E1017);
+  border-top: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  box-shadow: var(--sp-shadow-elevated);
+
+  @include responsive(md-up) {
+    display: none;
+  }
+
+  &__list {
+    display: flex;
+    width: 100%;
+    height: var(--sp-space-16, 64px);
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 var(--sp-space-3);
+    list-style: none;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    border-radius: var(--sp-radius-full, 9999px);
+    color: var(--sp-color-text-secondary, #9499A8);
+    text-decoration: none;
+    position: relative;
+    background-color: transparent;
+    transition: 
+      background-color var(--sp-transition-normal),
+      color var(--sp-transition-fast),
+      padding var(--sp-transition-normal),
+      transform var(--sp-transition-fast),
+      box-shadow var(--sp-transition-normal);
+    @include focus-ring;
+
+    &:active {
+      transform: scale(0.94);
+    }
+
+    /* Inactive State: Chỉ hiển thị Icon trong vùng tròn cảm ứng */
+    &:not(&--active) {
+      min-width: 44px;
+      padding: 0 var(--sp-space-3, 12px);
+
+      @media (hover: hover) {
+        &:hover {
+          color: var(--sp-color-text-primary, #F4F4F6);
+          background-color: var(--sp-state-hover, rgba(255, 255, 255, 0.06));
+        }
+      }
+
+      .app-bottom-nav__icon {
+        color: var(--sp-color-text-secondary, #9499A8);
+      }
+
+      .app-bottom-nav__label {
+        max-width: 0;
+        opacity: 0;
+        margin-left: 0;
+        pointer-events: none;
+      }
+    }
+
+    /* Active State: Full Pill Badge (Icon + Text nổi bật) */
+    &--active {
+      background-color: var(--sp-color-brand-primary, #E50914);
+      color: #FFFFFF;
+      padding: 0 var(--sp-space-4, 16px);
+      box-shadow: 0 4px 16px rgba(229, 9, 20, 0.35);
+
+      .app-bottom-nav__icon {
+        color: #FFFFFF;
+        transform: scale(1.05);
+      }
+
+      .app-bottom-nav__label {
+        max-width: 120px;
+        opacity: 1;
+        margin-left: var(--sp-space-2, 8px);
+        color: #FFFFFF;
+        font-weight: var(--sp-font-weight-bold, 700);
+      }
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    transition: color var(--sp-transition-fast), transform var(--sp-transition-fast);
+  }
+
+  &__label {
+    @include typography('body-sm');
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: 
+      max-width var(--sp-motion-duration-slow) var(--sp-motion-easing-neural),
+      opacity var(--sp-motion-duration-medium) var(--sp-motion-easing-neural),
+      margin-left var(--sp-motion-duration-slow) var(--sp-motion-easing-neural);
+  }
+}

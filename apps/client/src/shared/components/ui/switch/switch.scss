@@ -1,0 +1,418 @@
+/**
+ * @file switch.scss
+ * @module Components/UI/Switch/SwitchStyles
+ * @description SCSS styles cho Switch component (chuẩn BEM, Material 3 Expressive, Tokens --sp-*).
+ *              Tối ưu GPU — chỉ animate transform & opacity trên thumb/thumb-wrapper.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// =============================================================================
+// SWITCH WRAPPER (Label + Description Container)
+// =============================================================================
+.switch-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-3, 12px);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: middle;
+
+  &--placement-start {
+    flex-direction: row-reverse;
+  }
+
+  &--placement-top {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: var(--sp-space-1_5, 6px);
+  }
+
+  &--placement-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-space-1_5, 6px);
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.38;
+    pointer-events: none;
+  }
+
+  &--loading {
+    cursor: wait;
+  }
+
+  &:hover:not(.switch-wrapper--disabled):not(.switch-wrapper--loading) {
+    .switch__label {
+      color: var(--sp-color-text-primary);
+    }
+  }
+}
+
+.switch__label-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-0_5, 2px);
+}
+
+.switch__label {
+  @include typography('body-sm');
+  color: var(--sp-color-text-secondary);
+  line-height: var(--sp-line-height-tight, 1.2);
+  transition: color var(--sp-transition-fast);
+}
+
+.switch__description {
+  @include typography('caption');
+  color: var(--sp-color-text-muted);
+  line-height: var(--sp-line-height-normal, 1.4);
+}
+
+// =============================================================================
+// SWITCH CONTROL (Interactive Element)
+// =============================================================================
+.switch {
+  // Color Defaults
+  --sp-sw-color: var(--sp-color-brand-primary);
+  --sp-sw-track-bg-unchecked: var(--sp-color-surface-container-highest);
+  --sp-sw-track-border-unchecked: var(--sp-color-outline-variant);
+  --sp-sw-track-bg-checked: var(--sp-color-brand-primary);
+  --sp-sw-thumb-bg-unchecked: var(--sp-color-outline);
+  --sp-sw-thumb-bg-checked: var(--sp-color-on-primary, #ffffff);
+
+  // Medium (Default) Specifications
+  --sp-sw-width: 52px;
+  --sp-sw-height: 32px;
+  --sp-sw-padding: 4px;
+  --sp-sw-thumb-size: 24px;
+  --sp-sw-icon-size: 16px;
+  --sp-sw-thumb-scale-unchecked: 0.667; // 16px / 24px
+
+  // Travel Distance Calculation
+  --sp-sw-travel-distance: calc(var(--sp-sw-width) - var(--sp-sw-thumb-size) - (var(--sp-sw-padding) * 2));
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: var(--sp-sw-width);
+  height: var(--sp-sw-height);
+  flex-shrink: 0;
+  cursor: pointer;
+  vertical-align: middle;
+  box-sizing: border-box;
+  contain: layout style;
+  -webkit-tap-highlight-color: transparent;
+
+  // Touch Target Expander for Accessibility (Min 44x44px)
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    pointer-events: none;
+  }
+
+  // ---------------------------------------------------------------------------
+  // SIZES
+  // ---------------------------------------------------------------------------
+  &--size-small {
+    --sp-sw-width: 40px;
+    --sp-sw-height: 24px;
+    --sp-sw-padding: 3px;
+    --sp-sw-thumb-size: 18px;
+    --sp-sw-icon-size: 12px;
+    --sp-sw-thumb-scale-unchecked: 0.667; // 12px / 18px
+  }
+
+  &--size-large {
+    --sp-sw-width: 64px;
+    --sp-sw-height: 38px;
+    --sp-sw-padding: 4px;
+    --sp-sw-thumb-size: 30px;
+    --sp-sw-icon-size: 20px;
+    --sp-sw-thumb-scale-unchecked: 0.733; // 22px / 30px
+  }
+
+  // ---------------------------------------------------------------------------
+  // SEMANTIC COLOR VARIANTS
+  // ---------------------------------------------------------------------------
+  &--color-primary {
+    --sp-sw-color: var(--sp-color-brand-primary);
+    --sp-sw-track-bg-checked: var(--sp-color-brand-primary);
+    --sp-sw-thumb-bg-checked: var(--sp-color-on-primary, #ffffff);
+  }
+
+  &--color-accent,
+  &--color-secondary {
+    --sp-sw-color: var(--sp-color-brand-accent);
+    --sp-sw-track-bg-checked: var(--sp-color-brand-accent);
+    --sp-sw-thumb-bg-checked: var(--sp-color-on-primary, #ffffff);
+  }
+
+  &--color-success {
+    --sp-sw-color: var(--sp-color-status-success);
+    --sp-sw-track-bg-checked: var(--sp-color-status-success);
+    --sp-sw-thumb-bg-checked: var(--sp-color-on-primary, #ffffff);
+  }
+
+  &--color-warning {
+    --sp-sw-color: var(--sp-color-status-warning);
+    --sp-sw-track-bg-checked: var(--sp-color-status-warning);
+    --sp-sw-thumb-bg-checked: #07080A;
+  }
+
+  &--color-error,
+  &--color-danger {
+    --sp-sw-color: var(--sp-color-status-error);
+    --sp-sw-track-bg-checked: var(--sp-color-status-error);
+    --sp-sw-thumb-bg-checked: var(--sp-color-on-primary, #ffffff);
+  }
+
+  &--color-info {
+    --sp-sw-color: var(--sp-color-status-info);
+    --sp-sw-track-bg-checked: var(--sp-color-status-info);
+    --sp-sw-thumb-bg-checked: var(--sp-color-on-primary, #ffffff);
+  }
+
+  &--color-neutral,
+  &--color-default {
+    --sp-sw-color: var(--sp-color-text-primary);
+    --sp-sw-track-bg-checked: var(--sp-color-surface-bright);
+    --sp-sw-thumb-bg-checked: var(--sp-color-text-primary);
+  }
+
+  &--color-custom {
+    --sp-sw-color: var(--switch-custom-color);
+    --sp-sw-track-bg-checked: var(--switch-custom-color);
+    --sp-sw-thumb-bg-checked: #ffffff;
+  }
+
+  // ---------------------------------------------------------------------------
+  // NATIVE INPUT
+  // ---------------------------------------------------------------------------
+  &__input {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    opacity: 0;
+    cursor: inherit;
+
+    &:focus-visible + .switch__track {
+      outline: 2px solid var(--sp-border-focus, var(--sp-color-brand-primary));
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.25);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // TRACK
+  // ---------------------------------------------------------------------------
+  &__track {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: var(--sp-sw-track-bg-unchecked);
+    border: 2px solid var(--sp-sw-track-border-unchecked);
+    box-sizing: border-box;
+    will-change: background-color, border-color, box-shadow;
+    transition:
+      background-color var(--sp-transition-normal),
+      border-color var(--sp-transition-normal),
+      box-shadow var(--sp-transition-normal);
+  }
+
+  // ---------------------------------------------------------------------------
+  // THUMB WRAPPER & THUMB (GPU Optimized Motion)
+  // ---------------------------------------------------------------------------
+  &__thumb-wrapper {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--sp-sw-thumb-size) + (var(--sp-sw-padding) * 2));
+    height: 100%;
+    border-radius: var(--sp-radius-full, 9999px);
+    pointer-events: none;
+    will-change: transform;
+    transition: transform var(--sp-motion-duration-medium) var(--sp-motion-easing-neural);
+  }
+
+  &__thumb {
+    @include flex-center;
+    width: var(--sp-sw-thumb-size);
+    height: var(--sp-sw-thumb-size);
+    background-color: var(--sp-sw-thumb-bg-unchecked);
+    border-radius: var(--sp-radius-full, 9999px);
+    box-shadow: var(--sp-shadow-flat);
+    transform: scale(var(--sp-sw-thumb-scale-unchecked));
+    will-change: transform, background-color;
+    transition:
+      transform var(--sp-motion-duration-medium) var(--sp-motion-easing-neural),
+      background-color var(--sp-motion-duration-medium) var(--sp-motion-easing-neural);
+  }
+
+  // ---------------------------------------------------------------------------
+  // ICONS & LOADING SPINNER
+  // ---------------------------------------------------------------------------
+  &__icon-container {
+    @include flex-center;
+    width: 100%;
+    height: 100%;
+    color: var(--sp-sw-track-bg-unchecked);
+    transition: color var(--sp-transition-fast);
+  }
+
+  &__icon {
+    width: var(--sp-sw-icon-size);
+    height: var(--sp-sw-icon-size);
+    transition:
+      transform var(--sp-transition-fast),
+      opacity var(--sp-transition-fast);
+
+    &--unchecked {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    &--checked {
+      transform: scale(0);
+      opacity: 0;
+    }
+  }
+
+  &__spinner {
+    @include flex-center;
+    width: var(--sp-sw-icon-size);
+    height: var(--sp-sw-icon-size);
+    color: currentColor;
+    animation: spSpin 0.9s linear infinite;
+  }
+
+  // ===========================================================================
+  // CHECKED STATE
+  // ===========================================================================
+  &--checked {
+    .switch__track {
+      background-color: var(--sp-sw-track-bg-checked);
+      border-color: var(--sp-sw-track-bg-checked);
+      box-shadow: 0 0 16px color-mix(in srgb, var(--sp-sw-color) 35%, transparent);
+    }
+
+    .switch__thumb-wrapper {
+      transform: translateX(var(--sp-sw-travel-distance));
+    }
+
+    .switch__thumb {
+      transform: scale(1);
+      background-color: var(--sp-sw-thumb-bg-checked);
+    }
+
+    .switch__icon-container {
+      color: var(--sp-sw-color);
+    }
+
+    .switch__icon--unchecked {
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    .switch__icon--checked {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  // ===========================================================================
+  // ACTIVE / PRESSED STATE (M3 Elastic Stretch)
+  // ===========================================================================
+  &:active:not(.switch--disabled):not(.switch--loading) {
+    .switch__thumb {
+      transform: scale(1) scaleX(1.25);
+    }
+
+    &.switch--checked .switch__thumb-wrapper {
+      transform: translateX(var(--sp-sw-travel-distance)) translateX(-3px);
+    }
+  }
+
+  // ===========================================================================
+  // HOVER STATE
+  // ===========================================================================
+  @media (hover: hover) {
+    &:hover:not(.switch--disabled):not(.switch--loading) {
+      &:not(.switch--checked) {
+        .switch__track {
+          border-color: var(--sp-color-outline);
+        }
+
+        .switch__thumb {
+          background-color: var(--sp-color-text-primary);
+        }
+      }
+    }
+  }
+
+  // ===========================================================================
+  // FOCUS VISIBLE
+  // ===========================================================================
+  &--focus-visible {
+    .switch__track {
+      outline: 2px solid var(--sp-border-focus, var(--sp-color-brand-primary));
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.25);
+    }
+  }
+
+  // ===========================================================================
+  // LOADING STATE
+  // ===========================================================================
+  &--loading {
+    cursor: wait;
+    pointer-events: none;
+
+    .switch__thumb {
+      transform: scale(1);
+    }
+  }
+
+  // ===========================================================================
+  // DISABLED STATE
+  // ===========================================================================
+  &--disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.38;
+
+    .switch__track {
+      box-shadow: none !important;
+    }
+  }
+
+  // ===========================================================================
+  // REDUCED MOTION
+  // ===========================================================================
+  @media (prefers-reduced-motion: reduce) {
+    &__track,
+    &__thumb-wrapper,
+    &__thumb,
+    &__icon {
+      transition: none !important;
+    }
+  }
+}

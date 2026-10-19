@@ -1,0 +1,163 @@
+/**
+ * @file _player-variables.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Hệ thống biến giao diện riêng biệt cho VideoPlayer (--sp-vp-*)
+ * Độc lập 100% Obsidian Cinema Dark bất kể chủ đề trang web (Light/Dark Mode).
+ * Hỗ trợ 4 tầng Responsive: Mobile (<768px), Tablet (768-1279px), Desktop (1280-1599px), Ultrawide (≥1600px).
+ */
+
+.video-player {
+  /* ==========================================================================
+    1. TYPOGRAPHY & TEXT CONTRAST (Luôn màu sáng rõ trên nền tối video)
+    ========================================================================== */
+  --sp-vp-color-text-primary: #FFFFFF;
+  --sp-vp-color-text-secondary: rgba(255, 255, 255, 0.72);
+  --sp-vp-color-text-muted: rgba(255, 255, 255, 0.45);
+  --sp-vp-color-text-inverse: #07080A;
+
+  /* ==========================================================================
+    2. ICONS & BUTTONS (Mặc định: Desktop)
+    ========================================================================== */
+  --sp-vp-color-icon: #FFFFFF;
+  --sp-vp-color-icon-muted: rgba(255, 255, 255, 0.75);
+  --sp-vp-color-icon-hover: var(--sp-color-brand-primary, #E50914);
+
+  --sp-vp-btn-size: 38px;
+  --sp-vp-btn-radius: var(--sp-radius-full, 9999px);
+  --sp-vp-bg-btn-hover: rgba(255, 255, 255, 0.08);
+  --sp-vp-bg-btn-active: rgba(255, 255, 255, 0.14);
+
+  /* ==========================================================================
+    3. BRAND & ACCENT COLORS
+    ========================================================================== */
+  --sp-vp-color-brand: var(--sp-color-brand-primary, #E50914);
+  --sp-vp-color-brand-hover: var(--sp-color-brand-primary-hover, #FF1E27);
+  --sp-vp-color-accent: var(--sp-color-brand-accent, #7C5DFA);
+  --sp-vp-color-accent-hover: var(--sp-color-brand-accent-hover, #9277FF);
+  --sp-vp-color-amber: #F5A623;
+  --sp-vp-color-success: var(--sp-color-status-success, #10B981);
+  --sp-vp-color-error: var(--sp-color-status-error, #EF4444);
+
+  /* ==========================================================================
+    4. SURFACES, OVERLAYS & GRADIENTS
+    ========================================================================== */
+  --sp-vp-bg-surface-dim: #050608;
+  --sp-vp-bg-surface-dark: #07080A;
+  --sp-vp-bg-controls-gradient: linear-gradient(180deg, rgba(7, 8, 10, 0) 0%, rgba(7, 8, 10, 0.75) 45%, rgba(7, 8, 10, 0.95) 100%);
+  --sp-vp-bg-pause-overlay: radial-gradient(circle at center, rgba(7, 8, 10, 0.18) 0%, rgba(7, 8, 10, 0.45) 100%);
+  --sp-vp-bg-buffering-overlay: rgba(7, 8, 10, 0.45);
+  --sp-vp-bg-mobile-overlay: linear-gradient(180deg, rgba(7, 8, 10, 0.75) 0%, rgba(7, 8, 10, 0.15) 30%, rgba(7, 8, 10, 0.15) 70%, rgba(7, 8, 10, 0.85) 100%);
+  --sp-vp-theater-max-height: 82vh;
+
+  /* ==========================================================================
+    5. MENU POPOVER & DROPDOWNS (SettingsMenu, Quality, Subtitles)
+    ========================================================================== */
+  --sp-vp-bg-menu: #141722;
+  --sp-vp-bg-menu-hover: rgba(255, 255, 255, 0.08);
+  --sp-vp-bg-menu-active: rgba(255, 255, 255, 0.12);
+  --sp-vp-border-menu: rgba(255, 255, 255, 0.12);
+  --sp-vp-border-divider: rgba(255, 255, 255, 0.06);
+  --sp-vp-shadow-menu: 0 16px 40px rgba(0, 0, 0, 0.85);
+  --sp-vp-menu-radius: var(--sp-radius-md, 12px);
+  --sp-vp-menu-min-width: 240px;
+
+  /* ==========================================================================
+    6. TIMELINE & SEEKBAR
+    ========================================================================== */
+  --sp-vp-timeline-height: 20px;
+  --sp-vp-seekbar-height: 4px;
+  --sp-vp-seekbar-height-hover: 5px;
+  --sp-vp-seekbar-track-bg: rgba(255, 255, 255, 0.22);
+  --sp-vp-seekbar-track-buffered: rgba(255, 255, 255, 0.35);
+  --sp-vp-seekbar-track-played: #FFFFFF;
+  --sp-vp-seekbar-thumb-size: 12px;
+  --sp-vp-seekbar-thumb-bg: #FFFFFF;
+  --sp-vp-seekbar-thumb-shadow: 0 0 8px rgba(255, 255, 255, 0.75);
+  --sp-vp-seekbar-thumb-shadow-active: 0 0 12px rgba(255, 255, 255, 0.95);
+
+  /* ==========================================================================
+    7. VOLUME SLIDER
+    ========================================================================== */
+  --sp-vp-volume-track-bg: rgba(255, 255, 255, 0.28);
+  --sp-vp-volume-track-fill: #FFFFFF;
+  --sp-vp-volume-thumb-size: 12px;
+  --sp-vp-volume-width-expanded: 88px;
+
+  /* ==========================================================================
+    8. SPRITE STORYBOARD PREVIEW TOOLTIP
+    ========================================================================== */
+  --sp-vp-bg-sprite-time: rgba(7, 8, 10, 0.85);
+  --sp-vp-border-sprite: rgba(255, 255, 255, 0.16);
+  --sp-vp-shadow-sprite: var(--sp-shadow-elevated, 0 8px 24px rgba(0, 0, 0, 0.6));
+
+  /* ==========================================================================
+    9. GLASS HYBRID TOKENS
+    ========================================================================== */
+  --sp-vp-glass-bg: rgba(18, 21, 30, 0.78);
+  --sp-vp-glass-bg-subtle: rgba(14, 16, 23, 0.65);
+  --sp-vp-glass-border: rgba(255, 255, 255, 0.12);
+  --sp-vp-glass-border-strong: rgba(255, 255, 255, 0.20);
+  --sp-vp-glass-blur: blur(6px) saturate(180%);
+  --sp-vp-glass-blur-deep: blur(8px) saturate(180%);
+  --sp-vp-glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+
+  /* ==========================================================================
+    10. CINEMATIC TOP BAR
+    ========================================================================== */
+  --sp-vp-topbar-height: 56px;
+  --sp-vp-topbar-gradient: linear-gradient(180deg, rgba(7, 8, 10, 0.85) 0%, rgba(7, 8, 10, 0.45) 60%, transparent 100%);
+
+  /* ==========================================================================
+    11. HUD FEEDBACK & RIPPLE GESTURES
+    ========================================================================== */
+  --sp-vp-hud-circle-size: 72px;
+  --sp-vp-hud-bg: rgba(14, 16, 23, 0.75);
+  --sp-vp-hud-border: rgba(255, 255, 255, 0.14);
+  --sp-vp-hud-blur: blur(16px);
+  --sp-vp-hud-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
+
+  /* ==========================================================================
+    12. PLAYBACK RESUME BANNER (Top-Center Floating Capsule)
+    ========================================================================== */
+  --sp-vp-resume-bg: rgba(14, 16, 23, 0.88);
+  --sp-vp-resume-border: rgba(255, 255, 255, 0.16);
+  --sp-vp-resume-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --sp-vp-resume-blur: blur(16px) saturate(180%);
+
+  /* ==========================================================================
+    13. RESPONSIVE 4 TẦNG: OVERRIDES THEO CLASS TẦNG
+    ========================================================================== */
+  // ── TẦNG 1: MOBILE (< 768px) ──
+  &--tier-mobile {
+    --sp-vp-btn-size: 44px;
+    --sp-vp-topbar-height: 52px;
+    --sp-vp-timeline-height: 24px;
+    --sp-vp-seekbar-height: 5px;
+    --sp-vp-seekbar-thumb-size: 14px;
+    --sp-vp-hud-circle-size: 64px;
+  }
+
+  // ── TẦNG 2: TABLET (768px - 1279px) ──
+  &--tier-tablet {
+    --sp-vp-btn-size: 42px;
+    --sp-vp-topbar-height: 58px;
+    --sp-vp-timeline-height: 22px;
+    --sp-vp-seekbar-height: 5px;
+    --sp-vp-seekbar-thumb-size: 13px;
+  }
+
+  // ── TẦNG 3: DESKTOP (1280px - 1599px) ──
+  // Sử dụng các giá trị mặc định ở trên.
+
+  // ── TẦNG 4: ULTRAWIDE (≥ 1600px) ──
+  &--tier-ultrawide {
+    --sp-vp-btn-size: 48px;
+    --sp-vp-topbar-height: 68px;
+    --sp-vp-timeline-height: 28px;
+    --sp-vp-seekbar-height: 6px;
+    --sp-vp-seekbar-height-hover: 8px;
+    --sp-vp-seekbar-thumb-size: 16px;
+    --sp-vp-hud-circle-size: 88px;
+    --sp-vp-menu-min-width: 280px;
+  }
+}

@@ -1,0 +1,129 @@
+/**
+ * @file player-top-bar.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Định kiểu cho Cinematic Top Bar (Top Chrome) theo chuẩn Glass Hybrid & Invisible Interface.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.player-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sp-vp-topbar-height, 56px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-space-5);
+  background: var(--sp-vp-topbar-gradient);
+  z-index: calc(var(--sp-z-docked) + 10);
+  pointer-events: none;
+  user-select: none;
+  transition: opacity var(--sp-transition-normal), transform var(--sp-transition-normal);
+
+  &--visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  &--hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sp-radius-full);
+    background-color: var(--sp-vp-glass-bg-subtle);
+    backdrop-filter: var(--sp-vp-glass-blur);
+    border: 1px solid var(--sp-vp-glass-border);
+    color: var(--sp-vp-color-icon);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-vp-bg-btn-hover);
+      color: var(--sp-vp-color-icon-hover);
+      transform: scale(1.06);
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+
+    @include focus-ring;
+  }
+
+  &__titles {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    font-family: var(--sp-font-display, inherit);
+    font-size: var(--sp-font-body-md);
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-vp-color-text-primary);
+    line-height: var(--sp-line-height-tight);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  }
+
+  &__subtitle {
+    font-family: var(--sp-font-body, inherit);
+    font-size: var(--sp-font-caption);
+    color: var(--sp-vp-color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: var(--sp-line-height-normal);
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    flex-shrink: 0;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1);
+    padding: 3px 10px;
+    border-radius: var(--sp-radius-full);
+    background-color: var(--sp-vp-glass-bg-subtle);
+    backdrop-filter: var(--sp-vp-glass-blur);
+    border: 1px solid var(--sp-vp-glass-border);
+    color: var(--sp-vp-color-text-primary);
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-micro);
+    font-weight: var(--sp-font-weight-semibold);
+    letter-spacing: 0.3px;
+    box-shadow: var(--sp-vp-glass-shadow);
+
+    svg {
+      color: var(--sp-vp-color-accent);
+    }
+  }
+}

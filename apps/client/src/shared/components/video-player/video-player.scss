@@ -1,0 +1,196 @@
+/**
+ * @file video-player.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Định kiểu cho Video Player Container chuẩn Obsidian Cinema & Material 3 Tonal Depth (Aesthetic OS).
+ * Hỗ trợ 4 tầng Responsive: Mobile, Tablet, Desktop, Ultrawide.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use './styles/player-variables' as *;
+
+.video-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--sp-vp-bg-surface-dim, #050608);
+  border-radius: var(--sp-radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: manipulation;
+
+  // ── Toàn màn hình (Fullscreen) ──
+  &--fullscreen {
+    border-radius: 0;
+    border: none;
+    aspect-ratio: auto;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+
+  // ── Rạp chiếu phim (Theater Mode chuẩn YouTube) ──
+  &--theater {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: var(--sp-vp-theater-max-height, 82vh) !important;
+    aspect-ratio: 16 / 9;
+    border-radius: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  // ── TẦNG 1: MOBILE (< 768px) ──
+  &--tier-mobile {
+    border-radius: var(--sp-radius-sm, 8px);
+
+    // Khi xoay ngang điện thoại (Cinema View tự động)
+    &.video-player--orientation-landscape {
+      aspect-ratio: 16 / 9;
+      max-height: 100vh;
+    }
+
+    &.video-player--fullscreen {
+      border-radius: 0;
+    }
+  }
+
+  // ── TẦNG 2: TABLET (768px - 1279px) ──
+  &--tier-tablet {
+    border-radius: var(--sp-radius-md, 12px);
+
+    &.video-player--orientation-portrait {
+      aspect-ratio: 16 / 10;
+    }
+  }
+
+  // ── TẦNG 3: DESKTOP (1280px - 1599px) ──
+  &--tier-desktop {
+    border-radius: var(--sp-radius-md, 14px);
+  }
+
+  // ── TẦNG 4: ULTRAWIDE (≥ 1600px) ──
+  &--tier-ultrawide {
+    border-radius: var(--sp-radius-lg, 18px);
+  }
+
+  // ── Tự động ẩn con trỏ chuột khi Controls ẩn trong lúc phát (Invisible Interface) ──
+  &--hide-cursor {
+    cursor: none !important;
+
+    * {
+      cursor: none !important;
+    }
+  }
+
+  &__element {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #000000;
+    cursor: pointer;
+  }
+
+  // ── Overlay trạng thái tải / lỗi ──
+  &--loading,
+  &--error {
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-3);
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+  }
+
+  &__spinner {
+    color: var(--sp-vp-color-brand, #E50914);
+    animation: sp-player-spin 1s linear infinite;
+  }
+
+  &__loading-text {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+  }
+
+  &__error-icon {
+    color: var(--sp-vp-color-error, #EF4444);
+  }
+
+  &__error-text {
+    font-size: var(--sp-font-body-md);
+    color: var(--sp-vp-color-error, #EF4444);
+  }
+
+  // ── Lớp phủ tối nhẹ khi tạm dừng (Pause Overlay Animation) ──
+  &__pause-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--sp-vp-bg-pause-overlay);
+    cursor: pointer;
+    z-index: var(--sp-z-docked);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--sp-motion-duration-slow, 400ms) var(--sp-motion-easing-neural);
+
+    &--visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  // ── Buffering Overlay ──
+  &__buffering-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--sp-vp-bg-buffering-overlay);
+    pointer-events: none;
+    z-index: var(--sp-z-docked);
+  }
+
+  // ── Cảnh báo Stream Error ──
+  &__stream-error {
+    position: absolute;
+    top: var(--sp-space-4);
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    padding: var(--sp-space-2) var(--sp-space-4);
+    background-color: rgba(239, 68, 68, 0.9);
+    color: #ffffff;
+    border-radius: var(--sp-radius-sm);
+    font-size: var(--sp-font-caption);
+    font-weight: var(--sp-font-weight-medium);
+    box-shadow: var(--sp-shadow-elevated);
+    z-index: var(--sp-z-tooltip);
+  }
+
+  // ── Phụ đề Native Fallback (khi chạy trình duyệt Safari Native Fullscreen) ──
+  &__element::cue {
+    background-color: rgba(7, 8, 10, 0.85);
+    color: #FFFFFF;
+    font-family: var(--sp-font-body, system-ui, sans-serif);
+    font-size: clamp(14px, 2vw, 22px);
+    font-weight: 500;
+    line-height: 1.4;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.8);
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+}
+
+@keyframes sp-player-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

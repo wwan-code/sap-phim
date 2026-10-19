@@ -1,0 +1,309 @@
+/**
+ * @file logo-loader.scss
+ * @module Components/UI/LogoLoader/Styles
+ * @description SCSS styles cho Animated Logo Loading Component (The Aesthetic OS, Material 3 Expressive, Tonal Surface & Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. KEYFRAME ANIMATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes sp-logo-stroke-loop {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  48%, 78% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92% {
+    stroke-dashoffset: 0;
+    opacity: 0.15;
+  }
+  100% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+}
+
+@keyframes sp-logo-ambient-breathe {
+  0%, 100% {
+    opacity: 0.25;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+}
+
+@keyframes sp-logo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. MAIN BLOCK (.logo-loader)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.logo-loader {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  user-select: none;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  // ─── Ambient Glow Backdrop ────────────────────────────────────────────────
+  &__ambient-glow {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140%;
+    height: 140%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(229, 9, 20, 0.38) 0%,
+      rgba(124, 93, 250, 0.18) 45%,
+      transparent 70%
+    );
+    filter: blur(24px);
+    pointer-events: none;
+    z-index: 0;
+    animation: sp-logo-ambient-breathe 3.2s var(--sp-motion-easing-neural) infinite;
+  }
+
+  // ─── Vector Icon Wrapper ──────────────────────────────────────────────────
+  &__icon-wrapper {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  // ─── Stroke Paths & Delays ────────────────────────────────────────────────
+  &__path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke var(--sp-transition-normal);
+
+    // Sequential Stroke Drawing
+    .logo-loader--loop & {
+      animation: sp-logo-stroke-loop 3.2s var(--sp-motion-easing-neural) infinite;
+    }
+
+    // Delays for Tent paths
+    &--tent-1 { animation-delay: 0s; }
+    &--tent-2 { animation-delay: 0.15s; }
+    &--tent-3 { animation-delay: 0.3s; }
+    &--tent-4 { animation-delay: 0.45s; }
+    &--tent-5 { animation-delay: 0.6s; }
+    &--tent-6 { animation-delay: 0.75s; }
+
+    // Base Frame
+    &--base {
+      animation-delay: 0.9s;
+    }
+
+    // Cinema Drop
+    &--drop {
+      animation-delay: 1.1s;
+    }
+
+    // Play Trigger
+    &--play {
+      animation-delay: 1.35s;
+    }
+  }
+
+  // ─── Color Themes ─────────────────────────────────────────────────────────
+  &--color-brand {
+    .logo-loader__path {
+      stroke: var(--sp-color-text-primary, #FFFFFF);
+
+      &--base {
+        stroke: #FF3B30;
+      }
+
+      &--drop {
+        stroke: var(--sp-color-brand-primary, #E50914);
+        filter: drop-shadow(0 0 6px rgba(229, 9, 20, 0.6));
+      }
+
+      &--play {
+        stroke: #FFFFFF;
+        fill: rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+
+  &--color-monochrome {
+    .logo-loader__path {
+      stroke: var(--sp-color-text-primary, #FFFFFF);
+    }
+    .logo-loader__ambient-glow {
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.25) 0%,
+        transparent 70%
+      );
+    }
+  }
+
+  &--color-accent {
+    .logo-loader__path {
+      stroke: var(--sp-color-text-primary, #FFFFFF);
+
+      &--drop, &--base {
+        stroke: var(--sp-color-brand-accent, #7C5DFA);
+        filter: drop-shadow(0 0 6px rgba(124, 93, 250, 0.6));
+      }
+    }
+    .logo-loader__ambient-glow {
+      background: radial-gradient(
+        circle,
+        rgba(124, 93, 250, 0.4) 0%,
+        transparent 70%
+      );
+    }
+  }
+
+  // ─── Size Variants ────────────────────────────────────────────────────────
+  &--size-sm {
+    .logo-loader__icon-wrapper {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  &--size-md {
+    .logo-loader__icon-wrapper {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  &--size-lg {
+    .logo-loader__icon-wrapper {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+  &--size-xl {
+    .logo-loader__icon-wrapper {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  // ─── Fullscreen Splash Screen ─────────────────────────────────────────────
+  &--fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: var(--sp-z-toast, 1200);
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--sp-color-surface-base, #07080A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .logo-loader__icon-wrapper {
+      width: 110px;
+      height: 110px;
+
+      @include responsive(mobile-down) {
+        width: 88px;
+        height: 88px;
+      }
+    }
+  }
+
+  // ─── Optional Wordmark ────────────────────────────────────────────────────
+  &__wordmark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--sp-space-4, 16px);
+    animation: sp-logo-fade-in var(--sp-motion-duration-slow) var(--sp-motion-easing-neural) forwards;
+  }
+
+  &__brand-title {
+    font-family: var(--sp-font-display);
+    font-size: var(--sp-font-heading-h3, 1.25rem);
+    font-weight: var(--sp-font-weight-extrabold, 800);
+    letter-spacing: 0.08em;
+    color: var(--sp-color-text-primary, #F4F4F6);
+    line-height: 1.2;
+  }
+
+  &__brand-accent {
+    color: var(--sp-color-brand-primary, #E50914);
+  }
+
+  &__brand-tagline {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    letter-spacing: 0.25em;
+    color: var(--sp-color-text-muted, #5C6275);
+    margin-top: 2px;
+  }
+
+  // ─── Subtitle Text ────────────────────────────────────────────────────────
+  &__text {
+    @include typography('body-sm');
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary, #9499A8);
+    margin: var(--sp-space-4, 16px) 0 0 0;
+    text-align: center;
+    max-width: 280px;
+    animation: sp-logo-fade-in var(--sp-motion-duration-slow) var(--sp-motion-easing-neural) forwards;
+  }
+
+  // ─── Accessibility ────────────────────────────────────────────────────────
+  &__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}

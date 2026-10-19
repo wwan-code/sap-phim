@@ -1,0 +1,131 @@
+/**
+ * @file title-row.scss
+ * @module Admin/Modules/Movies/Components/TitleRow/Styles
+ * @description SCSS styling cho component TitleRow & TitleList chuẩn BEM và Material 3 Expressive.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.sp-title-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-3, 12px);
+  width: 100%;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 2px;
+  }
+
+  &__label {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+
+    &--required::after {
+      content: '*';
+      color: var(--sp-color-brand-primary, #e50914);
+      margin-left: 2px;
+    }
+  }
+
+  &__badge {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-muted);
+    background-color: var(--sp-color-surface-container-high);
+    padding: 2px 8px;
+    border-radius: var(--sp-radius-full, 9999px);
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: minmax(220px, 250px) minmax(0, 1fr) 48px;
+    gap: var(--sp-space-3, 12px);
+    align-items: flex-start;
+    background: transparent;
+    padding: 0;
+    border: none;
+
+    &--primary {
+      .sp-title-list__select-col .select__trigger,
+      .sp-title-list__select-col .text-field {
+        border-color: var(--sp-color-brand-accent, #7C5DFA) !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr auto;
+      gap: var(--sp-space-2, 8px);
+    }
+  }
+
+  &__select-col {
+    width: 100%;
+  }
+
+  &__input-col {
+    width: 100%;
+    min-width: 0;
+
+    @media (max-width: 640px) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__action-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    flex-shrink: 0;
+
+    .icon-button {
+      width: 40px;
+      height: 40px;
+      color: var(--sp-color-text-muted);
+      border-radius: var(--sp-radius-md, 12px);
+      transition: color var(--sp-transition-fast), background-color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+      &:not(:disabled):hover {
+        color: var(--sp-color-status-error, #ef4444);
+        background-color: rgba(239, 68, 68, 0.12);
+        transform: scale(1.05);
+      }
+
+      &:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__add-bar {
+    display: flex;
+    align-items: center;
+    padding-top: var(--sp-space-1, 4px);
+  }
+
+  &__add-btn {
+    border-radius: var(--sp-radius-md, 12px);
+    font-weight: var(--sp-font-weight-medium, 500);
+    border-style: dashed !important;
+  }
+
+  &__helper-error {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-status-error, #ef4444);
+    margin-top: var(--sp-space-1, 4px);
+  }
+}

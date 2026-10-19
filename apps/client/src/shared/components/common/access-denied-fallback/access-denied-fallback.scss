@@ -1,0 +1,111 @@
+/**
+ * @file access-denied-fallback.scss
+ * @module Components/Common/AccessDeniedFallback/AccessDeniedFallbackStyles
+ * @description SCSS styles cho AccessDeniedFallback component (chuẩn BEM, Material 3 Expressive, Solid Tonal và Tokens --sp-*).
+ *              Loại bỏ 100% Glassmorphism, tối ưu hóa responsive và micro-animations.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.access-denied {
+  @include flex-center;
+  min-height: 60vh;
+  padding: var(--sp-space-8, 32px) var(--sp-space-4, 16px);
+  box-sizing: border-box;
+
+  // ===========================================================================
+  // CARD CONTAINER (Solid Tonal)
+  // ===========================================================================
+  &__card {
+    width: 100%;
+    max-width: 560px;
+    padding: var(--sp-space-8, 32px) var(--sp-space-6, 24px);
+    border-radius: var(--sp-radius-xl, 28px);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    box-shadow: var(--sp-shadow-modal, 0 20px 50px rgba(0, 0, 0, 0.85));
+    box-sizing: border-box;
+
+    @include responsive(mobile) {
+      padding: var(--sp-space-6, 24px) var(--sp-space-4, 16px);
+      border-radius: var(--sp-radius-lg, 18px);
+      gap: var(--sp-space-3, 12px);
+    }
+  }
+
+  // ===========================================================================
+  // ICON BADGE (Gold Accent)
+  // ===========================================================================
+  &__icon-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--sp-radius-full, 9999px);
+    @include flex-center;
+    background-color: rgba(255, 184, 0, 0.12);
+    color: var(--sp-color-rating-star, #ffb800);
+    border: 1px solid rgba(255, 184, 0, 0.25);
+    box-shadow: 0 0 24px rgba(255, 184, 0, 0.15);
+    margin-bottom: var(--sp-space-2, 8px);
+    flex-shrink: 0;
+
+    @include responsive(mobile) {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  // ===========================================================================
+  // TYPOGRAPHY
+  // ===========================================================================
+  &__title {
+    @include typography('h2');
+    color: var(--sp-color-text-primary, #f4f4f6);
+    margin: 0;
+    font-weight: var(--sp-font-weight-bold, 700);
+
+    @include responsive(mobile) {
+      font-size: 1.35rem;
+    }
+  }
+
+  &__message {
+    @include typography('body-md');
+    color: var(--sp-color-text-secondary, #9499a8);
+    line-height: var(--sp-line-height-normal, 1.5);
+    margin: 0;
+    max-width: 90%;
+
+    @include responsive(mobile) {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      max-width: 100%;
+    }
+  }
+
+  // ===========================================================================
+  // ACTIONS GROUP
+  // ===========================================================================
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-3, 12px);
+    margin-top: var(--sp-space-4, 16px);
+    width: 100%;
+    flex-wrap: wrap;
+
+    @include responsive(mobile) {
+      flex-direction: column;
+      gap: var(--sp-space-2_5, 10px);
+
+      > * {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}

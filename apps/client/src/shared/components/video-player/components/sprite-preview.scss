@@ -1,0 +1,66 @@
+/**
+ * @file sprite-preview.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Định kiểu cho tooltip Canvas Storyboard Preview trên thanh seekbar theo chuẩn Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.sprite-preview {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-space-1);
+  pointer-events: none;
+  z-index: var(--sp-z-tooltip);
+  transition: opacity var(--sp-transition-fast);
+
+  &__canvas-wrapper {
+    width: 160px;
+    height: 90px;
+    border-radius: var(--sp-radius-sm);
+    overflow: hidden;
+    background-color: var(--sp-vp-bg-surface-dark, #07080A);
+    border: 2px solid var(--sp-vp-border-sprite, rgba(255, 255, 255, 0.16));
+    box-shadow: var(--sp-vp-shadow-sprite, 0 8px 24px rgba(0, 0, 0, 0.6));
+  }
+
+  &__canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__chapter {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-micro);
+    font-weight: var(--sp-font-weight-semibold);
+    color: var(--sp-color-brand-primary, #E50914);
+    background-color: var(--sp-vp-bg-sprite-time, rgba(7, 8, 10, 0.9));
+    border: 1px solid var(--sp-vp-border-menu, rgba(255, 255, 255, 0.12));
+    padding: 2px var(--sp-space-2);
+    border-radius: var(--sp-radius-xs);
+    backdrop-filter: blur(8px);
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__time {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-micro);
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    background-color: var(--sp-vp-bg-sprite-time, rgba(7, 8, 10, 0.85));
+    border: 1px solid var(--sp-vp-border-menu, rgba(255, 255, 255, 0.12));
+    padding: 2px var(--sp-space-2);
+    border-radius: var(--sp-radius-xs);
+    backdrop-filter: blur(8px);
+  }
+}

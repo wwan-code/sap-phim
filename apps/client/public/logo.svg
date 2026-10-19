@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+    <style>
+        /* * 1. stroke-dasharray: Biến nét liền thành nét đứt. Chiều dài '100' bằng đúng chiều dài nét.
+         * 2. stroke-dashoffset: Đẩy lùi nét đứt đi '100' để giấu nó đi khi mới bắt đầu.
+         */
+        .path-line {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            /* Chạy hiệu ứng đưa offset về 0 để lộ ra nét vẽ */
+            animation: draw 2s ease-in-out forwards;
+        }
+
+        /* * Thiết lập độ trễ (delay) cho từng bộ phận để logo được vẽ tuần tự,
+         * tạo cảm giác giống như một đầu bút đang đi từng nét một.
+         */
+        .tent { animation-delay: 0s; }
+        .base { animation-delay: 0.8s; }
+        .drop { animation-delay: 1.6s; }
+        .play { animation-delay: 2s; }
+
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+
+
+    <defs>
+        <mask id="drop-mask">
+            <rect width="200" height="200" fill="white" />
+            <path d="M 100 45 C 110 60, 135 85, 135 115 C 135 135, 120 145, 100 145 C 80 145, 65 135, 65 115 C 65 85, 90 60, 100 45 Z" fill="black" stroke="black" stroke-width="4" stroke-linejoin="round"/>
+        </mask>
+    </defs>
+
+    <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <g mask="url(#drop-mask)">
+            <path pathLength="100" class="path-line tent" d="M 100 45 L 35 85 Q 45 95 55 87 Q 65 95 75 85 Q 85 95 100 78" />
+            <path pathLength="100" class="path-line tent" d="M 55 87 Q 75 65 100 45" />
+            <path pathLength="100" class="path-line tent" d="M 75 85 Q 85 65 100 45" />
+
+            <path pathLength="100" class="path-line tent" d="M 100 45 L 165 85 Q 155 95 145 87 Q 135 95 125 85 Q 115 95 100 78" />
+            <path pathLength="100" class="path-line tent" d="M 145 87 Q 125 65 100 45" />
+            <path pathLength="100" class="path-line tent" d="M 125 85 Q 115 65 100 45" />
+        </g>
+
+        <path pathLength="100" class="path-line base" d="M 65 110 C 45 145, 75 155, 100 155 C 125 155, 155 145, 135 110" />
+
+        <path pathLength="100" class="path-line drop" d="M 100 45 C 110 60, 135 85, 135 115 C 135 135, 120 145, 100 145 C 80 145, 65 135, 65 115 C 65 85, 90 60, 100 45 Z" />
+
+        <path pathLength="100" class="path-line play" d="M 92 94 L 114 105 L 92 116 Z" />
+    </g>
+</svg>

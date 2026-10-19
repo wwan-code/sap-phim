@@ -1,0 +1,152 @@
+/**
+ * @file episode-transcode-status.scss
+ * @module Admin/Modules/Episodes/Styles
+ * @description Định kiểu cho component trạng thái chuyển mã thời gian thực theo chuẩn Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.transcode-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-2);
+  font-family: var(--sp-font-body);
+  font-size: var(--sp-font-caption);
+  line-height: 1;
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__spinner {
+    animation: sp-spin 1s linear infinite;
+  }
+
+  // ── Trạng thái: Sẵn sàng ──
+  &--ready {
+    color: var(--sp-color-status-success);
+    background-color: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: var(--sp-space-1) var(--sp-space-2);
+    border-radius: var(--sp-radius-sm);
+    font-weight: var(--sp-font-weight-medium);
+  }
+
+  // ── Trạng thái: Chờ tải lên ──
+  &--pending {
+    color: var(--sp-color-text-muted);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    padding: var(--sp-space-1) var(--sp-space-2);
+    border-radius: var(--sp-radius-sm);
+  }
+
+  // ── Trạng thái: Đang xử lý / Transcoding ──
+  &--processing {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sp-space-1);
+    min-width: 160px;
+    max-width: 220px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-2);
+  }
+
+  &__stage-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-1);
+    color: var(--sp-color-brand-accent);
+    min-width: 0;
+  }
+
+  &__stage-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--sp-font-micro);
+    font-weight: var(--sp-font-weight-medium);
+  }
+
+  &__percent {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-micro);
+    color: var(--sp-color-text-secondary);
+    font-weight: var(--sp-font-weight-bold);
+    flex-shrink: 0;
+  }
+
+  &__progress-track {
+    width: 100%;
+    height: 4px;
+    background-color: var(--sp-color-surface-container-highest);
+    border-radius: var(--sp-radius-full);
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sp-color-brand-accent) 0%, var(--sp-color-brand-primary) 100%);
+    border-radius: var(--sp-radius-full);
+    transition: width var(--sp-motion-duration-medium) var(--sp-motion-easing-neural);
+  }
+
+  // ── Trạng thái: Lỗi ──
+  &--failed {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+  }
+
+  &__info {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1);
+    color: var(--sp-color-status-error);
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: var(--sp-space-1) var(--sp-space-2);
+    border-radius: var(--sp-radius-sm);
+  }
+
+  &__retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1);
+    background-color: var(--sp-color-surface-container-high);
+    color: var(--sp-color-text-primary);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm);
+    padding: var(--sp-space-1) var(--sp-space-2);
+    font-size: var(--sp-font-micro);
+    font-weight: var(--sp-font-weight-medium);
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+
+    &:hover:not(:disabled) {
+      background-color: var(--sp-color-surface-hover);
+      border-color: var(--sp-color-brand-accent);
+      color: var(--sp-color-brand-accent);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@keyframes sp-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,204 @@
+.admin-dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__title-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--sp-radius-full, 9999px);
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #10b981;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    width: fit-content;
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--sp-font-display, inherit);
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--sp-color-text-primary, #f4f4f6);
+  }
+
+  &__desc {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--sp-color-text-secondary, #9499a8);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__btn-refresh {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--sp-radius-md, 12px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__spin {
+    animation: adminSpin 1s linear infinite;
+  }
+
+  /* Metric Cards Grid */
+  &__metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Main Grid */
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    align-items: start;
+
+    @media (max-width: 1100px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__chart-col {
+    min-width: 0;
+  }
+
+  &__side-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.admin-metric-card {
+  padding: 1.25rem;
+  border-radius: var(--sp-radius-md, 12px);
+  background: var(--sp-color-surface-container, #12151e);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--sp-shadow-flat, 0 2px 8px rgba(0, 0, 0, 0.4));
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--sp-color-text-secondary, #9499a8);
+  }
+
+  &__icon-box {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sp-radius-sm, 6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--revenue {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+    }
+    &--users {
+      background: rgba(14, 165, 233, 0.15);
+      color: #0ea5e9;
+    }
+    &--movies {
+      background: rgba(229, 9, 20, 0.15);
+      color: #e50914;
+    }
+    &--transcode {
+      background: rgba(124, 93, 250, 0.15);
+      color: #7c5dfa;
+    }
+  }
+
+  &__value {
+    font-family: var(--sp-font-display, inherit);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--sp-color-text-primary, #f4f4f6);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  &__trend-icon {
+    color: #10b981;
+  }
+
+  &__trend-text {
+    font-size: 0.75rem;
+    color: var(--sp-color-text-muted, #5c6275);
+  }
+}
+
+@keyframes adminSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,88 @@
+/**
+ * @file entity-form-drawer.scss
+ * @module Admin/Shared/Components/Forms/EntityFormDrawer/Styles
+ * @description Styling cho EntityFormDrawer theo chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.entity-form-drawer {
+  &__form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-5, 20px) var(--sp-space-6, 24px);
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sp-space-3, 12px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-6, 24px);
+    background-color: var(--sp-color-surface-container-high);
+    border-top: 1px solid var(--sp-border-subtle);
+    flex-shrink: 0;
+  }
+
+  &__field-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1, 4px);
+    width: 100%;
+  }
+
+  &__row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-space-4, 16px);
+
+    @include responsive('mobile') {
+      grid-template-columns: 1fr;
+      gap: var(--sp-space-3, 12px);
+    }
+  }
+
+  &__switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+  }
+
+  &__switch-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__switch-title {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-primary);
+  }
+
+  &__switch-desc {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-muted);
+  }
+
+  &__spinner {
+    animation: spin 1s linear infinite;
+  }
+}

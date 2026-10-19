@@ -1,0 +1,162 @@
+/**
+ * @file digital-clock.scss
+ * @module Components/UI/DateTimePicker/DigitalClockStyles
+ * @description SCSS styles cho DigitalClock component chọn giờ cuộn từng nấc (Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.digital-clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+  position: relative;
+  background-color: transparent;
+  border-radius: var(--sp-radius-lg, 18px);
+  overflow: hidden;
+  padding: 0 var(--sp-space-2, 8px);
+  user-select: none;
+  -webkit-user-select: none;
+  gap: 0;
+
+  @include responsive(max-sm) {
+    height: 280px;
+    border-radius: 0;
+  }
+
+  // ─── Highlight Band: Dải đánh dấu ô được chọn ở giữa ────────────────────────
+  &__highlight-band {
+    position: absolute;
+    top: 50%;
+    left: var(--sp-space-2, 8px);
+    right: var(--sp-space-2, 8px);
+    transform: translateY(-50%);
+    height: 40px;
+    background: var(--sp-color-surface-container-highest);
+    border: 1px solid var(--sp-border-subtle);
+    box-shadow: var(--sp-shadow-flat);
+    border-radius: var(--sp-radius-md, 12px);
+    pointer-events: none;
+    z-index: 1;
+
+    @include responsive(max-sm) {
+      height: 44px;
+    }
+  }
+
+  // ─── Column ─────────────────────────────────────────────────────────────────
+  &__column {
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    @include custom-scrollbar(0, transparent, transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 var(--sp-space-1, 4px);
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
+  &__spacer {
+    flex-shrink: 0;
+    height: calc(50% - 20px);
+
+    @include responsive(max-sm) {
+      height: calc(50% - 22px);
+    }
+  }
+
+  // ─── Item ───────────────────────────────────────────────────────────────────
+  &__item {
+    flex-shrink: 0;
+    height: 40px;
+    width: 52px;
+    @include flex-center;
+    scroll-snap-align: center;
+
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-text-secondary);
+
+    background: transparent;
+    border: none;
+    border-radius: var(--sp-radius-md, 12px);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--sp-transition-fast) var(--sp-motion-easing-neural);
+
+    @include responsive(max-sm) {
+      height: 44px;
+      width: 56px;
+    }
+
+    &-text {
+      position: relative;
+      z-index: 2;
+    }
+
+    &-layer {
+      position: absolute;
+      inset: 0;
+      background-color: var(--sp-color-text-primary);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity var(--sp-transition-fast);
+    }
+
+    &:hover &-layer,
+    &:focus-visible &-layer {
+      opacity: 0.08;
+    }
+
+    &--selected {
+      color: var(--sp-color-brand-primary);
+      font-size: var(--sp-font-display-h2);
+      font-weight: var(--sp-font-weight-bold);
+      font-family: var(--sp-font-display);
+
+      @include responsive(max-sm) {
+        font-size: 1.75rem;
+      }
+
+      .digital-clock__item-layer {
+        display: none;
+      }
+    }
+
+    &--disabled {
+      color: var(--sp-color-text-muted);
+      opacity: 0.35;
+      cursor: not-allowed;
+
+      &:hover .digital-clock__item-layer {
+        opacity: 0;
+      }
+    }
+  }
+
+  // ─── Separator ──────────────────────────────────────────────────────────────
+  &__separator {
+    font-size: 1.5rem;
+    font-weight: var(--sp-font-weight-bold);
+    font-family: var(--sp-font-display);
+    color: var(--sp-color-text-primary);
+    padding: 0 var(--sp-space-1, 4px);
+    z-index: 2;
+    flex-shrink: 0;
+    line-height: 1;
+
+    @include responsive(max-sm) {
+      font-size: 1.75rem;
+    }
+  }
+
+  &__separator-gap {
+    width: var(--sp-space-3, 12px);
+    flex-shrink: 0;
+  }
+}

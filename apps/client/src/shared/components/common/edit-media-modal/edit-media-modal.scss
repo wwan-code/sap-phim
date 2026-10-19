@@ -1,0 +1,29 @@
+/**
+ * @file edit-media-modal.scss
+ * @module Components/Common/EditMediaModal/EditMediaModalStyles
+ * @description SCSS styles cho EditMediaModal component (chuẩn BEM, Material 3 Expressive, Solid Tonal và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.edit-media-modal {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 85vh;
+  max-height: 720px;
+  min-height: 480px;
+  border-radius: var(--sp-radius-xl, 28px);
+  background-color: var(--sp-color-surface-container-high, #1b1f2b);
+  border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  box-shadow: var(--sp-shadow-modal, 0 20px 50px rgba(0, 0, 0, 0.85));
+  box-sizing: border-box;
+
+  @include responsive(mobile) {
+    height: 94dvh;
+    max-height: none;
+    min-height: 0;
+    border-radius: var(--sp-radius-lg, 18px);
+  }
+}

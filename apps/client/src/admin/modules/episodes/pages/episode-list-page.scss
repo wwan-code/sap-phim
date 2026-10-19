@@ -1,0 +1,302 @@
+/**
+ * @file episode-list-page.scss
+ * @module Admin/Modules/Episodes/Styles
+ * @description Định kiểu cho trang Quản lý danh sách tập phim chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.episode-admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-6, 24px);
+
+  // ── Header Actions ──
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  // ── KPI Stats Grid ──
+  &__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--sp-space-4, 16px);
+  }
+
+  &__stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+    background-color: var(--sp-color-surface-container);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+    box-shadow: var(--sp-shadow-flat);
+    transition: transform var(--sp-transition-fast), border-color var(--sp-transition-fast);
+
+    &:hover {
+      border-color: var(--sp-border-strong);
+      transform: translateY(-2px);
+    }
+
+    &-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--sp-radius-md, 12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      &--total {
+        background-color: rgba(124, 93, 250, 0.14);
+        color: var(--sp-color-brand-accent, #7c5dfa);
+      }
+
+      &--published {
+        background-color: rgba(16, 185, 129, 0.14);
+        color: var(--sp-color-status-success, #10b981);
+      }
+
+      &--draft {
+        background-color: rgba(245, 158, 11, 0.14);
+        color: var(--sp-color-status-warning, #f59e0b);
+      }
+
+      &--scheduled {
+        background-color: rgba(59, 130, 246, 0.14);
+        color: var(--sp-color-status-info, #3b82f6);
+      }
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .stat-label {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-secondary);
+        font-weight: var(--sp-font-weight-medium, 500);
+        margin-bottom: 2px;
+      }
+
+      .stat-value {
+        font-size: var(--sp-font-display-h2, 1.5rem);
+        font-weight: var(--sp-font-weight-extrabold, 800);
+        color: var(--sp-color-text-primary);
+        line-height: var(--sp-line-height-tight);
+      }
+
+      .stat-sub {
+        font-size: var(--sp-font-micro, 0.6875rem);
+        color: var(--sp-color-text-muted);
+        margin-top: 2px;
+      }
+    }
+  }
+
+  // ── Filter Toolbar Selects ──
+  &__filter-select {
+    min-width: 200px;
+  }
+
+  // ── DataGrid Cells ──
+
+  // 1. Code Pill (ID)
+  &__code-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: var(--sp-color-surface-container-highest);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-xs, 4px);
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-secondary);
+    transition: all var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-brand-accent);
+      border-color: var(--sp-color-brand-accent);
+      background-color: rgba(124, 93, 250, 0.1);
+    }
+  }
+
+  // 2. Number Cell & VIP Tag
+  &__number-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__number-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: linear-gradient(135deg, rgba(124, 93, 250, 0.16) 0%, rgba(124, 93, 250, 0.08) 100%);
+    border: 1px solid rgba(124, 93, 250, 0.3);
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-brand-accent, #7c5dfa);
+  }
+
+  &__vip-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    background: linear-gradient(135deg, rgba(255, 184, 0, 0.2) 0%, rgba(229, 9, 20, 0.14) 100%);
+    border: 1px solid rgba(255, 184, 0, 0.4);
+    border-radius: var(--sp-radius-xs, 4px);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-rating-star, #ffb800);
+  }
+
+  // 3. Movie Cell
+  &__movie-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    width: 100%;
+    min-width: 0;
+
+    .movie-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--sp-radius-sm, 6px);
+      background-color: var(--sp-color-surface-container-highest);
+      border: 1px solid var(--sp-border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sp-color-brand-accent);
+      flex-shrink: 0;
+    }
+
+    .movie-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .movie-name {
+        font-size: var(--sp-font-body-sm, 0.875rem);
+        font-weight: var(--sp-font-weight-semibold, 600);
+        color: var(--sp-color-text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .movie-meta {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  // 4. Title Cell
+  &__title-cell {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+
+    .episode-title {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-medium, 500);
+      color: var(--sp-color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // 5. Duration Cell
+  &__duration-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary);
+  }
+
+  // 6. ABR Qualities Pills
+  &__qualities {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &__quality-pill {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    padding: 2px 7px;
+    border-radius: var(--sp-radius-xs, 4px);
+    background-color: var(--sp-color-surface-container-highest);
+    color: var(--sp-color-text-secondary);
+    border: 1px solid var(--sp-border-subtle);
+
+    &--4k {
+      color: var(--sp-color-rating-star, #ffb800);
+      border-color: rgba(255, 184, 0, 0.35);
+      background: linear-gradient(135deg, rgba(255, 184, 0, 0.15) 0%, rgba(229, 9, 20, 0.1) 100%);
+      box-shadow: 0 0 8px rgba(255, 184, 0, 0.15);
+    }
+
+    &--2k {
+      color: #00F5D4;
+      border-color: rgba(0, 245, 212, 0.35);
+      background-color: rgba(0, 245, 212, 0.1);
+    }
+
+    &--1080p {
+      color: var(--sp-color-brand-accent, #7c5dfa);
+      border-color: rgba(124, 93, 250, 0.35);
+      background-color: rgba(124, 93, 250, 0.12);
+    }
+
+    &--720p {
+      color: var(--sp-color-status-info, #3b82f6);
+      border-color: rgba(59, 130, 246, 0.3);
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  &__empty-sources {
+    color: var(--sp-color-text-muted);
+    font-size: var(--sp-font-caption, 0.75rem);
+  }
+
+  // 7. View Count
+  &__view-count {
+    font-family: var(--sp-font-mono);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary);
+  }
+
+  // 8. Actions Cell
+  &__actions-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sp-space-1, 4px);
+  }
+
+  // 9. Video Player Modal Wrapper
+  &__player-wrapper {
+    padding: var(--sp-space-2, 8px) 0;
+    min-height: 480px;
+    border-radius: var(--sp-radius-md, 12px);
+    overflow: hidden;
+    background-color: #000;
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "name": "sap-phim-client",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@floating-ui/react": "^0.27.20",
+    "@hookform/resolvers": "^5.2.2",
+    "@reduxjs/toolkit": "^2.12.0",
+    "@tanstack/react-query": "^5.102.2",
+    "@tanstack/react-query-devtools": "^5.91.3",
+    "@tanstack/react-table": "^9.1.2",
+    "@tanstack/react-virtual": "^3.14.8",
+    "axios": "^1.19.0",
+    "classnames": "^2.5.1",
+    "framer-motion": "^10.16.5",
+    "hls.js": "^1.6.15",
+    "html-to-image": "^1.11.13",
+    "lucide-react": "^1.33.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-easy-crop": "^5.5.6",
+    "react-helmet-async": "^3.0.0",
+    "react-hook-form": "^7.71.1",
+    "react-hot-toast": "^2.6.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-player": "^2.13.0",
+    "react-redux": "^9.3.0",
+    "react-router-dom": "^7.18.2",
+    "recharts": "^3.7.0",
+    "redux-persist": "^6.0.0",
+    "sass": "1.103.1",
+    "socket.io-client": "^4.8.3",
+    "swiper": "14.1.0",
+    "tus-js-client": "^4.3.1",
+    "web-vitals": "6.1.1",
+    "yup": "^1.7.1",
+    "zustand": "^5.0.15"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --emptyOutDir=false",
+    "preview": "vite preview",
+    "test": "node --test src/app/routes/router.test.js tests/ai-suggestion.test.js && npm run build",
+    "test:ai": "node --test tests/ai-suggestion.test.js",
+    "lint": "eslint src --ext js,jsx",
+    "format": "prettier --write \"src/**/*.{js,jsx,json,css,scss}\""
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.55.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^3.1.1",
+    "vite": "^5.0.8"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

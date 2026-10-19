@@ -1,0 +1,157 @@
+/**
+ * @file notification-kpi-stats.scss
+ * @module Admin/Modules/Notifications/Components/NotificationKpiStats
+ * @description Styling cho khối thẻ thống kê KPI thông báo toàn hệ thống chuẩn Material 3 Expressive.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.notification-kpi-container {
+  width: 100%;
+}
+
+.notification-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-space-4, 16px);
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notification-kpi-card {
+  @include surface('container');
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-space-4, 16px);
+  padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+  border-radius: var(--sp-radius-lg, 18px);
+  border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  box-shadow: var(--sp-elevation-1);
+  transition: transform var(--sp-transition-fast), box-shadow var(--sp-transition-fast), border-color var(--sp-transition-fast);
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sp-elevation-2);
+    border-color: var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+  }
+
+  &__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--sp-radius-md, 12px);
+    flex-shrink: 0;
+    transition: transform var(--sp-transition-fast);
+  }
+
+  &:hover &__icon-wrapper {
+    transform: scale(1.05);
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__title {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    font-weight: var(--sp-font-weight-medium, 500);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  &__value {
+    font-family: var(--sp-font-display, sans-serif);
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    line-height: var(--sp-line-height-tight, 1.15);
+    color: var(--sp-color-text-primary, #f4f4f6);
+  }
+
+  &__subtitle {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    line-height: var(--sp-line-height-normal, 1.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: var(--sp-color-surface-container-highest, #242a3b);
+    border-radius: var(--sp-radius-full, 9999px);
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    width: var(--progress, 0%);
+    background-color: var(--sp-color-status-success, #10b981);
+    border-radius: var(--sp-radius-full, 9999px);
+    transition: width var(--sp-transition-expressive);
+  }
+
+  // ── Modifiers ──
+  &--primary {
+    .notification-kpi-card__icon-wrapper {
+      background-color: rgba(124, 93, 250, 0.12);
+      color: var(--sp-color-brand-accent, #7c5dfa);
+    }
+  }
+
+  &--success {
+    .notification-kpi-card__icon-wrapper {
+      background-color: rgba(16, 185, 129, 0.12);
+      color: var(--sp-color-status-success, #10b981);
+    }
+    .notification-kpi-card__value {
+      color: var(--sp-color-status-success, #10b981);
+    }
+  }
+
+  &--danger {
+    .notification-kpi-card__icon-wrapper {
+      background-color: rgba(239, 68, 68, 0.12);
+      color: var(--sp-color-status-error, #ef4444);
+    }
+    .notification-kpi-card__value {
+      color: var(--sp-color-status-error, #ef4444);
+    }
+  }
+
+  &--accent {
+    .notification-kpi-card__icon-wrapper {
+      background-color: rgba(245, 158, 11, 0.12);
+      color: var(--sp-color-status-warning, #f59e0b);
+    }
+  }
+
+  &--neutral {
+    .notification-kpi-card__icon-wrapper {
+      background-color: rgba(148, 153, 168, 0.1);
+      color: var(--sp-color-text-secondary, #9499a8);
+    }
+  }
+
+  &--loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}

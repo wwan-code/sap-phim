@@ -1,0 +1,215 @@
+/**
+ * @file notification-list-page.scss
+ * @module Admin/Modules/Notifications/Pages
+ * @description Styling cho trang Quản Lý & Phát Thông Báo Hệ Thống chuẩn Material 3 Expressive.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.notification-admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-6, 24px);
+  width: 100%;
+  max-width: var(--sp-container-max-width, 1440px);
+  margin: 0 auto;
+  padding-bottom: var(--sp-space-12, 48px);
+
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  &__pulse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-1, 4px) var(--sp-space-3, 12px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--sp-color-status-success, #10b981);
+      box-shadow: 0 0 8px var(--sp-color-status-success, #10b981);
+      animation: notif-pulse-dot-anim 2s infinite;
+    }
+  }
+
+  // ── Bulk Selection Bar ──
+  &__bulk-bar {
+    @include surface('container-high');
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-3, 12px) var(--sp-space-5, 20px);
+    border-radius: var(--sp-radius-md, 12px);
+    border: 1px solid var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    box-shadow: var(--sp-elevation-2);
+    animation: fadeInSlide 200ms var(--sp-motion-easing-neural);
+  }
+
+  &__bulk-info {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    font-weight: var(--sp-font-weight-medium, 500);
+  }
+
+  &__bulk-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    background-color: var(--sp-color-brand-primary, #e50914);
+    color: #ffffff;
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+  }
+
+  &__bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__confirm-text {
+    margin: 0;
+    line-height: var(--sp-line-height-normal, 1.5);
+    color: var(--sp-color-text-secondary, #9499a8);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+  }
+}
+
+@keyframes notif-pulse-dot-anim {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ── DataGrid Cells ──
+.notif-title-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-3, 12px);
+  min-width: 0;
+  width: 100%;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sp-radius-md, 12px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__text {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__sub {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.notif-user-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2, 8px);
+  min-width: 0;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__sub {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.notif-broadcast-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background-color: rgba(124, 93, 250, 0.12);
+  border: 1px solid rgba(124, 93, 250, 0.25);
+  border-radius: var(--sp-radius-full, 9999px);
+  color: var(--sp-color-brand-accent, #7c5dfa);
+  font-size: var(--sp-font-caption, 0.75rem);
+  font-weight: var(--sp-font-weight-medium, 500);
+}
+
+.notif-time-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--sp-font-caption, 0.75rem);
+  color: var(--sp-color-text-secondary, #9499a8);
+}
+
+.notif-actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-space-1, 4px);
+}
+
+// ── Filter Toolbar Selects ──
+.notif-filter-select {
+  min-width: 160px;
+}

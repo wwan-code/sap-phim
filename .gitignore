@@ -1,0 +1,33 @@
+# @file .gitignore
+# @module Repository
+# @description Exclude private configuration, runtime data and generated artifacts.
+node_modules/
+.env
+.env.*
+!.env.example
+!.env.*.example
+dist/
+build/
+coverage/
+logs/
+*.log
+.codex-artifacts/
+.cache/
+.vite/
+scratch/
+uploads/
+storage/
+backups/
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+*service-account*.json
+*serviceAccount*.json
+firebase-adminsdk*.json
+.DS_Store
+Thumbs.db
+*.tsbuildinfo

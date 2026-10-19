@@ -1,0 +1,54 @@
+{
+  "name": "sap-phim",
+  "version": "1.0.0",
+  "description": "Nền tảng phát trực tuyến phim",
+  "private": true,
+  "workspaces": [
+    "apps/client",
+    "apps/server",
+    "apps/video-server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:all": "concurrently \"npm run dev:server\" \"npm run dev:video\" \"npm run dev:client\"",
+    "dev:client": "cd apps/client && npm run dev",
+    "dev:server": "cd apps/server && npm run dev",
+    "dev:video": "cd apps/video-server && npm run dev",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:restart": "docker compose restart",
+    "docker:logs": "docker compose logs -f",
+    "start:jikan": "docker compose up -d jikan_rest jikan_redis jikan_mongo",
+    "install:all": "npm install && cd apps/client && npm install && cd ../server && npm install",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd apps/client && npm run build",
+    "build:server": "cd apps/server && npm run build",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "cd apps/server && npm test",
+    "test:client": "cd apps/client && npm test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wwan-code/sap-phim"
+  },
+  "keywords": [
+    "anime",
+    "streaming",
+    "collection",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "opentype.js": "^2.0.0",
+    "react-hot-toast": "^2.6.0",
+    "redux-persist": "^6.0.0"
+  }
+}

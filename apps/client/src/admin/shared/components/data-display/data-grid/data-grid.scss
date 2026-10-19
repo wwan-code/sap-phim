@@ -1,0 +1,1501 @@
+/**
+ * @file data-grid.scss
+ * @module Admin/Shared/Components/DataDisplay/DataGrid/Styles
+ * @description Stylesheet tái hiện chuẩn xác 100% Mockup Gogo MUI-X DataGrid:
+ * Thẻ Đơn Khối Liền Mạch (Unified Surface Card), Minimalist Toolbar (Icon Strip + Add Record),
+ * Expanding Search Pill, Subtle Column Dividers (16px), 6px Rounded Checkbox,
+ * Rounded Row Pill Highlight, Inline Edit Pills và Seamless Minimalist Pagination.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.data-grid {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  @include surface('container');
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: var(--sp-font-body);
+
+  // ── Density Variables ───────────────────
+  --data-grid-row-height: 52px;
+  --data-grid-header-height: 48px;
+  --data-grid-cell-padding: 0 var(--sp-space-2, 8px);
+  --data-grid-header-padding: 0 var(--sp-space-2, 8px);
+  --data-grid-font-size: var(--sp-font-body-sm, 0.875rem);
+
+  &--density-compact {
+    --data-grid-row-height: 40px;
+    --data-grid-header-height: 40px;
+    --data-grid-cell-padding: 0 var(--sp-space-1, 4px);
+    --data-grid-header-padding: 0 var(--sp-space-1, 4px);
+    --data-grid-font-size: var(--sp-font-caption, 0.75rem);
+  }
+
+  &--density-comfortable {
+    --data-grid-row-height: 68px;
+    --data-grid-header-height: 56px;
+    --data-grid-cell-padding: 0 var(--sp-space-3, 12px);
+    --data-grid-header-padding: 0 var(--sp-space-3, 12px);
+    --data-grid-font-size: var(--sp-font-body-md, 1rem);
+  }
+
+  // ── 1. Toolbar (Header Title + Primary Actions & Icon Strip) ──
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 var(--sp-space-4, 16px) 0;
+    background-color: transparent;
+    border-bottom: none;
+    gap: var(--sp-space-4, 16px);
+    min-height: 40px;
+
+    @include responsive(mobile) {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    &-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    &-title {
+      font-size: var(--sp-font-heading-h4, 1.125rem);
+      font-weight: var(--sp-font-weight-bold, 700);
+      color: var(--sp-color-text-primary);
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    &-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    // Primary Action Button (e.g. "+ Add Record")
+    &-primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      height: 34px;
+      border-radius: var(--sp-radius-md, 8px);
+      border: 1px solid var(--sp-border-subtle);
+      background-color: transparent;
+      color: var(--sp-color-text-primary);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-medium, 500);
+      cursor: pointer;
+      transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+      &:hover {
+        background-color: var(--sp-state-hover);
+        border-color: var(--sp-border-strong);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      @include focus-ring;
+    }
+
+    // Icon Strip Group
+    &-icon-strip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    &-divider {
+      width: 1px;
+      height: 18px;
+      background-color: var(--sp-border-strong);
+      margin: 0 4px;
+      opacity: 0.6;
+    }
+
+    // Minimalist Round Icon Button
+    &-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--sp-radius-full, 9999px);
+      border: none;
+      background: transparent;
+      color: var(--sp-color-text-secondary);
+      cursor: pointer;
+      position: relative;
+      transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+      &:hover:not(:disabled) {
+        background-color: var(--sp-state-hover);
+        color: var(--sp-color-text-primary);
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.95);
+      }
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      &--active {
+        color: var(--sp-color-brand-primary);
+        background-color: rgba(229, 9, 20, 0.08);
+      }
+
+      @include focus-ring;
+    }
+
+    // Expanding Search Pill (Dynamic Seamless Neural Morph)
+    &-search-morph {
+      display: flex;
+      align-items: center;
+      position: relative;
+      height: 34px;
+      width: 34px;
+      border-radius: var(--sp-radius-full, 9999px);
+      background-color: transparent;
+      border: 1px solid transparent;
+      box-sizing: border-box;
+      overflow: hidden;
+      transition: width var(--sp-motion-duration-slow, 350ms) var(--sp-motion-easing-neural),
+        background-color var(--sp-transition-fast),
+        border-color var(--sp-transition-fast),
+        box-shadow var(--sp-transition-fast);
+
+      &:hover:not(&--expanded) {
+        background-color: var(--sp-state-hover);
+      }
+
+      &--expanded {
+        width: 240px;
+        background-color: var(--sp-color-surface-container-high);
+        border-color: var(--sp-border-subtle);
+        box-shadow: var(--sp-shadow-flat);
+
+        &:focus-within {
+          width: 280px;
+          border-color: var(--sp-color-brand-primary);
+          box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+        }
+
+        .data-grid__toolbar-search-input {
+          opacity: 1;
+          pointer-events: auto;
+          padding-right: 28px;
+        }
+
+        .data-grid__toolbar-search-icon-btn {
+          color: var(--sp-color-text-secondary);
+          pointer-events: none;
+        }
+      }
+
+      @include responsive(mobile) {
+        &--expanded {
+          width: 100% !important;
+        }
+      }
+    }
+
+    &-search-icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--sp-radius-full, 9999px);
+      background: transparent;
+      border: none;
+      color: var(--sp-color-text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+      &:hover {
+        color: var(--sp-color-text-primary);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+
+    &-search-input {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0 6px 0 2px;
+      color: var(--sp-color-text-primary);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-family: inherit;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--sp-motion-duration-medium) var(--sp-motion-easing-neural);
+
+      &::placeholder {
+        color: var(--sp-color-text-secondary);
+        opacity: 0.7;
+      }
+    }
+
+    &-search-clear-btn {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--sp-radius-full, 9999px);
+      background: var(--sp-color-surface-container-highest, rgba(255, 255, 255, 0.1));
+      border: none;
+      color: var(--sp-color-text-secondary);
+      cursor: pointer;
+      transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+      &:hover {
+        background-color: var(--sp-color-brand-primary);
+        color: #FFFFFF;
+        transform: translateY(-50%) scale(1.1);
+      }
+    }
+  }
+
+  // ── 2. Table Container & Scroll ───────────────────────────────
+  &__container {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    background-color: transparent;
+
+    @include custom-scrollbar(6px, var(--sp-color-surface-container-high));
+  }
+
+  &__table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    position: relative;
+  }
+
+  // ── 3. Header (With Subtle 16px Column Dividers) ──────────────
+  &__header {
+    display: flex;
+    width: 100%;
+    background-color: transparent;
+    border-bottom: none;
+    padding: 0;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: var(--sp-z-docked, 10);
+    user-select: none;
+
+    &-cell {
+      display: flex;
+      align-items: center;
+      padding: var(--data-grid-header-padding);
+      height: var(--data-grid-header-height);
+      font-size: 0.8125rem;
+      font-weight: var(--sp-font-weight-semibold, 600);
+      color: var(--sp-color-text-secondary);
+      position: relative;
+      box-sizing: border-box;
+      flex-shrink: 0;
+
+      // Short centered vertical divider between columns (Mockup Style)
+      &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 14px;
+        background-color: var(--sp-border-subtle);
+      }
+
+      &--align-left {
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      &--align-center {
+        justify-content: center;
+        text-align: center;
+      }
+
+      &--align-right {
+        justify-content: flex-end;
+        text-align: right;
+      }
+
+      &--pinned-left,
+      &--pinned-right {
+        background-color: var(--sp-color-surface-container);
+        transition: box-shadow var(--sp-transition-fast), border-color var(--sp-transition-fast);
+      }
+
+      &--pinned-left-last {
+        border-right: 1px solid transparent;
+      }
+
+      &--pinned-right-first {
+        border-left: 1px solid transparent;
+      }
+
+      // Chỉ hiển thị bóng đổ và viền phân cách khi bảng thực sự cuộn ngang
+      .data-grid--scrolled-left &--pinned-left-last {
+        box-shadow: 4px 0 10px -2px rgba(0, 0, 0, 0.12);
+        border-right-color: var(--sp-border-subtle);
+      }
+
+      .data-grid--scrolled-right &--pinned-right-first {
+        box-shadow: -4px 0 10px -2px rgba(0, 0, 0, 0.12);
+        border-left-color: var(--sp-border-subtle);
+      }
+
+      &:hover {
+        .data-grid__header-cell-menu-btn {
+          opacity: 1;
+        }
+      }
+
+      &--sortable {
+        cursor: pointer;
+        transition: color var(--sp-transition-fast);
+
+        &:hover {
+          color: var(--sp-color-text-primary);
+        }
+      }
+
+      &-title {
+        @include text-truncate(1);
+        font-weight: inherit;
+      }
+
+      &-sort-icon {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 6px;
+        color: var(--sp-color-brand-primary);
+        flex-shrink: 0;
+      }
+
+      // 3-dots Context Menu Button on Column Header (Pure icon, transparent background, primary color on hover)
+      &-menu-btn {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        color: var(--sp-color-text-muted);
+        cursor: pointer;
+        padding: 2px;
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0;
+        opacity: 0;
+        transition: opacity var(--sp-transition-fast), color var(--sp-transition-fast);
+        flex-shrink: 0;
+
+        &:hover,
+        &:focus-visible,
+        &--open {
+          color: var(--sp-color-brand-primary) !important;
+          background: transparent !important;
+          background-color: transparent !important;
+          opacity: 1;
+        }
+
+        svg {
+          display: block;
+          transition: color var(--sp-transition-fast);
+        }
+      }
+
+      // Column Resize Handle (Hoàn toàn trong suốt, không hiển thị thanh dọc khi hover)
+      &-resizer {
+        position: absolute;
+        top: 0;
+        right: -4px;
+        bottom: 0;
+        width: 10px;
+        cursor: col-resize;
+        user-select: none;
+        touch-action: none;
+        z-index: var(--sp-z-docked, 10);
+        background: transparent;
+
+        &:hover,
+        &--active {
+          background: transparent;
+        }
+      }
+    }
+  }
+
+  // ── 4. Body & Rows (Rounded Pill Highlight) ───────────────────
+  &__body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    min-height: 180px;
+    background-color: transparent;
+    padding: 4px 0;
+    box-sizing: border-box;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: var(--data-grid-row-height);
+    height: var(--data-grid-row-height);
+    background-color: transparent;
+    border-radius: var(--sp-radius-md, 10px);
+    margin-bottom: 2px;
+    transition: background-color var(--sp-transition-fast), transform var(--sp-transition-fast), height var(--sp-transition-fast), min-height var(--sp-transition-fast);
+    box-sizing: border-box;
+
+    &:hover {
+      background-color: var(--sp-state-hover);
+    }
+
+    // Selected Row Pill Highlight (Mockup Style)
+    &--selected {
+      background-color: rgba(229, 9, 20, 0.06) !important;
+
+      &:hover {
+        background-color: rgba(229, 9, 20, 0.09) !important;
+      }
+    }
+
+    // Editing State (Subtle highlight container)
+    &--editing {
+      background-color: var(--sp-color-surface-container-low);
+    }
+
+    &--focused {
+      outline: 2px solid var(--sp-color-brand-primary);
+      outline-offset: -2px;
+      z-index: 2;
+    }
+  }
+
+  // ── 5. Cells & 6px Checkbox ───────────────────────────────────
+  &__cell {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    align-self: stretch;
+    padding: var(--data-grid-cell-padding);
+    font-size: var(--data-grid-font-size);
+    color: var(--sp-color-text-primary);
+    box-sizing: border-box;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    &--align-left {
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    &--align-center {
+      justify-content: center;
+      text-align: center;
+    }
+
+    &--align-right {
+      justify-content: flex-end;
+      text-align: right;
+    }
+
+    &--pinned-left,
+    &--pinned-right {
+      background-color: transparent;
+      transition: background-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast), border-color var(--sp-transition-fast);
+    }
+
+    &--pinned-left {
+      border-top-left-radius: inherit;
+      border-bottom-left-radius: inherit;
+    }
+
+    &--pinned-right {
+      border-top-right-radius: inherit;
+      border-bottom-right-radius: inherit;
+    }
+
+    &--pinned-left-last {
+      border-right: 1px solid transparent;
+    }
+
+    &--pinned-right-first {
+      border-left: 1px solid transparent;
+    }
+
+    // CHỈ khi cuộn ngang: Pinned cells mới kích hoạt nền che và viền bóng đổ nhẹ nhàng
+    .data-grid--scrolled-left &--pinned-left {
+      background-color: var(--sp-color-surface-container-lowest);
+    }
+
+    .data-grid--scrolled-left &--pinned-left-last {
+      box-shadow: 4px 0 10px -2px rgba(0, 0, 0, 0.12);
+      border-right-color: var(--sp-border-subtle);
+    }
+
+    .data-grid--scrolled-right &--pinned-right {
+      background-color: var(--sp-color-surface-container-lowest);
+    }
+
+    .data-grid--scrolled-right &--pinned-right-first {
+      box-shadow: -4px 0 10px -2px rgba(0, 0, 0, 0.12);
+      border-left-color: var(--sp-border-subtle);
+    }
+
+    // CHỈ khi đang cuộn ngang mới cần ghi đè màu nền đặc khi hover/selected để che nội dung cuộn bên dưới
+    .data-grid--scrolled-left .data-grid__row:hover &--pinned-left,
+    .data-grid--scrolled-right .data-grid__row:hover &--pinned-right {
+      background-color: var(--sp-color-surface-container-high);
+    }
+
+    .data-grid--scrolled-left .data-grid__row--selected &--pinned-left,
+    .data-grid--scrolled-right .data-grid__row--selected &--pinned-right {
+      background-color: var(--sp-color-surface-container-high);
+    }
+
+    &-content {
+      @include text-truncate(1);
+      width: 100%;
+    }
+
+    // Custom 6px Rounded Checkbox (Gogo MUI-X Style)
+    &-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px !important;
+      min-height: 18px !important;
+      max-width: 18px !important;
+      max-height: 18px !important;
+      flex-shrink: 0;
+      border: 1.5px solid var(--sp-color-outline-variant, rgba(255, 255, 255, 0.2));
+      border-radius: 6px !important;
+      background-color: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast);
+
+      &:hover {
+        border-color: var(--sp-color-brand-primary);
+      }
+
+      &:checked,
+      &:indeterminate {
+        background-color: var(--sp-color-brand-primary) !important;
+        border-color: var(--sp-color-brand-primary) !important;
+      }
+
+      &:checked::after {
+        content: '';
+        width: 4px;
+        height: 8px;
+        border: solid #ffffff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        position: absolute;
+        top: 2px;
+      }
+
+      &:indeterminate::after {
+        content: '';
+        width: 8px;
+        height: 2px;
+        background-color: #ffffff;
+        position: absolute;
+      }
+
+      @include focus-ring;
+    }
+  }
+
+  // ── 6. Inline Row Editing & Cell Content ───────────────────────
+  &__cell-edit-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .text-field,
+    .select__trigger {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .text-field__wrapper {
+      min-height: 32px;
+      height: 32px;
+      border-radius: var(--sp-radius-sm, 6px);
+      background-color: var(--sp-color-surface-container-high);
+    }
+
+    .text-field__input {
+      height: 32px;
+      padding: 0 var(--sp-space-2, 8px);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+    }
+
+    .select__input-override .text-field__wrapper {
+      min-height: 32px;
+      height: 32px;
+    }
+  }
+
+  &__edit-pill {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 36px;
+    border-radius: var(--sp-radius-md, 10px);
+    border: 1.5px solid var(--sp-border-strong);
+    background-color: transparent;
+    padding: 0 12px;
+    box-sizing: border-box;
+    transition: border-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    &:hover {
+      border-color: var(--sp-color-text-muted);
+    }
+
+    &:focus-within {
+      border-color: var(--sp-color-brand-primary);
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.15);
+    }
+
+    &-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      color: var(--sp-color-text-primary);
+
+      &::placeholder {
+        color: var(--sp-color-text-muted);
+      }
+    }
+
+    &-select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      color: var(--sp-color-text-primary);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    &-icon {
+      color: var(--sp-color-text-muted);
+      margin-left: auto;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+  }
+
+  // Action Icons Cell (Edit ✎, Delete 🗑, Save ✓, Cancel ✕)
+  &__actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      color: var(--sp-color-text-secondary);
+      transition: color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+      &:hover {
+        color: var(--sp-color-text-primary);
+        transform: scale(1.1);
+      }
+
+      &--save {
+        color: var(--sp-color-status-success);
+
+        &:hover {
+          color: #34d399;
+          transform: scale(1.15);
+        }
+      }
+
+      &--cancel {
+        color: var(--sp-color-status-error);
+
+        &:hover {
+          color: #f87171;
+          transform: scale(1.15);
+        }
+      }
+
+      &--delete {
+        &:hover {
+          color: var(--sp-color-status-error);
+        }
+      }
+    }
+  }
+
+  // ── 7. Pagination Footer (Count Left + Seamless Minimalist Right)
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-4, 16px) 0 0 0;
+    background-color: transparent;
+    border-top: none;
+    gap: var(--sp-space-3, 12px);
+
+    &-selected-text {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      color: var(--sp-color-text-muted);
+      font-weight: var(--sp-font-weight-medium, 500);
+    }
+
+    &-right-group {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-4, 16px);
+      margin-left: auto;
+    }
+
+    &-info-group {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-3, 12px);
+    }
+
+    &-page-size-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      background: transparent;
+      border: none;
+      border-radius: var(--sp-radius-sm, 6px);
+      color: var(--sp-color-text-secondary);
+      font-size: 0.8125rem;
+      font-weight: var(--sp-font-weight-medium, 500);
+      cursor: pointer;
+      transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+      &:hover {
+        background-color: var(--sp-state-hover);
+        color: var(--sp-color-text-primary);
+      }
+
+      &--open {
+        background-color: var(--sp-state-focus);
+        color: var(--sp-color-text-primary);
+      }
+
+      .data-grid__footer-page-size-label {
+        color: var(--sp-color-text-muted);
+      }
+
+      .data-grid__footer-page-size-value {
+        color: var(--sp-color-text-primary);
+        font-weight: var(--sp-font-weight-semibold, 600);
+      }
+
+      .data-grid__footer-page-size-icon {
+        color: var(--sp-color-text-muted);
+        transition: transform var(--sp-transition-fast);
+      }
+
+      &--open .data-grid__footer-page-size-icon {
+        transform: rotate(180deg);
+      }
+
+      @include focus-ring;
+    }
+
+    &-divider {
+      width: 1px;
+      height: 14px;
+      background-color: var(--sp-border-strong);
+    }
+
+    &-range-text {
+      font-size: 0.8125rem;
+      color: var(--sp-color-text-secondary);
+      font-weight: var(--sp-font-weight-medium, 500);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    &-pagination-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    &-page-circle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 4px;
+      border-radius: var(--sp-radius-sm, 6px);
+      border: none;
+      background: transparent;
+      color: var(--sp-color-text-secondary);
+      font-size: 0.8125rem;
+      font-weight: var(--sp-font-weight-medium, 500);
+      cursor: pointer;
+      transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+      &:hover:not(:disabled) {
+        background-color: var(--sp-state-hover);
+        color: var(--sp-color-text-primary);
+      }
+
+      &:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+      }
+
+      &--active {
+        background-color: transparent !important;
+        color: var(--sp-color-brand-primary) !important;
+        font-weight: var(--sp-font-weight-bold, 700);
+      }
+
+      @include focus-ring;
+    }
+  }
+
+  // ── 8. Floating Bulk Action Dock ──────────────────────────────
+  &__selection-bar {
+    position: fixed;
+    bottom: var(--sp-space-6, 24px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-3, 12px) var(--sp-space-6, 24px);
+    background-color: var(--sp-color-surface-elevated);
+    border: 1px solid var(--sp-border-strong);
+    border-radius: var(--sp-radius-xl, 28px);
+    box-shadow: var(--sp-shadow-modal);
+    z-index: var(--sp-z-sticky, 100);
+    animation: spSelectionBarSlideUp var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural) forwards;
+
+    &-info {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-2, 8px);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-semibold, 600);
+      color: var(--sp-color-text-primary);
+    }
+
+    &-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: var(--sp-radius-full, 9999px);
+      background-color: var(--sp-color-brand-primary);
+      color: #ffffff;
+      font-size: var(--sp-font-caption, 0.75rem);
+      font-weight: var(--sp-font-weight-bold, 700);
+    }
+  }
+
+  // ── 9. Empty / No Results / Error Views ────────────────────────
+  &__state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-space-12, 48px) var(--sp-space-6, 24px);
+    text-align: center;
+    min-height: 240px;
+    width: 100%;
+
+    &-icon {
+      color: var(--sp-color-text-muted);
+      margin-bottom: var(--sp-space-3, 12px);
+    }
+
+    &-title {
+      font-size: var(--sp-font-heading-h4, 1.125rem);
+      font-weight: var(--sp-font-weight-semibold, 600);
+      color: var(--sp-color-text-primary);
+      margin-bottom: 4px;
+    }
+
+    &-description {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      color: var(--sp-color-text-secondary);
+      max-width: 400px;
+    }
+  }
+
+  &__skeleton {
+    width: 100%;
+    height: 14px;
+    border-radius: var(--sp-radius-xs, 4px);
+    @include skeleton-shimmer;
+
+    &--text {
+      height: 14px;
+      border-radius: var(--sp-radius-xs, 4px);
+    }
+
+    &--checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: var(--sp-radius-xs, 4px);
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+
+    &--action {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--sp-radius-full, 9999px);
+      flex-shrink: 0;
+    }
+  }
+
+  // ── 10. Mobile Adaptive Feed ──────────────────────────────────
+  &__mobile-feed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3, 12px);
+    padding: 0;
+    background-color: transparent;
+
+    &-card {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--sp-color-surface-container-high);
+      border: 1px solid var(--sp-border-subtle);
+      border-radius: var(--sp-radius-md, 12px);
+      padding: var(--sp-space-4, 16px);
+      box-shadow: var(--sp-shadow-flat);
+
+      &--selected {
+        border-color: var(--sp-color-brand-primary);
+        background-color: rgba(229, 9, 20, 0.04);
+      }
+    }
+  }
+}
+
+// ── Outlined Filter Popover ─────────────────────────────────────
+.data-grid-filter-popover {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sp-color-surface-elevated);
+  border: 1px solid var(--sp-border-strong);
+  border-radius: var(--sp-radius-lg, 16px);
+  box-shadow: var(--sp-shadow-modal);
+  padding: var(--sp-space-5, 20px) var(--sp-space-6, 24px);
+  width: 540px;
+  max-width: calc(100vw - 32px);
+  z-index: var(--sp-z-modal, 1000);
+  color: var(--sp-color-text-primary);
+  font-family: var(--sp-font-body);
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+
+    .text-field,
+    .select__trigger {
+      margin-bottom: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--sp-border-subtle);
+  }
+}
+
+// ── Context Menu Popover ────────────────────────────────────────
+.data-grid-column-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sp-color-surface-elevated);
+  border: 1px solid var(--sp-border-strong);
+  border-radius: var(--sp-radius-md, 12px);
+  box-shadow: var(--sp-shadow-modal);
+  padding: 6px;
+  width: 220px;
+  z-index: var(--sp-z-modal, 1000);
+  color: var(--sp-color-text-primary);
+  font-family: var(--sp-font-body);
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--sp-radius-sm, 6px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    svg {
+      color: var(--sp-color-text-secondary);
+      flex-shrink: 0;
+      transition: color var(--sp-transition-fast);
+    }
+
+    &:hover {
+      background-color: var(--sp-color-surface-container-highest);
+      color: var(--sp-color-text-primary);
+
+      svg {
+        color: var(--sp-color-brand-primary);
+      }
+    }
+
+    @include focus-ring;
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: var(--sp-border-subtle);
+    margin: 4px 0;
+  }
+}
+
+// ── Toolbar Panels (Columns, Density, Export) ───────────────────
+.data-grid-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sp-color-surface-elevated);
+  border: 1px solid var(--sp-border-strong);
+  border-radius: var(--sp-radius-md, 12px);
+  box-shadow: var(--sp-shadow-modal);
+  padding: 12px;
+  min-width: 220px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: var(--sp-z-modal, 1000);
+  color: var(--sp-color-text-primary);
+  font-family: var(--sp-font-body);
+
+  @include custom-scrollbar(6px, var(--sp-color-surface-container-high));
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 8px 0;
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-secondary);
+    border-bottom: 1px solid var(--sp-border-subtle);
+    margin-bottom: 8px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: var(--sp-radius-sm, 6px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-primary);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-state-hover);
+    }
+
+    &--switch {
+      justify-content: space-between;
+      user-select: none;
+    }
+  }
+}
+
+// ── Columns Panel Popup (Mockup Gogo MUI-X Style) ───────────────
+.data-grid-columns-popup {
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  padding: 16px;
+  background-color: var(--sp-color-surface-container, #141721);
+  border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: var(--sp-radius-lg, 18px);
+  box-shadow: var(--sp-shadow-modal, 0 16px 40px rgba(0, 0, 0, 0.7));
+  box-sizing: border-box;
+  font-family: var(--sp-font-body);
+  user-select: none;
+
+  // 1. Search Pill
+  &__search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 38px;
+    padding: 0 14px;
+    background-color: var(--sp-color-surface-container-low, #0E1017);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: var(--sp-radius-full, 9999px);
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    transition: border-color var(--sp-transition-fast), background-color var(--sp-transition-fast);
+
+    &:focus-within {
+      border-color: var(--sp-color-brand-primary, #E50914);
+      background-color: var(--sp-color-surface-container-lowest, #07080A);
+    }
+  }
+
+  &__search-icon {
+    color: var(--sp-color-text-secondary, #9499A8);
+    flex-shrink: 0;
+  }
+
+  &__search-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--sp-color-text-primary, #F4F4F6);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-family: inherit;
+
+    &::placeholder {
+      color: var(--sp-color-text-secondary, #9499A8);
+      opacity: 0.8;
+    }
+  }
+
+  // 2. Columns List
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 2px;
+    margin-bottom: 12px;
+    @include custom-scrollbar(4px, var(--sp-color-surface-container-high));
+  }
+
+  &__item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: var(--sp-radius-sm, 8px);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast);
+    box-sizing: border-box;
+
+    &:hover {
+      background-color: var(--sp-state-hover, rgba(255, 255, 255, 0.05));
+    }
+  }
+
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid var(--sp-color-outline, rgba(255, 255, 255, 0.25));
+    background-color: transparent;
+    color: #FFFFFF;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+    &--checked {
+      background-color: var(--sp-color-brand-primary, #E50914) !important;
+      border-color: var(--sp-color-brand-primary, #E50914) !important;
+      color: #FFFFFF !important;
+    }
+  }
+
+  &__label {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary, #F4F4F6);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  // 3. Footer
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.06));
+  }
+
+  &__toggle-all {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: var(--sp-radius-sm, 8px);
+    background: transparent;
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-state-hover, rgba(255, 255, 255, 0.05));
+    }
+  }
+
+  &__footer-label {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary, #F4F4F6);
+  }
+
+  &__reset-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: var(--sp-radius-sm, 8px);
+    background-color: var(--sp-color-surface-container-high, rgba(255, 255, 255, 0.06));
+    color: var(--sp-color-text-secondary, #9499A8);
+    font-size: var(--sp-font-caption, 0.8125rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-container-highest, rgba(255, 255, 255, 0.12));
+      color: var(--sp-color-text-primary, #F4F4F6);
+    }
+  }
+}
+
+.data-grid-density-panel-wrapper {
+  width: 270px;
+}
+
+.data-grid-density-menu {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--sp-radius-sm, 8px);
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--sp-color-text-primary);
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-state-hover);
+    }
+
+    &--active {
+      background-color: var(--sp-color-surface-container-highest);
+      color: var(--sp-color-brand-primary);
+      border-color: var(--sp-border-subtle);
+
+      .data-grid-density-menu__item-title {
+        color: var(--sp-color-brand-primary);
+        font-weight: var(--sp-font-weight-bold, 700);
+      }
+
+      .data-grid-density-menu__item-icon {
+        color: var(--sp-color-brand-primary);
+      }
+    }
+
+    &--reset {
+      color: var(--sp-color-text-secondary);
+
+      &:hover {
+        color: var(--sp-color-status-error, #EF4444);
+        background-color: rgba(239, 68, 68, 0.08);
+
+        .data-grid-density-menu__item-icon,
+        .data-grid-density-menu__item-title {
+          color: var(--sp-color-status-error, #EF4444);
+        }
+      }
+    }
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sp-color-text-secondary);
+      flex-shrink: 0;
+    }
+
+    &-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    &-title {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-semibold, 600);
+      color: var(--sp-color-text-primary);
+      line-height: 1.25;
+    }
+
+    &-desc {
+      font-size: var(--sp-font-caption, 0.6875rem);
+      color: var(--sp-color-text-muted);
+      line-height: 1.3;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: var(--sp-border-subtle);
+    margin: 4px 0;
+  }
+}
+
+// ── 15. Floating Page Size Dropdown Menu ───────────────────────
+.data-grid-page-size-menu {
+  @include surface('container-highest');
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  min-width: 64px;
+  border-radius: var(--sp-radius-md, 12px);
+  box-shadow: var(--sp-shadow-elevated);
+  animation: spFadeIn var(--sp-motion-duration-fast, 150ms) var(--sp-motion-easing-neural);
+  gap: 2px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    border-radius: var(--sp-radius-sm, 6px);
+    color: var(--sp-color-text-primary);
+    font-size: 0.8125rem;
+    font-weight: var(--sp-font-weight-medium, 500);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-state-hover);
+      color: var(--sp-color-text-primary);
+    }
+
+    &--active {
+      background-color: var(--sp-state-hover);
+      color: var(--sp-color-brand-primary) !important;
+      font-weight: var(--sp-font-weight-bold, 700);
+    }
+
+    @include focus-ring;
+  }
+}

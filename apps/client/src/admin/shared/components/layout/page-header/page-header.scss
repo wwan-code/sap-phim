@@ -1,0 +1,170 @@
+/**
+ * @file page-header.scss
+ * @module Admin/Shared/Components/Layout/PageHeader/Styles
+ * @description Styling cho component PageHeader chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.admin-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-space-6, 24px);
+  margin-bottom: var(--sp-space-6, 24px);
+  flex-wrap: wrap;
+
+  @include responsive('mobile') {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sp-space-4, 16px);
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1, 4px);
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__breadcrumbs {
+    margin-bottom: var(--sp-space-2, 8px);
+  }
+
+  &__breadcrumb-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-space-2, 8px);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-muted);
+  }
+
+  &__breadcrumb-link {
+    color: var(--sp-color-text-secondary);
+    text-decoration: none;
+    transition: color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-text-primary);
+    }
+  }
+
+  &__breadcrumb-current {
+    color: var(--sp-color-brand-primary);
+    font-weight: var(--sp-font-weight-medium, 500);
+  }
+
+  &__breadcrumb-sep {
+    color: var(--sp-color-outline-variant, #44474e);
+    user-select: none;
+  }
+
+  &__title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1, 4px);
+  }
+
+  &__title-group {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    font-family: var(--sp-font-display);
+    font-size: var(--sp-font-display-h2, 1.75rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary);
+    line-height: var(--sp-line-height-tight, 1.2);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    line-height: 1.4;
+
+    &--primary {
+      background-color: rgba(229, 9, 20, 0.12);
+      color: var(--sp-color-brand-primary);
+      border: 1px solid rgba(229, 9, 20, 0.24);
+    }
+
+    &--neutral,
+    &--secondary {
+      background-color: var(--sp-color-surface-container-high);
+      color: var(--sp-color-text-secondary);
+      border: 1px solid var(--sp-border-subtle);
+    }
+
+    &--purple,
+    &--accent {
+      background-color: rgba(124, 93, 250, 0.15);
+      color: var(--sp-color-brand-accent);
+      border: 1px solid rgba(124, 93, 250, 0.3);
+    }
+
+    &--success {
+      background-color: rgba(16, 185, 129, 0.12);
+      color: var(--sp-color-status-success);
+      border: 1px solid rgba(16, 185, 129, 0.24);
+    }
+
+    &--warning {
+      background-color: rgba(245, 158, 11, 0.12);
+      color: var(--sp-color-status-warning);
+      border: 1px solid rgba(245, 158, 11, 0.24);
+    }
+
+    &--danger {
+      background-color: rgba(239, 68, 68, 0.12);
+      color: var(--sp-color-status-error);
+      border: 1px solid rgba(239, 68, 68, 0.24);
+    }
+
+    &--info {
+      background-color: rgba(59, 130, 246, 0.12);
+      color: var(--sp-color-status-info);
+      border: 1px solid rgba(59, 130, 246, 0.24);
+    }
+  }
+
+  &__subtitle {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary);
+    line-height: var(--sp-line-height-normal, 1.5);
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+
+    @include responsive('mobile') {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+}

@@ -1,0 +1,149 @@
+/**
+ * @file player-next-episode-card.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Card đếm ngược phát tập tiếp theo chuẩn Netflix (Next Episode Countdown Card) theo The Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.player-next-episode-card {
+  position: absolute;
+  bottom: 84px;
+  right: var(--sp-space-6, 24px);
+  z-index: calc(var(--sp-z-docked) + 16);
+  pointer-events: auto;
+  user-select: none;
+  width: 280px;
+  background-color: var(--sp-vp-glass-bg, rgba(14, 16, 23, 0.92));
+  backdrop-filter: var(--sp-vp-glass-blur-deep, blur(20px));
+  -webkit-backdrop-filter: var(--sp-vp-glass-blur-deep, blur(20px));
+  border: 1px solid var(--sp-vp-glass-border-strong, rgba(255, 255, 255, 0.16));
+  border-radius: var(--sp-radius-md, 12px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 20px rgba(229, 9, 20, 0.2);
+  padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-2, 8px);
+  animation: sp-next-card-slide 400ms var(--sp-motion-easing-neural) forwards;
+  transition: bottom var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural);
+
+  &--controls-hidden {
+    bottom: 28px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__badge {
+    font-family: var(--sp-font-body, sans-serif);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sp-color-brand-primary, #E50914);
+  }
+
+  &__close-btn {
+    background: transparent;
+    border: none;
+    color: var(--sp-color-text-secondary, #9499A8);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: var(--sp-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--sp-transition-fast), transform var(--sp-transition-fast);
+
+    &:hover {
+      color: #FFFFFF;
+      transform: scale(1.1);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__title {
+    font-family: var(--sp-font-body, sans-serif);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-primary, #FFFFFF);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__countdown {
+    font-family: var(--sp-font-mono, monospace);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499A8);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    margin-top: 4px;
+  }
+
+  &__play-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2, 8px);
+    padding: 8px 14px;
+    background-color: var(--sp-color-brand-primary, #E50914);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--sp-radius-sm, 6px);
+    color: #FFFFFF;
+    font-family: var(--sp-font-body, sans-serif);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), transform var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-brand-primary-hover, #FF1E27);
+      box-shadow: 0 0 16px rgba(229, 9, 20, 0.6);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+@keyframes sp-next-card-slide {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+// Thích ứng Mobile
+@media (max-width: 768px) {
+  .player-next-episode-card {
+    width: calc(100% - 32px);
+    left: 16px;
+    right: 16px;
+    bottom: 96px;
+
+    &--controls-hidden {
+      bottom: 24px;
+    }
+  }
+}

@@ -1,0 +1,561 @@
+/**
+ * @file membership-plan-list-page.scss
+ * @module Admin/Modules/MembershipPlans/Pages
+ * @description Styling cho trang Quản Lý Gói Hội Viên VIP chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.membership-plan-admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-6, 24px);
+  width: 100%;
+  max-width: var(--sp-container-max-width, 1440px);
+  margin: 0 auto;
+  padding-bottom: var(--sp-space-12, 48px);
+
+  // ── Header Actions ──
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  // ── KPI Stats Grid ──
+  &__kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-space-4, 16px);
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__kpi-card {
+    @include surface('container');
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-5, 20px);
+    border-radius: var(--sp-radius-md, 12px);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    transition: transform var(--sp-transition-normal), box-shadow var(--sp-transition-normal), border-color var(--sp-transition-normal);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sp-elevation-2);
+      border-color: var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    }
+
+    &--primary .membership-plan-admin-page__kpi-icon {
+      background: rgba(229, 9, 20, 0.12);
+      color: var(--sp-color-brand-primary, #e50914);
+      border-color: rgba(229, 9, 20, 0.25);
+    }
+
+    &--success .membership-plan-admin-page__kpi-icon {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--sp-color-status-success, #10b981);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    &--accent .membership-plan-admin-page__kpi-icon {
+      background: rgba(124, 93, 250, 0.12);
+      color: var(--sp-color-brand-accent, #7c5dfa);
+      border-color: rgba(124, 93, 250, 0.25);
+    }
+
+    &--warning .membership-plan-admin-page__kpi-icon {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--sp-color-status-warning, #f59e0b);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+  }
+
+  &__kpi-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--sp-radius-md, 12px);
+    border: 1px solid transparent;
+    flex-shrink: 0;
+  }
+
+  &__kpi-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1, 4px);
+    min-width: 0;
+  }
+
+  &__kpi-label {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    font-weight: var(--sp-font-weight-medium, 500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__kpi-value {
+    font-family: var(--sp-font-display);
+    font-size: var(--sp-font-display-h2, 1.75rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    line-height: var(--sp-line-height-tight, 1.15);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__kpi-desc {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ── Toolbar Filter Elements ──
+  &__toolbar-filters {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    flex-wrap: wrap;
+  }
+
+  &__search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 260px;
+
+    @media (max-width: 600px) {
+      min-width: 100%;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--sp-color-text-muted, #5c6275);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 var(--sp-space-3, 12px) 0 36px;
+      background-color: var(--sp-color-surface-container-high, #1b1f2b);
+      border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+      border-radius: var(--sp-radius-md, 12px);
+      color: var(--sp-color-text-primary, #f4f4f6);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      outline: none;
+      transition: border-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+      &::placeholder {
+        color: var(--sp-color-text-muted, #5c6275);
+      }
+
+      &:focus {
+        border-color: var(--sp-color-brand-primary, #e50914);
+        box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+      }
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 8px;
+      background: none;
+      border: none;
+      color: var(--sp-color-text-muted, #5c6275);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border-radius: var(--sp-radius-xs, 4px);
+
+      &:hover {
+        color: var(--sp-color-text-primary, #f4f4f6);
+      }
+    }
+  }
+
+  // ── Pricing Grid Container ──
+  &__pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-space-5, 20px);
+
+    @media (max-width: 1320px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 680px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // ── Pricing Plan Card ──
+  &__plan-card {
+    @include surface('container');
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--sp-radius-lg, 18px);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    box-shadow: var(--sp-shadow-flat);
+    transition: transform var(--sp-transition-normal), box-shadow var(--sp-transition-normal), border-color var(--sp-transition-normal);
+    overflow: hidden;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--sp-shadow-elevated);
+      border-color: var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    }
+
+    // Popular modifier
+    &--popular {
+      border-color: rgba(229, 9, 20, 0.45);
+      box-shadow: 0 4px 20px rgba(229, 9, 20, 0.15), var(--sp-shadow-flat);
+
+      &:hover {
+        border-color: var(--sp-color-brand-primary, #e50914);
+        box-shadow: 0 8px 30px rgba(229, 9, 20, 0.25), var(--sp-shadow-elevated);
+      }
+
+      .membership-plan-admin-page__plan-popular-ribbon {
+        display: flex;
+      }
+    }
+
+    // Inactive modifier
+    &--inactive {
+      opacity: 0.65;
+      filter: saturate(0.7);
+
+      &:hover {
+        opacity: 0.9;
+        filter: none;
+      }
+    }
+  }
+
+  // Popular Ribbon
+  &__plan-popular-ribbon {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-1, 4px);
+    background: linear-gradient(90deg, #e50914, #ff1e27);
+    color: #ffffff;
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: var(--sp-space-1, 4px) 0;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+  }
+
+  // Card Header
+  &__plan-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3, 12px);
+    padding: var(--sp-space-5, 20px) var(--sp-space-5, 20px) var(--sp-space-4, 16px);
+    border-bottom: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  }
+
+  &__plan-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__plan-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--sp-radius-md, 12px);
+    border: 1px solid transparent;
+  }
+
+  &__plan-badges {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__plan-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__plan-tier-code {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sp-color-text-muted, #5c6275);
+  }
+
+  &__plan-title {
+    margin: 0;
+    font-family: var(--sp-font-display);
+    font-size: var(--sp-font-heading-h3, 1.25rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary, #f4f4f6);
+  }
+
+  &__plan-tagline {
+    margin: 0;
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    line-height: 1.4;
+    min-height: 38px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  // Card Price Block
+  &__plan-price-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1, 4px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+    background-color: var(--sp-color-surface-container-low, #0e1017);
+    border-bottom: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  }
+
+  &__plan-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-space-1, 4px);
+  }
+
+  &__plan-price-amount {
+    font-family: var(--sp-font-display);
+    font-size: clamp(1.5rem, 2vw, 1.85rem);
+    font-weight: var(--sp-font-weight-extrabold, 800);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    letter-spacing: -0.02em;
+
+    &--free {
+      color: var(--sp-color-brand-accent, #7c5dfa);
+    }
+  }
+
+  &__plan-price-cycle {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    font-weight: var(--sp-font-weight-medium, 500);
+  }
+
+  &__plan-yearly-discount {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+
+    .yearly-price {
+      font-weight: var(--sp-font-weight-semibold, 600);
+      color: var(--sp-color-text-primary, #f4f4f6);
+    }
+
+    .discount-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--sp-color-status-success, #10b981);
+      border-radius: var(--sp-radius-full, 9999px);
+      font-size: var(--sp-font-micro, 0.6875rem);
+      font-weight: var(--sp-font-weight-bold, 700);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+  }
+
+  // Card Specs & Perks Body
+  &__plan-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-4, 16px) var(--sp-space-5, 20px);
+    flex: 1;
+  }
+
+  &__plan-specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__plan-spec-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-2, 8px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border-radius: var(--sp-radius-sm, 6px);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.05));
+
+    .spec-icon {
+      color: var(--sp-color-text-muted, #5c6275);
+      flex-shrink: 0;
+    }
+
+    .spec-text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .spec-title {
+        font-size: var(--sp-font-micro, 0.6875rem);
+        color: var(--sp-color-text-muted, #5c6275);
+        line-height: 1.1;
+      }
+
+      .spec-value {
+        font-size: var(--sp-font-caption, 0.75rem);
+        font-weight: var(--sp-font-weight-semibold, 600);
+        color: var(--sp-color-text-primary, #f4f4f6);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__plan-perks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__plan-perk-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    line-height: 1.4;
+
+    .perk-check {
+      color: var(--sp-color-status-success, #10b981);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .perk-cross {
+      color: var(--sp-color-text-muted, #5c6275);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    &--disabled {
+      color: var(--sp-color-text-muted, #5c6275);
+      text-decoration: line-through;
+    }
+  }
+
+  // Card Footer Action Row
+  &__plan-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-3, 12px) var(--sp-space-5, 20px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border-top: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  }
+
+  &__plan-switch-group {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+
+    .switch-label {
+      font-size: var(--sp-font-caption, 0.75rem);
+      font-weight: var(--sp-font-weight-medium, 500);
+      color: var(--sp-color-text-secondary, #9499a8);
+    }
+  }
+
+  &__plan-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+  }
+
+  // ── Empty State ──
+  &__empty-state {
+    @include surface('container');
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-space-12, 48px) var(--sp-space-6, 24px);
+    border-radius: var(--sp-radius-lg, 18px);
+    border: 1px dashed var(--sp-border-strong, rgba(255, 255, 255, 0.16));
+    text-align: center;
+    gap: var(--sp-space-4, 16px);
+
+    .empty-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: var(--sp-radius-xl, 28px);
+      background-color: var(--sp-color-surface-container-high, #1b1f2b);
+      color: var(--sp-color-text-muted, #5c6275);
+    }
+
+    .empty-title {
+      margin: 0;
+      font-family: var(--sp-font-display);
+      font-size: var(--sp-font-heading-h3, 1.25rem);
+      color: var(--sp-color-text-primary, #f4f4f6);
+    }
+
+    .empty-desc {
+      margin: 0;
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      color: var(--sp-color-text-secondary, #9499a8);
+      max-width: 420px;
+    }
+  }
+
+  // ── Skeleton Loader ──
+  &__skeleton-card {
+    @include surface('container');
+    height: 480px;
+    border-radius: var(--sp-radius-lg, 18px);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.5; }
+}

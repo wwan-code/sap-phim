@@ -1,0 +1,292 @@
+@use '@styles/abstract/mixins' as *;
+
+.dashboard-chart-card {
+  @include flex-column;
+  gap: var(--sys-spacing-md, 16px);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  &__header {
+    @include flex-between;
+    flex-wrap: wrap;
+    gap: var(--sys-spacing-sm, 12px);
+    border-bottom: 1px solid var(--sys-color-outline-variant);
+    padding-bottom: 14px;
+  }
+
+  &__title-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sys-spacing-md, 16px);
+  }
+
+  &__title {
+    font-size: var(--sys-typescale-title-medium, 16px);
+    font-weight: var(--sys-font-weight-bold, 700);
+    color: var(--sys-color-on-surface);
+    margin: 0;
+    letter-spacing: var(--sys-tracking-tight, -0.015em);
+  }
+
+  // ── Metric Tabs ─────────────────────────────────────────
+  &__metric-tabs {
+    display: inline-flex;
+    align-items: center;
+    background: var(--sys-color-surface-container);
+    border-radius: var(--sys-shape-corner-full, 9999px);
+    padding: var(--sys-spacing-xxxxs, 3px);
+    gap: var(--sys-spacing-xxxxs, 2px);
+    border: 1px solid var(--sys-color-outline-variant);
+  }
+
+  &__metric-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sys-spacing-xxs, 6px);
+    height: 30px;
+    padding: 0 var(--sys-spacing-sm, 12px);
+    border-radius: var(--sys-shape-corner-full, 9999px);
+    background: transparent;
+    border: none;
+    color: var(--sys-color-on-surface-variant);
+    font-size: var(--sys-typescale-label-small, 12px);
+    font-weight: var(--sys-font-weight-medium, 500);
+    cursor: pointer;
+    transition: all var(--sys-motion-duration-short-3, 150ms) var(--sys-motion-easing-standard);
+    user-select: none;
+
+    &:hover {
+      color: var(--sys-color-on-surface);
+      background: var(--sys-color-surface-container-high);
+    }
+
+    &--active {
+      background: var(--sys-color-primary);
+      color: var(--sys-color-on-primary, #ffffff);
+      font-weight: var(--sys-font-weight-semibold, 600);
+      box-shadow: var(--sys-glow-primary);
+
+      &:hover {
+        background: var(--sys-color-primary);
+        color: var(--sys-color-on-primary, #ffffff);
+      }
+    }
+  }
+
+  // ── Controls: Range & Growth ────────────────────────────
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--sys-spacing-sm, 10px);
+  }
+
+  &__range-group {
+    display: inline-flex;
+    align-items: center;
+    background: var(--sys-color-surface-container);
+    border-radius: var(--sys-shape-corner-md, 10px);
+    padding: var(--sys-spacing-xxxxs, 2px);
+    gap: var(--sys-spacing-xxxxs, 2px);
+    border: 1px solid var(--sys-color-outline-variant);
+  }
+
+  &__range-btn {
+    height: 26px;
+    padding: 0 var(--sys-spacing-sm, 10px);
+    border-radius: var(--sys-shape-corner-xs, 6px);
+    background: transparent;
+    border: none;
+    color: var(--sys-color-on-surface-variant);
+    font-size: var(--sys-typescale-label-small, 11px);
+    font-weight: var(--sys-font-weight-medium, 500);
+    cursor: pointer;
+    transition: all var(--sys-motion-duration-short-3, 150ms) ease;
+
+    &:hover {
+      color: var(--sys-color-on-surface);
+    }
+
+    &--active {
+      background: var(--sys-color-surface-container-highest);
+      color: var(--sys-color-on-surface);
+      font-weight: var(--sys-font-weight-semibold, 600);
+      box-shadow: var(--sys-elevation-level-1);
+    }
+  }
+
+  &__growth-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sys-spacing-xxxxs, 4px);
+    font-size: var(--sys-typescale-label-small, 11px);
+    font-weight: var(--sys-font-weight-bold, 700);
+    padding: var(--sys-spacing-xxxxs, 3px) var(--sys-spacing-xs, 8px);
+    border-radius: var(--sys-shape-corner-full, 9999px);
+
+    &--positive {
+      color: var(--sys-color-success);
+      background: var(--sys-color-success-container);
+      border: 1px solid rgba(22, 163, 74, 0.25);
+    }
+
+    &--negative {
+      color: var(--sys-color-error);
+      background: var(--sys-color-error-container);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+    }
+  }
+
+  // ── Canvas Container ────────────────────────────────────
+  &__canvas-container {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    @include flex-center;
+  }
+
+  &__loading-overlay {
+    position: absolute;
+    inset: 0;
+    @include flex-column;
+    @include flex-center;
+    gap: var(--sys-spacing-sm, 10px);
+    background: var(--sys-color-surface);
+    opacity: 0.9;
+    z-index: 10;
+    color: var(--sys-color-on-surface-variant);
+    font-size: var(--sys-typescale-body-medium, 13px);
+  }
+
+  &__spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(var(--sys-color-primary-rgb), 0.2);
+    border-top-color: var(--sys-color-primary);
+    border-radius: var(--sys-shape-corner-full, 9999px);
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__error-state,
+  &__empty-state {
+    @include flex-column;
+    @include flex-center;
+    gap: var(--sys-spacing-sm, 10px);
+    color: var(--sys-color-on-surface-variant);
+    font-size: var(--sys-typescale-body-medium, 13px);
+    text-align: center;
+    padding: 40px var(--sys-spacing-md, 20px);
+  }
+
+  &__error-icon {
+    color: var(--sys-color-error);
+  }
+
+  &__retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sys-spacing-xxs, 6px);
+    height: 32px;
+    padding: 0 14px;
+    border-radius: var(--sys-shape-corner-md, 8px);
+    background: var(--sys-color-surface-container);
+    border: 1px solid var(--sys-color-outline-variant);
+    color: var(--sys-color-on-surface);
+    font-size: var(--sys-typescale-label-small, 12px);
+    font-weight: var(--sys-font-weight-medium, 500);
+    cursor: pointer;
+    transition: all var(--sys-motion-duration-short-3, 150ms) ease;
+
+    &:hover {
+      background: var(--sys-color-surface-container-high);
+      border-color: var(--sys-color-outline);
+    }
+  }
+
+  // ── Footer Summary ──────────────────────────────────────
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sys-spacing-md, 16px);
+    padding-top: var(--sys-spacing-sm, 12px);
+    border-top: 1px solid var(--sys-color-outline-variant);
+    flex-wrap: wrap;
+  }
+
+  &__stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sys-spacing-xxs, 6px);
+    font-size: var(--sys-typescale-label-small, 12px);
+  }
+
+  &__stat-label {
+    color: var(--sys-color-on-surface-variant);
+  }
+
+  &__stat-value {
+    color: var(--sys-color-on-surface);
+    font-weight: var(--sys-font-weight-bold, 700);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Custom Tooltip (Adaptive Glassmorphism) ────────────────
+.dashboard-chart-tooltip {
+  background: var(--sys-color-surface-container-highest);
+  border: 1px solid var(--sys-color-outline-variant);
+  border-radius: var(--sys-shape-corner-md, 12px);
+  padding: 10px 14px;
+  box-shadow: var(--sys-elevation-level-3);
+  min-width: 190px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--sys-spacing-xxs, 6px);
+    font-size: var(--sys-typescale-label-small, 11px);
+    font-weight: var(--sys-font-weight-semibold, 600);
+    color: var(--sys-color-on-surface-variant);
+    border-bottom: 1px solid var(--sys-color-outline-variant);
+    padding-bottom: var(--sys-spacing-xxs, 6px);
+    margin-bottom: var(--sys-spacing-xs, 8px);
+  }
+
+  &__items {
+    @include flex-column;
+    gap: var(--sys-spacing-xxs, 6px);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--sys-spacing-xs, 8px);
+    font-size: var(--sys-typescale-body-medium, 12px);
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--sys-shape-corner-full, 9999px);
+    flex-shrink: 0;
+  }
+
+  &__label {
+    color: var(--sys-color-on-surface-variant);
+    flex: 1;
+  }
+
+  &__val {
+    color: var(--sys-color-on-surface);
+    font-weight: var(--sys-font-weight-bold, 700);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

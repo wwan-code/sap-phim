@@ -1,0 +1,306 @@
+/**
+ * @file _account-sidebar.scss
+ * @module Pages/Account/Styles/Sidebar
+ * @description Styling cho Sidebar danh mục tài khoản (Desktop 2-column & Swiper Chip Carousel trên Mobile/Tablet < 1024px).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.account-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-3);
+  width: 100%;
+
+  @include responsive(lg-up) {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: calc(var(--sp-space-20) + var(--sp-space-4));
+    align-self: flex-start;
+  }
+
+  &__search-box {
+    margin-bottom: var(--sp-space-2);
+  }
+
+  &__search-icon {
+    color: var(--sp-color-text-muted);
+  }
+
+  &__clear-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: var(--sp-radius-full);
+    background-color: var(--sp-color-surface-container-high);
+    color: var(--sp-color-text-secondary);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-hover);
+      color: var(--sp-color-text-primary);
+    }
+  }
+
+  /* ==========================================================================
+     1. DESKTOP NAVIGATION (>= 1024px)
+     ========================================================================== */
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2);
+
+    @include responsive(tablet-down) {
+      display: none;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3);
+    width: 100%;
+    padding: var(--sp-space-3) var(--sp-space-4);
+    border-radius: var(--sp-radius-lg);
+    background-color: transparent;
+    color: var(--sp-color-text-secondary);
+    text-align: left;
+    position: relative;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+    @include focus-ring;
+
+    &:hover:not(&--active) {
+      background-color: var(--sp-color-surface-hover);
+      color: var(--sp-color-text-primary);
+    }
+
+    &--active {
+      background-color: var(--sp-color-surface-container-high);
+      color: var(--sp-color-text-primary);
+      box-shadow: var(--sp-elevation-1);
+
+      .account-sidebar__item-icon-wrapper {
+        background-color: var(--sp-color-brand-primary);
+        color: var(--sp-color-on-primary);
+      }
+
+      .account-sidebar__item-desc {
+        color: var(--sp-color-text-secondary);
+      }
+    }
+
+    &--danger {
+      &:hover:not(.account-sidebar__item--active) {
+        color: var(--sp-color-status-error);
+        background-color: rgba(239, 68, 68, 0.08);
+
+        .account-sidebar__item-icon-wrapper {
+          color: var(--sp-color-status-error);
+        }
+      }
+
+      &.account-sidebar__item--active {
+        background-color: rgba(239, 68, 68, 0.12);
+        color: var(--sp-color-status-error);
+        border-color: rgba(239, 68, 68, 0.3);
+
+        .account-sidebar__item-icon-wrapper {
+          background-color: var(--sp-color-status-error);
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  &__item-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sp-radius-md);
+    background-color: var(--sp-color-surface-container);
+    color: var(--sp-color-text-secondary);
+    flex-shrink: 0;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+  }
+
+  &__item-icon {
+    flex-shrink: 0;
+  }
+
+  &__item-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-1);
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__item-label {
+    @include typography('body-md');
+    font-weight: var(--sp-font-weight-semibold);
+    white-space: nowrap;
+  }
+
+  &__item-desc {
+    @include typography('caption');
+    color: var(--sp-color-text-muted);
+    line-height: var(--sp-line-height-tight);
+    @include text-truncate(1);
+  }
+
+  &__active-pill {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    border-radius: var(--sp-radius-full) 0 0 var(--sp-radius-full);
+    background-color: var(--sp-color-brand-primary);
+  }
+
+  /* ==========================================================================
+     2. MOBILE & TABLET SWIPER CHIPS (< 1024px)
+     ========================================================================== */
+  &__swiper-wrapper {
+    display: none;
+    position: relative;
+    width: 100%;
+    align-items: center;
+
+    @include responsive(tablet-down) {
+      display: flex;
+    }
+  }
+
+  &__swiper {
+    width: 100%;
+    overflow: hidden;
+    padding: var(--sp-space-1) 0;
+  }
+
+  &__swiper-slide {
+    width: auto !important;
+    display: flex;
+    align-items: center;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 var(--sp-space-4);
+    border-radius: var(--sp-radius-md);
+    background-color: var(--sp-color-surface-container-high);
+    color: var(--sp-color-text-primary);
+    border: 1px solid transparent;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    @include typography('body-sm');
+    font-weight: var(--sp-font-weight-medium);
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast), transform var(--sp-transition-fast);
+    @include focus-ring;
+
+    &:hover:not(&--active) {
+      background-color: var(--sp-color-surface-hover);
+    }
+
+    /* Active State: High contrast light pill (mockup style) */
+    &--active {
+      background-color: #FFFFFF;
+      color: #0F0F0F;
+      font-weight: var(--sp-font-weight-semibold);
+      box-shadow: var(--sp-elevation-1);
+
+      [data-theme='light'] & {
+        background-color: #0F0F0F;
+        color: #FFFFFF;
+      }
+    }
+
+    &--danger {
+      background-color: rgba(239, 68, 68, 0.12);
+      color: var(--sp-color-status-error);
+
+      &:hover:not(.account-sidebar__chip--active) {
+        background-color: rgba(239, 68, 68, 0.18);
+      }
+
+      &.account-sidebar__chip--active {
+        background-color: var(--sp-color-status-error);
+        color: #FFFFFF;
+      }
+    }
+  }
+
+  &__chip-label {
+    white-space: nowrap;
+  }
+
+  /* Scrim Overlays & Arrow Navigation Buttons */
+  &__nav-scrim {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--sp-transition-fast);
+
+    &--visible {
+      opacity: 1;
+    }
+
+    &--left {
+      left: 0;
+      width: 56px;
+      background: linear-gradient(90deg, var(--sp-color-surface-base, #07080A) 35%, transparent 100%);
+      justify-content: flex-start;
+    }
+
+    &--right {
+      right: 0;
+      width: 56px;
+      background: linear-gradient(270deg, var(--sp-color-surface-base, #07080A) 35%, transparent 100%);
+      justify-content: flex-end;
+    }
+  }
+
+  &__nav-btn {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: var(--sp-radius-full);
+    background-color: rgba(33, 33, 33, 0.95);
+    border: 1px solid var(--sp-border-subtle);
+    color: #FFFFFF;
+    cursor: pointer;
+    box-shadow: var(--sp-elevation-2);
+    transition: transform var(--sp-transition-fast), background-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-hover);
+      transform: scale(1.08);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

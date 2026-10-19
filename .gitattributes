@@ -1,0 +1,13 @@
+# @file .gitattributes
+# @module Repository
+# @description Normalize source line endings while preserving binary assets.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary

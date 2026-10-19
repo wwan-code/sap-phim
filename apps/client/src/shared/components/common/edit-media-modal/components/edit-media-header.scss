@@ -1,0 +1,70 @@
+/**
+ * @file edit-media-header.scss
+ * @module Components/Common/EditMediaModal/Components/EditMediaHeaderStyles
+ * @description SCSS styles cho EditMediaHeader component (chuẩn BEM, Material 3 Expressive, Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.edit-media-modal__header {
+  @include flex-between;
+  padding: var(--sp-space-3, 12px) var(--sp-space-5, 20px);
+  background-color: var(--sp-color-surface-container-high, #1b1f2b);
+  border-bottom: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  z-index: 10;
+  flex-shrink: 0;
+  gap: var(--sp-space-3, 12px);
+  box-sizing: border-box;
+
+  &--processing {
+    pointer-events: none;
+    opacity: 0.75;
+  }
+
+  @include responsive(mobile) {
+    padding: var(--sp-space-2_5, 10px) var(--sp-space-3, 12px);
+  }
+}
+
+.edit-media-modal__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2_5, 10px);
+  min-width: 0;
+}
+
+.edit-media-modal__title {
+  @include typography('h3');
+  font-size: 1.15rem;
+  font-weight: var(--sp-font-weight-bold, 700);
+  color: var(--sp-color-text-primary, #f4f4f6);
+  margin: 0;
+  @include text-truncate;
+
+  @include responsive(mobile) {
+    font-size: 1rem;
+  }
+}
+
+.edit-media-modal__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2, 8px);
+  flex-shrink: 0;
+}
+
+.edit-media-modal__tools-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-1, 4px);
+  padding: 2px 4px;
+  background-color: var(--sp-color-surface-container, #12151e);
+  border-radius: var(--sp-radius-md, 12px);
+  border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+
+  @include responsive(mobile) {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+  }
+}

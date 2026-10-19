@@ -1,0 +1,9 @@
+/* ==========================================================================
+   Sạp Phim Design System - Main SCSS Entrypoint
+   ========================================================================== */
+
+@use './abstract/variables';
+@use './abstract/mixins';
+@use './base/reset';
+@use './base/global';
+@use './base/theme-transitions';

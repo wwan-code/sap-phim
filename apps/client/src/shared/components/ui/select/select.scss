@@ -1,0 +1,396 @@
+/**
+ * @file select.scss
+ * @module Components/UI/Select/Styles
+ * @description SCSS styles cho Select component (chuẩn BEM, Material 3 Expressive, Tonal Dropdown và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. MAIN BLOCK (.select)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.select {
+  // ─── Trigger Box ──────────────────────────────────────────────────────────
+  &__trigger {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    display: inline-flex;
+    min-width: 0;
+    transition: all var(--sp-transition-normal);
+
+    &--disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    // Ghi đè cấu trúc input của TextField bên trong trigger
+    .text-field,
+    .text-field__wrapper {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    input,
+    .text-field__input {
+      caret-color: transparent !important;
+      cursor: pointer !important;
+      pointer-events: none !important;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  &__trigger-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+    color: var(--sp-color-text-muted);
+    flex-shrink: 0;
+  }
+
+  &__trigger-clear {
+    background: transparent;
+    border: none;
+    padding: var(--sp-space-1, 4px);
+    color: var(--sp-color-text-muted);
+    cursor: pointer;
+    border-radius: var(--sp-radius-full, 9999px);
+    @include flex-center;
+    transition:
+      color var(--sp-transition-fast),
+      background-color var(--sp-transition-fast),
+      transform var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-status-error);
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.92);
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__trigger-icon {
+    transition: transform var(--sp-transition-normal) var(--sp-motion-easing-neural);
+    flex-shrink: 0;
+    color: var(--sp-color-text-secondary);
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__trigger-spinner {
+    animation: sp-select-spin 0.9s linear infinite;
+    color: var(--sp-color-brand-primary);
+    flex-shrink: 0;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 2. CHIPS CONTAINER (Multi-select Input Chips)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+    padding: 2px 0;
+    max-width: 100%;
+    position: relative;
+    z-index: 3;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--sp-color-surface-container-highest);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm, 6px);
+    padding: 0 var(--sp-space-1, 4px) 0 var(--sp-space-2, 8px);
+    height: 24px;
+    pointer-events: auto;
+    gap: var(--sp-space-1, 4px);
+    transition:
+      background-color var(--sp-transition-fast),
+      border-color var(--sp-transition-fast);
+
+    &:hover {
+      background-color: var(--sp-color-surface-hover);
+      border-color: var(--sp-border-strong);
+    }
+  }
+
+  &__chip-text {
+    @include typography('caption');
+    line-height: 1;
+    color: var(--sp-color-text-primary);
+    max-width: 120px;
+    @include text-truncate;
+    font-weight: var(--sp-font-weight-medium);
+  }
+
+  &__chip-delete {
+    background: transparent;
+    border: none;
+    padding: 2px;
+    color: var(--sp-color-text-muted);
+    cursor: pointer;
+    border-radius: var(--sp-radius-full, 9999px);
+    @include flex-center;
+    transition:
+      color var(--sp-transition-fast),
+      background-color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-text-primary);
+      background-color: var(--sp-state-hover);
+    }
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__chips-more {
+    @include typography('micro');
+    color: var(--sp-color-text-secondary);
+    padding: 0 var(--sp-space-1_5, 6px);
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm, 6px);
+    height: 24px;
+    @include flex-center;
+    font-weight: var(--sp-font-weight-semibold);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3. DROPDOWN POPOVER MENU (Material 3 Tonal Container)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__dropdown {
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-strong);
+    border-radius: var(--sp-radius-lg, 18px);
+    box-shadow: var(--sp-shadow-modal);
+    z-index: var(--sp-z-modal, 1000);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    min-width: 200px;
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  // ─── Search Bar ───────────────────────────────────────────────────────────
+  &__dropdown-search {
+    padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    border-bottom: 1px solid var(--sp-border-subtle);
+    background-color: transparent;
+  }
+
+  &__dropdown-search-icon {
+    color: var(--sp-color-text-muted);
+    flex-shrink: 0;
+  }
+
+  &__dropdown-search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--sp-color-text-primary);
+    @include typography('body-sm');
+    font-family: var(--sp-font-body);
+    width: 100%;
+    padding: var(--sp-space-1, 4px) 0;
+
+    &::placeholder {
+      color: var(--sp-color-text-muted);
+    }
+  }
+
+  // ─── Options List ─────────────────────────────────────────────────────────
+  &__dropdown-list {
+    overflow-y: auto;
+    padding: var(--sp-space-1, 4px) 0;
+    flex: 1;
+    @include custom-scrollbar(5px, var(--sp-color-surface-hover), transparent);
+  }
+
+  &__dropdown-empty {
+    padding: var(--sp-space-6, 24px) var(--sp-space-4, 16px);
+    color: var(--sp-color-text-muted);
+    @include typography('body-sm');
+    text-align: center;
+    font-family: var(--sp-font-body);
+  }
+
+  &__dropdown-group {
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px) var(--sp-space-1, 4px);
+    @include typography('micro');
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--sp-font-body);
+  }
+
+  &__dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: var(--sp-space-2_5, 10px) var(--sp-space-4, 16px);
+    cursor: pointer;
+    min-height: 40px;
+    position: relative;
+    gap: var(--sp-space-3, 12px);
+    transition: background-color var(--sp-transition-fast);
+
+    &:hover,
+    &--active {
+      background-color: var(--sp-color-surface-hover);
+    }
+
+    &--selected {
+      background-color: rgba(229, 9, 20, 0.08);
+      color: var(--sp-color-brand-primary);
+
+      &:hover {
+        background-color: rgba(229, 9, 20, 0.12);
+      }
+
+      .select__dropdown-item-text {
+        color: var(--sp-color-brand-primary);
+        font-weight: var(--sp-font-weight-semibold);
+      }
+    }
+
+    &--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  &__dropdown-item-text {
+    flex: 1;
+    @include typography('body-sm');
+    font-family: var(--sp-font-body);
+    @include text-truncate;
+    color: var(--sp-color-text-primary);
+  }
+
+  &__dropdown-check {
+    color: var(--sp-color-brand-primary);
+    flex-shrink: 0;
+  }
+
+  &__dropdown-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--sp-color-outline, #8E9099);
+    border-radius: var(--sp-radius-xs, 4px);
+    @include flex-center;
+    transition: all var(--sp-transition-fast);
+    flex-shrink: 0;
+    background-color: transparent;
+
+    svg {
+      display: block;
+      color: var(--sp-color-on-primary, #FFFFFF);
+    }
+
+    &--checked {
+      background-color: var(--sp-color-brand-primary);
+      border-color: var(--sp-color-brand-primary);
+    }
+  }
+
+  // ─── Dropdown Footer (Multi-select Actions) ────────────────────────────────
+  &__dropdown-footer {
+    padding: var(--sp-space-2, 8px);
+    border-top: 1px solid var(--sp-border-subtle);
+    display: flex;
+    gap: var(--sp-space-2, 8px);
+    background-color: transparent;
+  }
+
+  &__dropdown-action {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm, 6px);
+    padding: var(--sp-space-1_5, 6px) 0;
+    @include typography('caption');
+    font-weight: var(--sp-font-weight-semibold);
+    font-family: var(--sp-font-body);
+    color: var(--sp-color-text-secondary);
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+
+    &:hover:not(:disabled) {
+      background-color: var(--sp-color-surface-container-highest);
+      color: var(--sp-color-text-primary);
+      border-color: var(--sp-border-strong);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    &--clear:hover:not(:disabled) {
+      color: var(--sp-color-status-error);
+      border-color: var(--sp-color-status-error);
+      background-color: rgba(239, 68, 68, 0.08);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. KEYFRAMES
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes sp-select-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. ACCESSIBILITY: REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .select {
+    &__trigger-icon,
+    &__trigger {
+      transition: none !important;
+    }
+
+    &__trigger-spinner {
+      animation: none !important;
+    }
+  }
+}

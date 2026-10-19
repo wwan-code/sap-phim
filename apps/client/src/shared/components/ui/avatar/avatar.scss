@@ -1,0 +1,425 @@
+/**
+ * @file avatar.scss
+ * @module Components/UI/Avatar/Styles
+ * @description SCSS styles cho Avatar và AvatarGroup component (chuẩn BEM, Material 3 Expressive, Tonal Palettes, Status Badges và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. MAIN BLOCK (.avatar)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.avatar {
+  position: relative;
+  display: inline-flex;
+  @include flex-center;
+  overflow: visible;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: var(--sp-font-body);
+  vertical-align: middle;
+  transition:
+    transform var(--sp-transition-fast) var(--sp-motion-easing-neural),
+    box-shadow var(--sp-transition-fast);
+
+  // ─── Clickable Modifier ───────────────────────────────────────────────────
+  &--clickable {
+    cursor: pointer;
+
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 2. INNER CONTENT & IMAGE
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__content {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    @include flex-center;
+    position: relative;
+    z-index: 1;
+    background-color: var(--sp-color-surface-container-high);
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--sp-transition-normal);
+
+    &--loaded {
+      opacity: 1;
+    }
+  }
+
+  &__placeholder {
+    position: absolute;
+    inset: 0;
+    background-color: var(--sp-color-surface-container-high);
+    @include skeleton;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3. FALLBACK & INITIALS (Tonal Color System)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__fallback {
+    @include flex-center;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  &__initials {
+    font-family: var(--sp-font-display);
+    font-weight: var(--sp-font-weight-bold);
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  &__default-icon {
+    display: block;
+  }
+
+  // ─── Tonal Color Palettes ─────────────────────────────────────────────────
+  &--color-primary {
+    .avatar__content {
+      background-color: rgba(229, 9, 20, 0.16);
+      color: var(--sp-color-brand-primary);
+    }
+  }
+
+  &--color-accent {
+    .avatar__content {
+      background-color: rgba(124, 93, 250, 0.16);
+      color: var(--sp-color-brand-accent);
+    }
+  }
+
+  &--color-indigo {
+    .avatar__content {
+      background-color: rgba(99, 102, 241, 0.16);
+      color: #818CF8;
+    }
+  }
+
+  &--color-emerald {
+    .avatar__content {
+      background-color: rgba(16, 185, 129, 0.16);
+      color: #34D399;
+    }
+  }
+
+  &--color-amber {
+    .avatar__content {
+      background-color: rgba(245, 158, 11, 0.16);
+      color: #FBBF24;
+    }
+  }
+
+  &--color-rose {
+    .avatar__content {
+      background-color: rgba(244, 63, 94, 0.16);
+      color: #FB7185;
+    }
+  }
+
+  &--color-teal {
+    .avatar__content {
+      background-color: rgba(20, 184, 166, 0.16);
+      color: #2DD4BF;
+    }
+  }
+
+  &--color-neutral {
+    .avatar__content {
+      background-color: var(--sp-color-surface-container-highest);
+      color: var(--sp-color-text-primary);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 4. VARIANTS (Shapes)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--variant-circle {
+    border-radius: var(--sp-radius-full, 9999px);
+  }
+
+  &--variant-square {
+    border-radius: var(--sp-radius-none, 0px);
+  }
+
+  &--variant-rounded {
+    border-radius: var(--sp-radius-md, 12px);
+
+    &.avatar--size-xs,
+    &.avatar--size-sm {
+      border-radius: var(--sp-radius-sm, 6px);
+    }
+
+    &.avatar--size-xl,
+    &.avatar--size-2xl {
+      border-radius: var(--sp-radius-lg, 18px);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 5. SIZES
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--size-xs {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  &--size-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  &--size-md {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  &--size-lg {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+
+  &--size-xl {
+    width: 80px;
+    height: 80px;
+    font-size: 26px;
+  }
+
+  &--size-2xl {
+    width: 96px;
+    height: 96px;
+    font-size: 32px;
+  }
+
+  &--size-full {
+    width: 100%;
+    height: 100%;
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 24px;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 6. STATUS INDICATORS & BADGES
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__status {
+    position: absolute;
+    width: 26%;
+    height: 26%;
+    min-width: 8px;
+    min-height: 8px;
+    max-width: 18px;
+    max-height: 18px;
+    border-radius: var(--sp-radius-full, 9999px);
+    border: 2px solid var(--sp-color-surface-base, #07080A);
+    z-index: 3;
+    box-shadow: var(--sp-shadow-flat);
+
+    // Vị trí
+    &--pos-bottom-right {
+      bottom: 0;
+      right: 0;
+    }
+
+    &--pos-bottom-left {
+      bottom: 0;
+      left: 0;
+    }
+
+    &--pos-top-right {
+      top: 0;
+      right: 0;
+    }
+
+    &--pos-top-left {
+      top: 0;
+      left: 0;
+    }
+
+    // Trạng thái màu sắc
+    &--online {
+      background-color: var(--sp-color-status-success);
+    }
+
+    &--offline {
+      background-color: var(--sp-color-text-muted);
+    }
+
+    &--busy {
+      background-color: var(--sp-color-status-error);
+    }
+
+    &--away {
+      background-color: var(--sp-color-status-warning);
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    &--pos-bottom-right {
+      bottom: -2px;
+      right: -2px;
+    }
+
+    &--pos-bottom-left {
+      bottom: -2px;
+      left: -2px;
+    }
+
+    &--pos-top-right {
+      top: -2px;
+      right: -2px;
+    }
+
+    &--pos-top-left {
+      top: -2px;
+      left: -2px;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 7. MODIFIERS (Premium Glow & Frames)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--premium {
+    box-shadow:
+      0 0 0 2px var(--sp-color-surface-base, #07080A),
+      0 0 0 4px var(--sp-color-brand-primary),
+      0 0 16px rgba(229, 9, 20, 0.4);
+  }
+
+  &--has-frame {
+    .avatar__content {
+      transform: scale(0.82);
+    }
+  }
+
+  &__frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 126%;
+    height: 126%;
+    z-index: 4;
+    pointer-events: none;
+    object-fit: contain;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. AVATAR GROUP (.avatar-group)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.avatar-group {
+  display: inline-flex;
+  align-items: center;
+
+  &__item {
+    display: inline-flex;
+    position: relative;
+    transition: transform var(--sp-transition-fast) var(--sp-motion-easing-neural);
+
+    &:hover {
+      z-index: 100 !important;
+      transform: translateY(-2px) scale(1.08);
+    }
+  }
+
+  // Cutout border viền ngăn cách giữa các avatar lồng nhau
+  &__avatar,
+  &__surplus-avatar {
+    box-shadow: 0 0 0 2px var(--sp-color-surface-base, #07080A) !important;
+  }
+
+  // ─── Spacing Offsets ──────────────────────────────────────────────────────
+  &--spacing-tight {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -14px;
+    }
+  }
+
+  &--spacing-normal {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -10px;
+    }
+  }
+
+  &--spacing-loose {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -6px;
+    }
+  }
+
+  // ─── Size-specific Negative Margins ───────────────────────────────────────
+  &--size-xs {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -6px;
+    }
+  }
+
+  &--size-sm {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -8px;
+    }
+  }
+
+  &--size-md {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -10px;
+    }
+  }
+
+  &--size-lg {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -14px;
+    }
+  }
+
+  &--size-xl {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -20px;
+    }
+  }
+
+  &--size-2xl {
+    .avatar-group__item:not(:first-child) {
+      margin-left: -24px;
+    }
+  }
+}

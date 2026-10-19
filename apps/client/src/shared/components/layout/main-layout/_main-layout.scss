@@ -1,0 +1,29 @@
+/**
+ * @file _main-layout.scss
+ * @module Components/Layout/MainLayout/Styles
+ * @description SCSS layout shell cho MainLayout theo chuẩn Material 3 Expressive và CSS Variables toàn cục.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.main-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sp-color-surface-base, #07080A);
+  color: var(--sp-color-text-primary, #F4F4F6);
+  position: relative;
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 72px;
+
+    @include responsive(mobile-down) {
+      padding-top: 64px;
+      padding-bottom: calc(var(--sp-space-16, 64px) + env(safe-area-inset-bottom, 0px));
+    }
+  }
+}

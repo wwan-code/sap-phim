@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 40 140 120" width="100%" height="100%">
+    <defs>
+        <mask id="drop-mask">
+            <rect width="200" height="200" fill="white" />
+            <path d="M 100 45 C 110 60, 135 85, 135 115 C 135 135, 120 145, 100 145 C 80 145, 65 135, 65 115 C 65 85, 90 60, 100 45 Z" fill="black" stroke="black" stroke-width="10" stroke-linejoin="round"/>
+        </mask>
+        
+        <filter id="lantern-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+        </filter>
+        <filter id="petal-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+        </filter>
+    </defs>
+
+    <g fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        
+        <!-- SAKURA PETALS (Floating on the left side) -->
+        <g stroke-width="0">
+            <!-- Petal 1 (Large) -->
+            <g transform="translate(38, 65) rotate(-20) scale(0.8)">
+                <path d="M 0 -12 C 8 -5, 10 5, 6 10 L 0 5 L -6 10 C -10 5, -8 -5, 0 -12 Z" fill="currentColor" />
+            </g>
+            <!-- Petal 2 (Medium) -->
+            <g transform="translate(40, 120) rotate(15) scale(0.7)">
+                <path d="M 0 -12 C 8 -5, 10 5, 6 10 L 0 5 L -6 10 C -10 5, -8 -5, 0 -12 Z" fill="currentColor" />
+            </g>
+            <!-- Petal 3 (Small) -->
+            <g transform="translate(50, 105) rotate(-45) scale(0.5)">
+                <path d="M 0 -12 C 8 -5, 10 5, 6 10 L 0 5 L -6 10 C -10 5, -8 -5, 0 -12 Z" fill="currentColor" />
+            </g>
+        </g>
+
+        <!-- LANTERN (Hanging from right eave curve) -->
+        <g stroke-width="0">
+            <!-- String -->
+            <path d="M 155 89 L 155 97" stroke="currentColor" stroke-width="2" />
+            
+            <!-- Top Cap -->
+            <rect x="151" y="96" width="8" height="2" fill="currentColor" rx="1" />
+            
+            <!-- Lantern Body (Chochin oval) - Changed to outline for monochrome -->
+            <ellipse cx="155" cy="109" rx="8" ry="12" fill="none" stroke="currentColor" stroke-width="2" />
+            
+            <!-- Lantern Ribs (Horizontal curved lines) -->
+            <path d="M 148 104 Q 155 107 162 104" stroke="currentColor" stroke-width="1" fill="none" />
+            <path d="M 147 109 Q 155 112 163 109" stroke="currentColor" stroke-width="1" fill="none" />
+            <path d="M 148 114 Q 155 117 162 114" stroke="currentColor" stroke-width="1" fill="none" />
+            
+            <!-- Bright Inner Core -->
+            <ellipse cx="155" cy="109" rx="2" ry="4" fill="currentColor" />
+            
+            <!-- Bottom Cap -->
+            <rect x="151" y="121" width="8" height="2" fill="currentColor" rx="1" />
+        </g>
+
+        <!-- Tent lines -->
+        <g mask="url(#drop-mask)" stroke="currentColor">
+            <!-- Left Eave -->
+            <path d="M 100 45 L 35 85 Q 45 95 55 87 Q 65 95 75 85 Q 85 95 100 78" />
+            <path d="M 55 87 Q 75 65 100 45" />
+            <path d="M 75 85 Q 85 65 100 45" />
+
+            <!-- Right Eave -->
+            <path d="M 100 45 L 165 85 Q 155 95 145 87 Q 135 95 125 85 Q 115 95 100 78" />
+            <path d="M 145 87 Q 125 65 100 45" />
+            <path d="M 125 85 Q 115 65 100 45" />
+        </g>
+
+        <!-- Base curve -->
+        <path d="M 65 110 C 45 145, 75 155, 100 155 C 125 155, 155 145, 135 110" stroke="currentColor" />
+
+        <!-- Drop -->
+        <path d="M 100 45 C 110 60, 135 85, 135 115 C 135 135, 120 145, 100 145 C 80 145, 65 135, 65 115 C 65 85, 90 60, 100 45 Z" stroke="currentColor" />
+
+        <!-- Play button -->
+        <path d="M 89 91 L 117 105 L 89 119 Z" fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    </g>
+</svg>

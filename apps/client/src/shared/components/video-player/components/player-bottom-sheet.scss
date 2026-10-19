@@ -1,0 +1,294 @@
+/**
+ * @file player-bottom-sheet.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Định kiểu cho Unified Bottom Sheet (Ngăn kéo cảm ứng Mobile & Tablet) chuẩn Obsidian Cinema & Glass Hybrid.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.player-bottom-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: calc(var(--sp-z-modal) + 100);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+
+  &--open {
+    pointer-events: auto;
+
+    .player-bottom-sheet__backdrop {
+      opacity: 1;
+    }
+
+    .player-bottom-sheet__panel {
+      transform: translateY(0);
+    }
+  }
+
+  // ── Lớp nền làm mờ Backdrop ──
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity var(--sp-transition-normal);
+    cursor: pointer;
+  }
+
+  // ── Khung nội dung Bottom Sheet ──
+  &__panel {
+    position: relative;
+    width: 100%;
+    max-height: 80%;
+    background: var(--sp-vp-glass-bg, rgba(16, 19, 28, 0.94));
+    border-top: 1px solid var(--sp-vp-glass-border, rgba(255, 255, 255, 0.12));
+    border-top-left-radius: var(--sp-radius-xl, 24px);
+    border-top-right-radius: var(--sp-radius-xl, 24px);
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.85);
+    backdrop-filter: var(--sp-vp-glass-blur-deep, blur(24px) saturate(190%));
+    -webkit-backdrop-filter: var(--sp-vp-glass-blur-deep, blur(24px) saturate(190%));
+    transform: translateY(100%);
+    transition: transform var(--sp-motion-duration-slow, 350ms) var(--sp-motion-easing-neural);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+  }
+
+  // ── Thanh nắm kéo (Drag Handle) ──
+  &__handle-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-space-2) 0 var(--sp-space-1);
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__handle-indicator {
+    width: 38px;
+    height: 4px;
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: rgba(255, 255, 255, 0.28);
+    transition: background-color var(--sp-transition-fast), width var(--sp-transition-fast);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  // ── Header của Bottom Sheet ──
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-2) var(--sp-space-4);
+    border-bottom: 1px solid var(--sp-vp-border-divider, rgba(255, 255, 255, 0.08));
+    min-height: 48px;
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+  }
+
+  &__back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sp-radius-full);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast);
+
+    &:active {
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  &__title {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    font-weight: var(--sp-font-weight-bold);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+  }
+
+  &__close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--sp-radius-full);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), color var(--sp-transition-fast);
+
+    &:hover,
+    &:active {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  // ── Thanh Tabs chính (Cài đặt / Phụ đề) ──
+  &__tabs {
+    display: flex;
+    align-items: center;
+    padding: var(--sp-space-2) var(--sp-space-4);
+    gap: var(--sp-space-2);
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--sp-vp-border-divider, rgba(255, 255, 255, 0.06));
+  }
+
+  &__tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-space-2);
+    height: 38px;
+    border-radius: var(--sp-radius-md, 12px);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.65));
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm);
+    font-weight: var(--sp-font-weight-medium);
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+
+    &--active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      font-weight: var(--sp-font-weight-semibold);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+
+      svg {
+        color: var(--sp-color-brand-primary, #E50914);
+      }
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  // ── Phần nội dung cuộn bên trong Sheet ──
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--sp-space-2) var(--sp-space-4) var(--sp-space-4);
+    display: flex;
+    flex-direction: column;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: var(--sp-radius-full);
+    }
+  }
+
+  // ── Danh sách mục điều hướng (Items list) ──
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    padding: var(--sp-space-2) var(--sp-space-3);
+    border-radius: var(--sp-radius-md, 10px);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-text-primary, #ffffff);
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color var(--sp-transition-fast);
+
+    &:active {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  &__item-label {
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-vp-color-text-primary, #ffffff);
+  }
+
+  &__item-right {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2);
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.7));
+  }
+
+  &__item-value {
+    font-size: var(--sp-font-body-sm);
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.7));
+  }
+
+  // ── Lựa chọn Radio Options trong Subview ──
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 46px;
+    padding: var(--sp-space-2) var(--sp-space-3);
+    border-radius: var(--sp-radius-md, 10px);
+    background: transparent;
+    border: none;
+    color: var(--sp-vp-color-text-secondary, rgba(255, 255, 255, 0.72));
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-md);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--sp-transition-fast);
+
+    &:active {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    &--active {
+      background-color: rgba(229, 9, 20, 0.12);
+      color: #ffffff;
+      font-weight: var(--sp-font-weight-semibold);
+
+      svg {
+        color: var(--sp-color-brand-primary, #E50914);
+      }
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: var(--sp-vp-border-divider, rgba(255, 255, 255, 0.08));
+    margin: var(--sp-space-2) 0;
+  }
+}

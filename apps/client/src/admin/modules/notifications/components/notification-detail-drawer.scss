@@ -1,0 +1,254 @@
+/**
+ * @file notification-detail-drawer.scss
+ * @module Admin/Modules/Notifications/Components/NotificationDetailDrawer
+ * @description Styling cho Drawer hiển thị chi tiết thông báo hệ thống chuẩn Material 3 Expressive.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.notif-detail-drawer {
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    padding: var(--sp-space-5, 20px) var(--sp-space-6, 24px);
+  }
+
+  &__card {
+    @include surface('container-low');
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    border-radius: var(--sp-radius-md, 12px);
+    padding: var(--sp-space-4, 16px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-3, 12px);
+
+    &--sub {
+      background-color: var(--sp-color-surface-container, #12151e);
+    }
+  }
+
+  &__card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-secondary, #9499a8);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    padding-bottom: var(--sp-space-2, 8px);
+    margin-bottom: var(--sp-space-2, 8px);
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--sp-radius-md, 12px);
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  &__title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: var(--sp-font-heading-h3, 1.25rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    margin: 0;
+    line-height: var(--sp-line-height-tight, 1.2);
+  }
+
+  &__meta-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__label {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    font-weight: var(--sp-font-weight-medium, 500);
+  }
+
+  &__message-box {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: var(--sp-color-surface-container, #12151e);
+    border-radius: var(--sp-radius-sm, 8px);
+    padding: var(--sp-space-3, 12px);
+    border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  }
+
+  &__message {
+    font-size: var(--sp-font-body-md, 1rem);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    line-height: var(--sp-line-height-normal, 1.5);
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__action-url {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--sp-color-brand-accent, #7c5dfa);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    word-break: break-all;
+    transition: color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-brand-accent-hover, #9277ff);
+      text-decoration: underline;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-space-3, 12px);
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__person {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+  }
+
+  &__person-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__person-name {
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    color: var(--sp-color-text-primary, #f4f4f6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__person-sub {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__person-id {
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-text-muted, #5c6275);
+    font-family: var(--sp-font-mono, monospace);
+  }
+
+  &__empty-state {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary, #9499a8);
+    font-style: italic;
+    padding: var(--sp-space-1, 4px) 0;
+  }
+
+  &__timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__timeline-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-3, 12px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    padding: var(--sp-space-1, 4px) 0;
+    border-bottom: 1px dashed var(--sp-border-subtle, rgba(255, 255, 255, 0.06));
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__timeline-label {
+    color: var(--sp-color-text-secondary, #9499a8);
+  }
+
+  &__timeline-val {
+    color: var(--sp-color-text-primary, #f4f4f6);
+    font-weight: var(--sp-font-weight-medium, 500);
+  }
+
+  &__code {
+    padding: 2px 6px;
+    background-color: var(--sp-color-surface-container-high, #1b1f2b);
+    border-radius: var(--sp-radius-xs, 4px);
+    font-family: var(--sp-font-mono, monospace);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: var(--sp-color-brand-accent, #7c5dfa);
+  }
+
+  &__json-block {
+    margin: 0;
+    padding: var(--sp-space-3, 12px);
+    background-color: var(--sp-color-surface-container-highest, #242a3b);
+    border-radius: var(--sp-radius-sm, 8px);
+    font-family: var(--sp-font-mono, monospace);
+    font-size: var(--sp-font-micro, 0.6875rem);
+    color: #e2e8f0;
+    overflow: auto;
+    max-height: 180px;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-space-4, 16px) var(--sp-space-6, 24px);
+    border-top: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  }
+
+  &__delete-btn {
+    color: var(--sp-color-status-error, #ef4444) !important;
+
+    &:hover {
+      background-color: rgba(239, 68, 68, 0.12) !important;
+    }
+  }
+}

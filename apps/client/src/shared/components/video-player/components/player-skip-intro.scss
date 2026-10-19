@@ -1,0 +1,93 @@
+/**
+ * @file player-skip-intro.scss
+ * @module Components/VideoPlayer/Styles
+ * @description Nút "Bỏ qua phần giới thiệu" (Skip Intro) chuẩn Netflix Web & Mobile theo The Aesthetic OS.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+@use '../styles/player-variables' as *;
+
+.player-skip-intro {
+  position: absolute;
+  bottom: 84px;
+  right: var(--sp-space-6, 24px);
+  z-index: calc(var(--sp-z-docked) + 14);
+  pointer-events: auto;
+  user-select: none;
+  animation: sp-skip-intro-enter 350ms var(--sp-motion-easing-neural) forwards;
+  transition: bottom var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural);
+
+  &--controls-hidden {
+    bottom: 32px;
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    padding: var(--sp-space-2, 8px) var(--sp-space-4, 16px);
+    background-color: var(--sp-vp-glass-bg, rgba(18, 21, 30, 0.85));
+    backdrop-filter: var(--sp-vp-glass-blur, blur(12px));
+    -webkit-backdrop-filter: var(--sp-vp-glass-blur, blur(12px));
+    border: 1px solid var(--sp-vp-glass-border-strong, rgba(255, 255, 255, 0.22));
+    border-radius: var(--sp-radius-sm, 6px);
+    color: var(--sp-color-text-primary, #FFFFFF);
+    font-family: var(--sp-font-body, system-ui, sans-serif);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 12px rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: background-color var(--sp-transition-fast), border-color var(--sp-transition-fast), transform var(--sp-transition-fast);
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.97);
+      background-color: rgba(255, 255, 255, 0.28);
+    }
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__text {
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+}
+
+@keyframes sp-skip-intro-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Thích ứng trên màn hình nhỏ
+@media (max-width: 768px) {
+  .player-skip-intro {
+    bottom: 96px;
+    right: var(--sp-space-4, 16px);
+
+    &--controls-hidden {
+      bottom: 24px;
+    }
+
+    &__button {
+      padding: 6px 12px;
+      font-size: var(--sp-font-caption, 0.75rem);
+    }
+  }
+}

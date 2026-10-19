@@ -1,0 +1,62 @@
+/**
+ * @file key-value-builder.scss
+ * @module Admin/Shared/Components/Forms/KeyValueBuilder/Styles
+ * @description Styling cho KeyValueBuilder theo chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.key-value-builder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-2, 8px);
+  width: 100%;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__label {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__empty {
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px dashed var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-muted);
+    text-align: center;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+  }
+
+  &__col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__helper {
+    margin: 0;
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary);
+  }
+}

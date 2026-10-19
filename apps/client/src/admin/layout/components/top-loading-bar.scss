@@ -1,0 +1,57 @@
+/**
+ * @file top-loading-bar.scss
+ * @module Admin/Layout/Components/TopLoadingBar/Styles
+ * @description Thanh tải đỏ liền sát mép trên; data-progress điều khiển transform qua token, không dùng inline style.
+ */
+
+.admin-top-loading-bar {
+  --sp-top-loader-height: calc(var(--sp-space-1) / 2);
+  --sp-top-loader-progress: 0;
+
+  // Các mức tiến độ được tạo khi biên dịch SCSS, tránh ghi style động vào DOM.
+  @for $step from 0 through 100 {
+    &[data-progress='#{$step}'] {
+      --sp-top-loader-progress: #{$step * 0.01};
+    }
+  }
+
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: var(--sp-top-loader-height);
+  z-index: calc(var(--sp-z-modal) + 1);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity var(--sp-motion-duration-fast) var(--sp-motion-easing-neural);
+
+  &__fill {
+    inline-size: 100%;
+    block-size: 100%;
+    background: var(--sp-color-brand-primary);
+    transform: scaleX(var(--sp-top-loader-progress));
+    transform-origin: left center;
+    transition: transform var(--sp-motion-duration-slow) var(--sp-motion-easing-neural);
+    will-change: transform;
+  }
+
+  &--complete,
+  &--fading {
+    .admin-top-loading-bar__fill {
+      transition-duration: var(--sp-motion-duration-fast);
+    }
+  }
+
+  &--fading {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-top-loading-bar {
+    transition: none;
+
+    &__fill {
+      transition: none;
+    }
+  }
+}

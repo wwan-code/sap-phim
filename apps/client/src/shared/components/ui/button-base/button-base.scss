@@ -1,0 +1,148 @@
+/**
+ * @file button-base.scss
+ * @module Components/UI/ButtonBase/Styles
+ * @description SCSS styles nền tảng cho ButtonBase và TouchRipple component (The Aesthetic OS).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. MAIN BLOCK (ButtonBase Reset & Interactive State)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  -webkit-tap-highlight-color: transparent;
+
+  &::-moz-focus-inner {
+    border-style: none;
+  }
+
+  &--disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.45;
+  }
+
+  &--focus-visible,
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. TOUCH RIPPLE (Material 3 Dynamic Surface Feedback)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.touch-ripple {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+
+  // Ripple child container
+  &__child {
+    position: absolute;
+    border-radius: var(--sp-radius-full, 9999px);
+    opacity: 0;
+    transform: scale(0);
+    will-change: transform, opacity;
+    contain: strict;
+    animation: sp-ripple-enter var(--sp-motion-duration-slow, 350ms) var(--sp-motion-easing-invisible, cubic-bezier(0.4, 0, 0.2, 1)) both;
+
+    &--pulsate {
+      animation: sp-ripple-pulsate 2400ms var(--sp-motion-easing-neural, cubic-bezier(0.16, 1, 0.3, 1)) infinite;
+    }
+
+    &--leaving {
+      .touch-ripple__child-inner {
+        animation: sp-ripple-exit var(--sp-motion-duration-slow, 350ms) var(--sp-motion-easing-invisible, cubic-bezier(0.4, 0, 0.2, 1)) both;
+      }
+    }
+  }
+
+  // Inner colored circle
+  &__child-inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: currentColor;
+    opacity: 0.16;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. KEYFRAME ANIMATIONS (60FPS Neural Motion)
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes sp-ripple-enter {
+  0% {
+    transform: scale(0);
+    opacity: 0.12;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.22;
+  }
+}
+
+@keyframes sp-ripple-exit {
+  0% {
+    opacity: 0.22;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sp-ripple-pulsate {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(0.82);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(0.92);
+    opacity: 0.45;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. ACCESSIBILITY: REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .touch-ripple {
+    display: none;
+  }
+}

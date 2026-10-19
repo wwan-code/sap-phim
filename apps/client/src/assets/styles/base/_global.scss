@@ -1,0 +1,33 @@
+body {
+  font-family: var(--sp-font-body, system-ui, -apple-system, sans-serif);
+  background-color: var(--sp-color-surface-base, #07080a);
+  color: var(--sp-color-text-primary, #f4f4f6);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color var(--sp-transition-normal, 250ms ease),
+              color var(--sp-transition-normal, 250ms ease);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sp-color-surface-base, #07080a);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sp-color-surface-hover, #1b1f2b);
+  border-radius: var(--sp-radius-full, 9999px);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sp-color-surface-active, #242a3b);
+}
+
+::selection {
+  background-color: var(--sp-color-brand-primary, #e50914);
+  color: #ffffff;
+}

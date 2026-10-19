@@ -1,0 +1,116 @@
+/**
+ * @file player-subtitles.scss
+ * @module Components/VideoPlayer/Components
+ * @description Định kiểu cho lớp phụ đề nổi (Custom Subtitle Overlay) chuẩn Obsidian Cinema & Aesthetic OS.
+ * Tự động thích ứng theo 4 tầng Responsive (Mobile, Tablet, Desktop, Ultrawide).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.player-subtitles {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 32px;
+  width: auto;
+  max-width: 86%;
+  text-align: center;
+  pointer-events: none;
+  z-index: var(--sp-z-docked, 10);
+  transition: bottom var(--sp-motion-duration-medium, 250ms) var(--sp-motion-easing-neural);
+
+  // Khi thanh controls mở -> tự động nâng phụ đề lên trên timeline/seekbar
+  &--controls-visible {
+    bottom: 88px;
+  }
+
+  &__cue {
+    display: inline-block;
+    background-color: var(--sub-bg-color, rgba(7, 8, 10, 0.82));
+    backdrop-filter: var(--sub-backdrop-filter, blur(8px));
+    -webkit-backdrop-filter: var(--sub-backdrop-filter, blur(8px));
+    color: var(--sub-text-color, var(--sp-vp-color-text-primary, #FFFFFF));
+    opacity: var(--sub-text-opacity, 1);
+    padding: var(--sp-space-1, 4px) var(--sp-space-3, 12px);
+    border-radius: var(--sp-radius-sm, 6px);
+    border: var(--sub-border, 1px solid rgba(255, 255, 255, 0.08));
+    font-family: var(--sub-font-family, var(--sp-font-body, system-ui, sans-serif));
+    font-weight: var(--sp-font-weight-medium, 500);
+    line-height: var(--sp-line-height-normal, 1.45);
+    text-shadow: var(--sub-text-shadow, 0 2px 4px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.8));
+    box-shadow: var(--sub-box-shadow, 0 4px 16px rgba(0, 0, 0, 0.5));
+    word-break: break-word;
+    user-select: none;
+    transition: color var(--sp-transition-fast), background-color var(--sp-transition-fast), opacity var(--sp-transition-fast);
+  }
+
+  // ── Các mức kích cỡ chữ phụ đề (Small / Medium / Large / XLarge) ──
+  &--size-small &__cue {
+    font-size: clamp(13px, 1.6vw, 17px);
+    padding: 3px 10px;
+  }
+
+  &--size-medium &__cue {
+    font-size: clamp(15px, 2.1vw, 22px);
+    padding: 5px 14px;
+  }
+
+  &--size-large &__cue {
+    font-size: clamp(18px, 2.7vw, 28px);
+    padding: 7px 18px;
+    font-weight: var(--sp-font-weight-semibold, 600);
+  }
+
+  &--size-xlarge &__cue {
+    font-size: clamp(22px, 3.4vw, 36px);
+    padding: 9px 22px;
+    font-weight: var(--sp-font-weight-semibold, 600);
+  }
+}
+
+// ── Định kiểu phụ đề theo tầng Responsive ──
+.video-player--tier-mobile {
+  .player-subtitles {
+    bottom: 20px;
+    max-width: 92%;
+
+    &--controls-visible {
+      bottom: 96px; // Tránh va chạm với bottom timeline và hàng nút điều khiển mobile
+    }
+
+    &--size-small .player-subtitles__cue {
+      font-size: clamp(12px, 3.2vw, 15px);
+      padding: 3px 8px;
+    }
+
+    &--size-medium .player-subtitles__cue {
+      font-size: clamp(14px, 3.8vw, 18px);
+      padding: 4px 12px;
+    }
+
+    &--size-large .player-subtitles__cue {
+      font-size: clamp(16px, 4.4vw, 22px);
+      padding: 5px 14px;
+    }
+
+    &--size-xlarge .player-subtitles__cue {
+      font-size: clamp(18px, 5vw, 26px);
+      padding: 6px 16px;
+    }
+  }
+}
+
+.video-player--tier-ultrawide {
+  .player-subtitles {
+    bottom: 48px;
+
+    &--controls-visible {
+      bottom: 124px;
+    }
+
+    &--size-medium .player-subtitles__cue {
+      font-size: clamp(18px, 2.2vw, 26px);
+      padding: 6px 18px;
+    }
+  }
+}

@@ -1,0 +1,125 @@
+/**
+ * @file tag-input.scss
+ * @module Admin/Shared/Components/Forms/TagInput/Styles
+ * @description Styling cho TagInput theo chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.tag-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-1, 4px);
+  width: 100%;
+
+  &__label {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__container {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+    cursor: text;
+    transition: border-color var(--sp-transition-fast), box-shadow var(--sp-transition-fast);
+
+    &:hover:not(.tag-input--disabled) {
+      border-color: var(--sp-border-strong);
+    }
+  }
+
+  &--focused &__container {
+    border-color: var(--sp-color-brand-primary);
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+  }
+
+  &--error &__container {
+    border-color: var(--sp-color-status-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  }
+
+  &--disabled &__container {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    width: 100%;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-space-1, 4px);
+    padding: 3px 8px 3px 10px;
+    background-color: var(--sp-color-surface-container-high);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-full, 9999px);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-primary);
+    line-height: 1.4;
+  }
+
+  &__chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin-left: 2px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--sp-color-text-muted);
+    cursor: pointer;
+    transition: color var(--sp-transition-fast), background-color var(--sp-transition-fast);
+
+    &:hover {
+      color: var(--sp-color-status-error);
+      background-color: rgba(239, 68, 68, 0.12);
+    }
+  }
+
+  &__field {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-primary);
+
+    &::placeholder {
+      color: var(--sp-color-text-muted);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__helper {
+    margin: 0;
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary);
+
+    &--error {
+      color: var(--sp-color-status-error);
+    }
+  }
+}

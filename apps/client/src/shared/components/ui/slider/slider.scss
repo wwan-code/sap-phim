@@ -1,0 +1,457 @@
+/**
+ * @file slider.scss
+ * @module Components/UI/Slider/Styles
+ * @description SCSS styles cho Slider component (chuẩn BEM, Material 3 Expressive, Tonal Layers, Pin Tooltip và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. MAIN BLOCK (.slider)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.slider {
+  // ─── Token Defaults ───────────────────────────────────────────────────────
+  --slider-active-color: var(--sp-color-brand-primary);
+  --slider-track-bg: var(--sp-color-surface-container-highest);
+  --slider-track-thickness: 6px;
+  --slider-thumb-size: 18px;
+  --slider-state-size: 36px;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  font-family: var(--sp-font-body);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 2. COLOR THEMES
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--color-primary {
+    --slider-active-color: var(--sp-color-brand-primary);
+  }
+
+  &--color-accent,
+  &--color-secondary {
+    --slider-active-color: var(--sp-color-brand-accent);
+  }
+
+  &--color-success {
+    --slider-active-color: var(--sp-color-status-success);
+  }
+
+  &--color-warning {
+    --slider-active-color: var(--sp-color-status-warning);
+  }
+
+  &--color-error,
+  &--color-danger {
+    --slider-active-color: var(--sp-color-status-error);
+  }
+
+  &--color-neutral {
+    --slider-active-color: var(--sp-color-text-primary);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3. SIZES (Small: 4px/14px, Medium: 6px/18px, Large: 8px/22px)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--size-small,
+  &--size-sm {
+    --slider-track-thickness: 4px;
+    --slider-thumb-size: 14px;
+    --slider-state-size: 28px;
+  }
+
+  &--size-medium,
+  &--size-md {
+    --slider-track-thickness: 6px;
+    --slider-thumb-size: 18px;
+    --slider-state-size: 36px;
+  }
+
+  &--size-large,
+  &--size-lg {
+    --slider-track-thickness: 8px;
+    --slider-thumb-size: 22px;
+    --slider-state-size: 44px;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 4. ORIENTATION (Horizontal & Vertical)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--horizontal {
+    width: 100%;
+    height: var(--slider-state-size);
+    padding: 0 var(--sp-space-2, 8px);
+
+    .slider__track-container {
+      width: 100%;
+      height: var(--slider-track-thickness);
+    }
+
+    .slider__thumb {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .slider__pin {
+      bottom: calc(100% + var(--sp-space-2, 8px));
+      left: 50%;
+      transform: translateX(-50%);
+
+      &::after {
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 4px solid transparent;
+        border-top-color: var(--slider-active-color);
+      }
+    }
+
+    .slider__mark-tick {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .slider__mark-label {
+      top: calc(100% + var(--sp-space-2, 8px));
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  &--vertical {
+    height: 200px;
+    width: var(--slider-state-size);
+    padding: var(--sp-space-2, 8px) 0;
+    justify-content: center;
+
+    .slider__track-container {
+      height: 100%;
+      width: var(--slider-track-thickness);
+    }
+
+    .slider__thumb {
+      left: 50%;
+      transform: translate(-50%, 50%);
+    }
+
+    .slider__pin {
+      left: calc(100% + var(--sp-space-2, 8px));
+      top: 50%;
+      transform: translateY(-50%);
+
+      &::after {
+        top: 50%;
+        left: -8px;
+        transform: translateY(-50%);
+        border: 4px solid transparent;
+        border-right-color: var(--slider-active-color);
+      }
+    }
+
+    .slider__mark-tick {
+      left: 50%;
+      transform: translate(-50%, 50%);
+    }
+
+    .slider__mark-label {
+      left: calc(100% + var(--sp-space-2, 8px));
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 5. TRACK & FILL (Solid Tonal Container)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__track-container {
+    position: relative;
+    border-radius: var(--sp-radius-full, 9999px);
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+  }
+
+  &__track {
+    position: absolute;
+    border-radius: var(--sp-radius-full, 9999px);
+    pointer-events: none;
+
+    &--bg {
+      inset: 0;
+      background-color: var(--slider-track-bg);
+      border: 1px solid var(--sp-border-subtle);
+      z-index: 1;
+    }
+
+    &--fill {
+      background-color: var(--slider-active-color);
+      z-index: 2;
+      transition: background-color var(--sp-transition-fast);
+
+      .slider--horizontal & {
+        top: 0;
+        bottom: 0;
+      }
+
+      .slider--vertical & {
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 6. MARKS & TICKS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__marks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  &__mark {
+    position: absolute;
+
+    .slider--horizontal & {
+      top: 0;
+      bottom: 0;
+    }
+
+    .slider--vertical & {
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &__mark-tick {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: var(--sp-color-outline-variant, #44474E);
+    transition: background-color var(--sp-transition-fast);
+
+    .slider__mark--active & {
+      background-color: var(--sp-color-on-primary, #FFFFFF);
+    }
+  }
+
+  &__mark-label {
+    position: absolute;
+    @include typography('micro');
+    font-weight: var(--sp-font-weight-medium);
+    color: var(--sp-color-text-muted);
+    white-space: nowrap;
+    pointer-events: none;
+
+    .slider__mark--active & {
+      color: var(--sp-color-text-primary);
+      font-weight: var(--sp-font-weight-semibold);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 7. THUMB & STATE LAYERS (M3 Expressive)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__thumb {
+    position: absolute;
+    z-index: 4;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    cursor: grab;
+
+    &--active {
+      cursor: grabbing;
+    }
+  }
+
+  // 44x44px Invisible Touch Target Expander (Material 3 Touch Ergonomics)
+  &__touch-target {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    background: transparent;
+  }
+
+  // State Layer (Hover / Focus / Active Ripple)
+  &__state-layer {
+    position: absolute;
+    width: var(--slider-state-size);
+    height: var(--slider-state-size);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: var(--slider-active-color);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--sp-transition-fast) var(--sp-motion-easing-neural),
+      opacity var(--sp-transition-fast);
+
+    .slider__thumb:hover & {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.12;
+    }
+
+    .slider__thumb:focus-visible &,
+    .slider__thumb--focused & {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.22;
+    }
+
+    .slider__thumb--active & {
+      transform: translate(-50%, -50%) scale(1.15);
+      opacity: 0.30;
+    }
+  }
+
+  // Core Solid Thumb Circle
+  &__thumb-core {
+    width: var(--slider-thumb-size);
+    height: var(--slider-thumb-size);
+    border-radius: var(--sp-radius-full, 9999px);
+    background-color: var(--slider-active-color);
+    border: 2px solid var(--sp-color-surface-base, #07080A);
+    box-shadow: var(--sp-shadow-flat);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition:
+      transform var(--sp-transition-fast) var(--sp-motion-easing-neural),
+      box-shadow var(--sp-transition-fast),
+      background-color var(--sp-transition-fast);
+
+    .slider__thumb:hover & {
+      box-shadow: var(--sp-shadow-elevated);
+    }
+
+    .slider__thumb--active & {
+      transform: scale(1.15);
+      box-shadow: var(--sp-shadow-modal);
+    }
+  }
+
+  &__thumb-icon {
+    color: var(--sp-color-on-primary, #FFFFFF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65%;
+    height: 65%;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 8. MATERIAL 3 PIN VALUE INDICATOR (Balloon Tooltip)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__pin {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    animation: sp-slider-pin-emerge 0.16s var(--sp-motion-easing-neural) forwards;
+
+    &::after {
+      content: '';
+      position: absolute;
+    }
+  }
+
+  &__pin-bubble {
+    background-color: var(--slider-active-color);
+    color: var(--sp-color-on-primary, #FFFFFF);
+    padding: 3px 7px;
+    border-radius: var(--sp-radius-sm, 6px);
+    @include typography('caption');
+    font-weight: var(--sp-font-weight-bold);
+    box-shadow: var(--sp-shadow-elevated);
+    position: relative;
+    white-space: nowrap;
+  }
+
+  &__pin-value {
+    display: block;
+    line-height: 1.15;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 9. STATES (Disabled & ReadOnly)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--disabled {
+    opacity: 0.45 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+
+    .slider__track--fill,
+    .slider__thumb-core {
+      background-color: var(--sp-color-text-muted) !important;
+    }
+  }
+
+  &--readonly {
+    cursor: default;
+
+    .slider__track-container,
+    .slider__thumb {
+      cursor: default;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 10. KEYFRAMES
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes sp-slider-pin-emerge {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 11. ACCESSIBILITY: REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .slider {
+    &__thumb-core,
+    &__state-layer,
+    &__pin {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}

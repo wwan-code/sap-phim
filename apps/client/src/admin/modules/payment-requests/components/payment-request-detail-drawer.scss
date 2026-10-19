@@ -1,0 +1,512 @@
+/**
+ * @file payment-request-detail-drawer.scss
+ * @module Admin/Modules/PaymentRequests/Styles/PaymentRequestDetailDrawer
+ * @description Styling Drawer xem chi tiết yêu cầu thanh toán chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+.payment-request-detail-drawer {
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-5, 20px);
+    padding: var(--sp-space-5, 20px);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--sp-space-4, 16px) var(--sp-space-6, 24px);
+    border-top: 1px solid var(--sp-border-subtle);
+    background-color: var(--sp-color-surface-container-high);
+
+    .footer-action-group {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-3, 12px);
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+}
+
+// ── Payment Detail Cards ──
+.payment-detail-card {
+  background-color: var(--sp-color-surface-container);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md, 12px);
+  padding: var(--sp-space-5, 20px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-4, 16px);
+  transition: border-color var(--sp-transition-normal);
+
+  &:hover {
+    border-color: var(--sp-border-strong);
+  }
+
+  &__section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    font-weight: var(--sp-font-weight-bold, 700);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sp-color-text-secondary);
+    margin: 0;
+
+    svg {
+      color: var(--sp-color-brand-accent, #7c5dfa);
+    }
+  }
+
+  // Card Trạng thái & Số tiền nổi bật
+  &--status {
+    background: linear-gradient(
+      180deg,
+      var(--sp-color-surface-container-high) 0%,
+      var(--sp-color-surface-container) 100%
+    );
+    border-color: rgba(124, 93, 250, 0.2);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-space-3, 12px);
+
+    .type-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-3, 12px);
+
+      .type-indicator {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--sp-radius-sm, 6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        &--topup {
+          background-color: rgba(16, 185, 129, 0.15);
+          color: var(--sp-color-status-success, #10b981);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        &--withdrawal {
+          background-color: rgba(239, 68, 68, 0.15);
+          color: var(--sp-color-status-error, #ef4444);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+      }
+
+      .type-title {
+        font-size: var(--sp-font-body-md, 1rem);
+        font-weight: var(--sp-font-weight-bold, 700);
+        color: var(--sp-color-text-primary);
+        margin: 0;
+      }
+
+      .type-code {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-muted);
+
+        code {
+          color: var(--sp-color-brand-accent, #7c5dfa);
+          font-family: var(--sp-font-mono);
+          font-weight: var(--sp-font-weight-semibold, 600);
+        }
+      }
+    }
+  }
+
+  // Khối số tiền song song
+  .payment-amount-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm, 6px);
+    padding: var(--sp-space-4, 16px);
+    gap: var(--sp-space-4, 16px);
+
+    .amount-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-space-1, 4px);
+
+      .amount-label {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-muted);
+      }
+
+      .amount-value {
+        font-size: var(--sp-font-heading-h3, 1.35rem);
+        font-weight: var(--sp-font-weight-extrabold, 800);
+        letter-spacing: -0.02em;
+
+        &--topup {
+          color: var(--sp-color-status-success, #10b981);
+        }
+
+        &--withdrawal {
+          color: var(--sp-color-status-error, #ef4444);
+        }
+      }
+
+      .coin-value {
+        font-size: var(--sp-font-body-lg, 1.125rem);
+        font-weight: var(--sp-font-weight-bold, 700);
+        color: #ffb800;
+      }
+    }
+
+    .amount-divider {
+      width: 1px;
+      height: 42px;
+      background-color: var(--sp-border-subtle);
+    }
+  }
+
+  .plan-attachment {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-2, 8px);
+    font-size: var(--sp-font-body-sm, 0.875rem);
+    color: var(--sp-color-text-secondary);
+    background-color: rgba(124, 93, 250, 0.08);
+    border: 1px dashed rgba(124, 93, 250, 0.3);
+    padding: var(--sp-space-2, 8px) var(--sp-space-3, 12px);
+    border-radius: var(--sp-radius-sm, 6px);
+
+    .plan-icon {
+      color: #ffb800;
+    }
+
+    strong {
+      color: var(--sp-color-text-primary);
+    }
+  }
+
+  // ── User Profile Row ──
+  .user-profile-row {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+
+    .user-avatar-wrap {
+      flex-shrink: 0;
+
+      .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: var(--sp-radius-full, 9999px);
+        object-fit: cover;
+        border: 2px solid var(--sp-color-brand-accent, #7c5dfa);
+      }
+
+      .user-avatar-fallback {
+        width: 50px;
+        height: 50px;
+        border-radius: var(--sp-radius-full, 9999px);
+        background: linear-gradient(135deg, rgba(124, 93, 250, 0.4) 0%, rgba(229, 9, 20, 0.2) 100%);
+        color: var(--sp-color-text-primary);
+        font-weight: var(--sp-font-weight-bold, 700);
+        font-size: var(--sp-font-body-md, 1rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--sp-border-subtle);
+      }
+    }
+
+    .user-profile-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+
+      .name-wrap {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-space-2, 8px);
+        flex-wrap: wrap;
+
+        .user-name {
+          font-size: var(--sp-font-body-md, 1rem);
+          font-weight: var(--sp-font-weight-bold, 700);
+          color: var(--sp-color-text-primary);
+        }
+
+        .user-handle {
+          font-size: var(--sp-font-caption, 0.75rem);
+          color: var(--sp-color-text-muted);
+        }
+      }
+
+      .user-email {
+        font-size: var(--sp-font-caption, 0.75rem);
+        color: var(--sp-color-text-secondary);
+        margin-top: var(--sp-space-1, 4px);
+      }
+
+      .user-id-row {
+        display: flex;
+        align-items: center;
+        gap: var(--sp-space-2, 8px);
+        margin-top: var(--sp-space-1, 4px);
+
+        .user-id-text {
+          font-family: var(--sp-font-mono);
+          font-size: var(--sp-font-micro, 0.6875rem);
+          color: var(--sp-color-text-muted);
+          background-color: var(--sp-color-surface-container-lowest);
+          padding: 2px 6px;
+          border-radius: var(--sp-radius-xs, 4px);
+          max-width: 200px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  // ── Bank Info Grid ──
+  .bank-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-space-3, 12px);
+
+    .bank-info-item {
+      background-color: var(--sp-color-surface-container-low);
+      padding: var(--sp-space-3, 12px);
+      border-radius: var(--sp-radius-sm, 6px);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-space-1, 4px);
+      border: 1px solid var(--sp-border-subtle);
+
+      &--full {
+        grid-column: 1 / -1;
+      }
+
+      &__label {
+        font-size: var(--sp-font-micro, 0.6875rem);
+        color: var(--sp-color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      &__val {
+        font-size: var(--sp-font-body-sm, 0.875rem);
+        color: var(--sp-color-text-primary);
+        word-break: break-word;
+      }
+
+      .account-number-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--sp-space-2, 8px);
+
+        .account-number {
+          font-size: var(--sp-font-body-md, 1rem);
+          font-family: var(--sp-font-mono);
+          font-weight: var(--sp-font-weight-bold, 700);
+          color: var(--sp-color-text-primary);
+          background-color: var(--sp-color-surface-container-lowest);
+          padding: 4px 8px;
+          border-radius: var(--sp-radius-xs, 4px);
+          letter-spacing: 0.05em;
+        }
+      }
+    }
+  }
+
+  // ── QR Code Preview Box ──
+  .qr-preview-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-md, 12px);
+    padding: var(--sp-space-4, 16px);
+    gap: var(--sp-space-3, 12px);
+
+    &__title {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-2, 8px);
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      font-weight: var(--sp-font-weight-semibold, 600);
+      color: var(--sp-color-text-primary);
+    }
+
+    &__image-wrapper {
+      background-color: #ffffff;
+      padding: var(--sp-space-3, 12px);
+      border-radius: var(--sp-radius-md, 12px);
+      box-shadow: var(--sp-shadow-flat);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .qr-image {
+        max-width: 200px;
+        max-height: 200px;
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: var(--sp-radius-xs, 4px);
+      }
+    }
+
+    .qr-external-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-space-1, 4px);
+      font-size: var(--sp-font-caption, 0.75rem);
+      color: var(--sp-color-brand-accent, #7c5dfa);
+      text-decoration: none;
+      transition: color var(--sp-transition-fast);
+
+      &:hover {
+        color: var(--sp-color-brand-accent-hover, #9277ff);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // ── Timeline ──
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-4, 16px);
+    position: relative;
+    padding-left: var(--sp-space-4, 16px);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background-color: var(--sp-border-subtle);
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-space-3, 12px);
+      position: relative;
+
+      &__bullet {
+        position: absolute;
+        left: -15px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: var(--sp-radius-full, 9999px);
+        background-color: var(--sp-color-text-muted);
+        border: 2px solid var(--sp-color-surface-container);
+
+        &--approved {
+          background-color: var(--sp-color-status-success, #10b981);
+        }
+
+        &--rejected {
+          background-color: var(--sp-color-status-error, #ef4444);
+        }
+
+        &--expired {
+          background-color: var(--sp-color-status-warning, #f59e0b);
+        }
+      }
+
+      &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .time-title {
+          font-size: var(--sp-font-body-sm, 0.875rem);
+          font-weight: var(--sp-font-weight-medium, 500);
+          color: var(--sp-color-text-primary);
+        }
+
+        .time-val {
+          font-size: var(--sp-font-caption, 0.75rem);
+          color: var(--sp-color-text-muted);
+        }
+      }
+    }
+  }
+
+  // ── Rejection Reason Box ──
+  .rejection-reason-box {
+    background-color: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: var(--sp-radius-sm, 6px);
+    padding: var(--sp-space-3, 12px) var(--sp-space-4, 16px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+
+    &__header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-space-2, 8px);
+      font-size: var(--sp-font-caption, 0.75rem);
+      font-weight: var(--sp-font-weight-bold, 700);
+      color: var(--sp-color-status-error, #ef4444);
+    }
+
+    &__content {
+      font-size: var(--sp-font-body-sm, 0.875rem);
+      color: var(--sp-color-text-primary);
+      margin: 0;
+      line-height: var(--sp-line-height-normal, 1.5);
+      font-style: italic;
+    }
+  }
+}
+
+// ── Copy Button ──
+.copy-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--sp-color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-1, 4px);
+  padding: 4px;
+  border-radius: var(--sp-radius-xs, 4px);
+  transition: all var(--sp-transition-fast);
+
+  &:hover {
+    color: var(--sp-color-text-primary);
+    background-color: var(--sp-state-hover);
+  }
+
+  &--highlight {
+    background-color: rgba(124, 93, 250, 0.12);
+    color: var(--sp-color-brand-accent, #7c5dfa);
+    padding: 4px 8px;
+    font-size: var(--sp-font-micro, 0.6875rem);
+    font-weight: var(--sp-font-weight-semibold, 600);
+
+    &:hover {
+      background-color: rgba(124, 93, 250, 0.2);
+      color: var(--sp-color-brand-accent-hover, #9277ff);
+    }
+  }
+}

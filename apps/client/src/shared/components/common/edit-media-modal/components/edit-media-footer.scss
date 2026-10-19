@@ -1,0 +1,112 @@
+/**
+ * @file edit-media-footer.scss
+ * @module Components/Common/EditMediaModal/Components/EditMediaFooterStyles
+ * @description SCSS styles cho EditMediaFooter component (chuẩn BEM, Material 3 Expressive, Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.edit-media-modal__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-space-3, 12px);
+  padding: var(--sp-space-3, 12px) var(--sp-space-5, 20px);
+  background-color: var(--sp-color-surface-container-high, #1b1f2b);
+  border-top: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  @include responsive(desktop) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &--processing {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  @include responsive(mobile) {
+    padding: var(--sp-space-2_5, 10px) var(--sp-space-3, 12px);
+  }
+}
+
+.edit-media-modal__zoom-control {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-3, 12px);
+  width: 100%;
+  max-width: 460px;
+  flex: 1;
+
+  @include responsive(mobile) {
+    gap: var(--sp-space-2, 8px);
+  }
+}
+
+.edit-media-modal__zoom-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2, 8px);
+  color: var(--sp-color-text-secondary, #9499a8);
+  font-size: var(--sp-font-body-sm, 0.875rem);
+  font-weight: var(--sp-font-weight-medium, 500);
+  flex-shrink: 0;
+}
+
+.edit-media-modal__zoom-icon {
+  color: var(--sp-color-text-secondary, #9499a8);
+  flex-shrink: 0;
+}
+
+.edit-media-modal__zoom-text {
+  @include responsive(mobile) {
+    display: none;
+  }
+}
+
+.edit-media-modal__zoom-value {
+  min-width: 46px;
+  text-align: center;
+  font-family: var(--sp-font-mono, monospace);
+  font-size: var(--sp-font-caption, 0.75rem);
+  font-weight: var(--sp-font-weight-semibold, 600);
+  color: var(--sp-color-text-primary, #f4f4f6);
+  background-color: var(--sp-color-surface-container-highest, #242a3b);
+  border-radius: var(--sp-radius-full, 9999px);
+  padding: 2px var(--sp-space-2, 8px);
+  border: 1px solid var(--sp-border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.edit-media-modal__slider-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2, 8px);
+  flex: 1;
+  width: 100%;
+}
+
+.edit-media-modal__slider {
+  flex: 1;
+  width: 100%;
+}
+
+.edit-media-modal__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-space-2, 8px);
+  flex-shrink: 0;
+
+  @include responsive(mobile) {
+    width: 100%;
+    justify-content: stretch;
+
+    > * {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

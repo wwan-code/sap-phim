@@ -1,0 +1,181 @@
+/**
+ * @file movie.validator.js
+ * @module Validator_Movie
+ * @description Xác thực dữ liệu đầu vào cho module anime/movie.
+ */
+
+import Joi from "joi";
+
+const titleSchema = Joi.object({
+  type: Joi.string().trim().max(50).required(),
+  title: Joi.string().trim().min(1).max(500).required(),
+});
+
+const actorCastSchema = Joi.object({
+  id: Joi.string().uuid().allow("", null).optional(),
+  actor_id: Joi.string().uuid().allow("", null).optional(),
+  actorId: Joi.string().uuid().allow("", null).optional(),
+  name: Joi.string().trim().max(255).allow("", null).optional(),
+  actor_name: Joi.string().trim().max(255).allow("", null).optional(),
+  image_url: Joi.string().allow("", null).optional(),
+  actor_image_url: Joi.string().allow("", null).optional(),
+  avatar_url: Joi.string().allow("", null).optional(),
+  role: Joi.string().trim().max(100).allow("", null).optional(),
+  role_name: Joi.string().trim().max(100).allow("", null).optional(),
+  character_name: Joi.string().trim().max(255).allow("", null).optional(),
+  character_image: Joi.string().allow("", null).optional(),
+  cast_order: Joi.number().integer().min(0).optional(),
+  is_main_cast: Joi.boolean().optional(),
+  notes: Joi.string().allow("", null).optional(),
+}).or("id", "actor_id", "actorId", "name", "actor_name");
+
+const orchestrationFields = {
+  jobId: Joi.string().trim().max(120).optional(),
+  job_id: Joi.string().trim().max(120).optional(),
+};
+
+const relationFields = {
+  actor_ids: Joi.array().items(Joi.string().uuid()).optional(),
+  actor_cast: Joi.array().items(actorCastSchema).optional(),
+  actors: Joi.array().items(actorCastSchema).optional(),
+  cast: Joi.array().items(actorCastSchema).optional(),
+};
+
+export const movieValidator = {
+  create: Joi.object({
+    ...orchestrationFields,
+    title: Joi.string().trim().min(1).max(500).optional(),
+    titles: Joi.array().items(titleSchema).min(1).optional(),
+    slug: Joi.string().trim().max(255).optional(),
+    series_id: Joi.string().uuid().allow("", null).optional(),
+    country_id: Joi.string().uuid().allow("", null).optional(),
+    category_id: Joi.string().uuid().allow("", null).optional(),
+    studio_id: Joi.string().uuid().allow("", null).optional(),
+    genre_ids: Joi.array().items(Joi.string().uuid()).allow(null).optional(),
+    type: Joi.string().valid("movie", "series", "special", "ova", "ona", "tv").default("series"),
+    status: Joi.string().valid("ongoing", "completed", "upcoming", "cancelled", "hiatus").default("ongoing"),
+    is_published: Joi.boolean().default(false),
+    description: Joi.string().allow("", null).optional(),
+    images: Joi.object().unknown(true).default({}),
+    trailer_url: Joi.string().allow("", null).optional(),
+    release_date: Joi.date().iso().allow("", null).optional(),
+    release_year: Joi.number().integer().min(1900).max(2100).allow("", null).optional(),
+    duration: Joi.number().integer().min(0).allow("", null).optional(),
+    quality: Joi.string().valid("HD", "FHD", "2K", "4K", "HDR", "CAM").default("FHD"),
+    sub_dub_type: Joi.string().valid("sub", "dub", "both", "raw").default("sub"),
+    source_type: Joi.string().valid("manga", "light_novel", "original", "game", "visual_novel", "novel", "other").allow("", null).optional(),
+    anilist_id: Joi.number().integer().allow(null).optional(),
+    imdb_id: Joi.string().allow("", null).optional(),
+    tmdb_id: Joi.number().integer().allow(null).optional(),
+    mal_id: Joi.number().integer().allow(null).optional(),
+    imdb_rating: Joi.number().min(0).max(10).allow("", null).optional(),
+    age_rating: Joi.string().valid("G", "PG", "PG-13", "R", "R+", "13+", "16+", "18+", "P").default("PG-13"),
+    director: Joi.string().allow("", null).optional(),
+    seo_keywords: Joi.array().items(Joi.string()).optional(),
+    marketing_content: Joi.object().unknown(true).optional(),
+    tags: Joi.array().items(Joi.string()).optional(),
+    season: Joi.string().valid("spring", "summer", "fall", "winter").allow("", null).optional(),
+    season_number: Joi.number().integer().min(1).allow("", null).optional(),
+    total_episodes: Joi.number().integer().min(0).allow("", null).optional(),
+    meta_title: Joi.string().allow("", null).optional(),
+    meta_description: Joi.string().allow("", null).optional(),
+    meta_keywords: Joi.array().items(Joi.string()).optional(),
+    is_premium: Joi.boolean().default(false),
+    ...relationFields,
+  }).or("title", "titles"),
+
+  update: Joi.object({
+    ...orchestrationFields,
+    title: Joi.string().trim().min(1).max(500).optional(),
+    titles: Joi.array().items(titleSchema).min(1).optional(),
+    slug: Joi.string().trim().max(255).optional(),
+    series_id: Joi.string().uuid().allow("", null).optional(),
+    country_id: Joi.string().uuid().allow("", null).optional(),
+    category_id: Joi.string().uuid().allow("", null).optional(),
+    studio_id: Joi.string().uuid().allow("", null).optional(),
+    genre_ids: Joi.array().items(Joi.string().uuid()).allow(null).optional(),
+    type: Joi.string().valid("movie", "series", "special", "ova", "ona", "tv").optional(),
+    status: Joi.string().valid("ongoing", "completed", "upcoming", "cancelled", "hiatus").optional(),
+    is_published: Joi.boolean().optional(),
+    description: Joi.string().allow("", null).optional(),
+    images: Joi.object().unknown(true).optional(),
+    trailer_url: Joi.string().allow("", null).optional(),
+    release_date: Joi.date().iso().allow("", null).optional(),
+    release_year: Joi.number().integer().min(1900).max(2100).allow("", null).optional(),
+    duration: Joi.number().integer().min(0).allow("", null).optional(),
+    quality: Joi.string().valid("HD", "FHD", "2K", "4K", "HDR", "CAM").optional(),
+    sub_dub_type: Joi.string().valid("sub", "dub", "both", "raw").optional(),
+    source_type: Joi.string().valid("manga", "light_novel", "original", "game", "visual_novel", "novel", "other").allow("", null).optional(),
+    anilist_id: Joi.number().integer().allow(null).optional(),
+    imdb_id: Joi.string().allow("", null).optional(),
+    tmdb_id: Joi.number().integer().allow(null).optional(),
+    mal_id: Joi.number().integer().allow(null).optional(),
+    imdb_rating: Joi.number().min(0).max(10).allow("", null).optional(),
+    age_rating: Joi.string().valid("G", "PG", "PG-13", "R", "R+", "13+", "16+", "18+", "P").optional(),
+    director: Joi.string().allow("", null).optional(),
+    seo_keywords: Joi.array().items(Joi.string()).optional(),
+    marketing_content: Joi.object().unknown(true).optional(),
+    tags: Joi.array().items(Joi.string()).optional(),
+    season: Joi.string().valid("spring", "summer", "fall", "winter").allow("", null).optional(),
+    season_number: Joi.number().integer().min(1).allow("", null).optional(),
+    total_episodes: Joi.number().integer().min(0).allow("", null).optional(),
+    meta_title: Joi.string().allow("", null).optional(),
+    meta_description: Joi.string().allow("", null).optional(),
+    meta_keywords: Joi.array().items(Joi.string()).optional(),
+    is_premium: Joi.boolean().optional(),
+    ...relationFields,
+  }),
+
+  imageUpdate: Joi.object({
+    ...orchestrationFields,
+  }),
+
+  list: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    search: Joi.string().trim().allow("").optional(),
+    genre: Joi.string().trim().optional(),
+    category: Joi.string().trim().optional(),
+    country: Joi.string().trim().optional(),
+    studio: Joi.string().trim().optional(),
+    series: Joi.string().trim().optional(),
+    year: Joi.number().integer().min(1900).max(2100).optional(),
+    season: Joi.string().valid("spring", "summer", "fall", "winter").optional(),
+    status: Joi.string().valid("ongoing", "completed", "upcoming", "cancelled", "hiatus").optional(),
+    type: Joi.string().valid("movie", "series", "special", "ova", "ona", "tv").optional(),
+    quality: Joi.string().valid("HD", "FHD", "2K", "4K", "HDR", "CAM").optional(),
+    sub_dub_type: Joi.string().valid("sub", "dub", "both", "raw").optional(),
+    source_type: Joi.string().optional(),
+    sort: Joi.string().valid("newest", "updated", "trending", "rating", "title", "daily_views", "weekly_views", "monthly_views", "favorites", "year").optional(),
+    is_published: Joi.boolean().optional(),
+  }),
+
+  adminList: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(100).default(20),
+    search: Joi.string().trim().allow("").optional(),
+    status: Joi.string().valid("ongoing", "completed", "upcoming", "cancelled", "hiatus").optional(),
+    type: Joi.string().valid("movie", "series", "special", "ova", "ona", "tv").optional(),
+    category: Joi.string().trim().optional(),
+    genre: Joi.string().trim().optional(),
+    country: Joi.string().trim().optional(),
+    studio: Joi.string().trim().optional(),
+    series: Joi.string().trim().optional(),
+    year: Joi.number().integer().min(1900).max(2100).optional(),
+    season: Joi.string().valid("spring", "summer", "fall", "winter").optional(),
+    quality: Joi.string().optional(),
+    sub_dub_type: Joi.string().optional(),
+    source_type: Joi.string().optional(),
+    is_published: Joi.boolean().optional(),
+    is_trash: Joi.boolean().optional(),
+    tab: Joi.string().optional(),
+    order_by: Joi.string().optional().default("updated_at"),
+    sort: Joi.string().valid("ASC", "DESC", "asc", "desc").optional().default("DESC"),
+  }),
+
+  bulkIds: Joi.object({
+    ids: Joi.array().items(Joi.string().uuid().required()).min(1).required(),
+  }),
+};
+
+export default movieValidator;

@@ -1,0 +1,164 @@
+/**
+ * @file circular-progress.scss
+ * @module Components/UI/CircularProgress/Styles
+ * @description SCSS styles cho CircularProgress component (chuẩn BEM, Material 3 Expressive, Center Content và Tokens --sp-*).
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. MAIN BLOCK (.circular-progress)
+// ─────────────────────────────────────────────────────────────────────────────
+
+.circular-progress {
+  position: relative;
+  display: inline-flex;
+  @include flex-center;
+  vertical-align: middle;
+  line-height: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: var(--sp-font-body);
+  color: var(--sp-color-brand-primary);
+
+  // ─── Indeterminate Variant (Continuous Rotating Spinner) ──────────────────
+  &--indeterminate {
+    animation: sp-cp-rotate 1.4s linear infinite;
+  }
+
+  // ─── Determinate Variant (Fixed Radial Progress) ───────────────────────────
+  &--determinate {
+    transform: rotate(-90deg);
+    transition: transform var(--sp-transition-normal);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 2. SEMANTIC COLOR THEMES (Material 3 Tokens --sp-*)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &--color-primary {
+    color: var(--sp-color-brand-primary);
+  }
+
+  &--color-accent {
+    color: var(--sp-color-brand-accent);
+  }
+
+  &--color-success {
+    color: var(--sp-color-status-success);
+  }
+
+  &--color-warning {
+    color: var(--sp-color-status-warning);
+  }
+
+  &--color-error {
+    color: var(--sp-color-status-error);
+  }
+
+  &--color-info {
+    color: var(--sp-color-status-info);
+  }
+
+  &--color-neutral {
+    color: var(--sp-color-text-primary);
+  }
+
+  &--color-inherit {
+    color: inherit;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 3. SVG & TRACK ELEMENTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__track {
+    stroke: currentColor;
+    opacity: 0.12;
+  }
+
+  &__circle {
+    stroke: currentColor;
+    transition: stroke-dashoffset var(--sp-transition-normal) var(--sp-motion-easing-neural);
+
+    .circular-progress--indeterminate & {
+      animation: sp-cp-stroke-dash 1.4s ease-in-out infinite;
+    }
+
+    &--disable-shrink {
+      animation: none !important;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 4. CENTER CONTENT / LABEL
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  &__label {
+    position: absolute;
+    inset: 0;
+    @include flex-center;
+    font-family: var(--sp-font-display);
+    font-weight: var(--sp-font-weight-bold);
+    line-height: 1;
+    text-align: center;
+    color: var(--sp-color-text-primary);
+    pointer-events: none;
+
+    // Trong chế độ determinate, parent bị rotate(-90deg) nên cần xoay ngược lại 90deg để chữ thẳng đứng
+    .circular-progress--determinate & {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. KEYFRAMES
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes sp-cp-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sp-cp-stroke-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: -15px;
+  }
+  100% {
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: -125px;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. ACCESSIBILITY: REDUCED MOTION
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .circular-progress {
+    &--indeterminate {
+      animation: none !important;
+    }
+
+    &__circle {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}

@@ -1,0 +1,222 @@
+/**
+ * @file image-upload-field.scss
+ * @module Admin/Shared/Components/Forms/ImageUploadField/Styles
+ * @description Styling cho ImageUploadField theo chuẩn Material 3 Expressive & Obsidian Cinema.
+ */
+
+@use '@/assets/styles/abstract/mixins' as *;
+
+.image-upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-space-2, 8px);
+  width: 100%;
+
+  &__label {
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-secondary);
+  }
+
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-4, 16px);
+
+    @include responsive('mobile') {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__preview-box {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: var(--sp-radius-md, 12px);
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px solid var(--sp-border-subtle);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--ratio-poster &__preview-box {
+    width: 72px;
+    height: 96px;
+  }
+
+  &--ratio-landscape &__preview-box {
+    width: 120px;
+    height: 68px;
+  }
+
+  &--ratio-banner &__preview-box {
+    width: 140px;
+    height: 60px;
+  }
+
+  &__preview-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    &:hover .image-upload-field__preview-overlay {
+      opacity: 1;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__preview-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(7, 8, 10, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--sp-transition-fast);
+  }
+
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--sp-color-text-muted);
+  }
+
+  &__no-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__no-image-text {
+    font-size: 0.625rem;
+    color: var(--sp-color-text-muted);
+    font-weight: var(--sp-font-weight-medium, 500);
+  }
+
+  &__loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--sp-color-brand-primary);
+  }
+
+  &__spinner {
+    animation: spin 1s linear infinite;
+  }
+
+  &__percent {
+    font-size: 0.6875rem;
+    font-weight: var(--sp-font-weight-bold, 700);
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-space-2, 8px);
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  &__tabs {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--sp-color-surface-container-low);
+    border: 1px solid var(--sp-border-subtle);
+    border-radius: var(--sp-radius-sm, 6px);
+    padding: 2px;
+    gap: 2px;
+    width: fit-content;
+  }
+
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: var(--sp-font-caption, 0.75rem);
+    font-weight: var(--sp-font-weight-medium, 500);
+    color: var(--sp-color-text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--sp-transition-fast);
+
+    &:hover:not(:disabled) {
+      color: var(--sp-color-text-primary);
+    }
+
+    &--active {
+      background-color: var(--sp-color-surface-container-high);
+      color: var(--sp-color-text-primary);
+      font-weight: var(--sp-font-weight-semibold, 600);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__input-zone {
+    width: 100%;
+  }
+
+  &__file-action {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-space-3, 12px);
+    flex-wrap: wrap;
+  }
+
+  &__hidden-file {
+    display: none;
+  }
+
+  &__file-hint {
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-muted);
+  }
+
+  &__url-action {
+    width: 100%;
+  }
+
+  &__helper {
+    margin: 0;
+    font-family: var(--sp-font-body);
+    font-size: var(--sp-font-caption, 0.75rem);
+    color: var(--sp-color-text-secondary);
+
+    &--error {
+      color: var(--sp-color-status-error);
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
