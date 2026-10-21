@@ -44,8 +44,8 @@
     "dev": "vite",
     "build": "vite build --emptyOutDir=false",
     "preview": "vite preview",
-    "test": "node --test src/app/routes/router.test.js tests/ai-suggestion.test.js && npm run build",
-    "test:ai": "node --test tests/ai-suggestion.test.js",
+    "test": "node --test src/app/routes/router.test.js tests/ai-vietnamese.test.js && npm run build",
+    "test:ai": "node --test tests/ai-vietnamese.test.js",
     "lint": "eslint src --ext js,jsx",
     "format": "prettier --write \"src/**/*.{js,jsx,json,css,scss}\""
   },

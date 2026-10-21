@@ -1,327 +1,302 @@
-/**
- * @file evidence-collector.service.js
- * @module AI_Evidence_Collector
- * @description Collect source evidence only after checking the selected movie identity.
- */
-
-import axios from "axios";
-import crypto from "node:crypto";
-
-import { env } from "../../../config/env.config.js";
-import { cacheHelper } from "../../../config/redis.config.js";
-import { logger } from "../../../utils/logger.js";
-import { AI_CACHE_TTL } from "../constants/ai.constants.js";
-import { groupCandidates, normalizeMediaType, sameWork, selectUnambiguousCandidate, sourceIdentity } from "./movie-identity.util.js";
-
+/** Bounded collection and enrichment; no model, queue or entity-write dependency. */
+import axios from 'axios';
+import crypto from 'node:crypto';
+import { env } from '../../../config/env.config.js';
+import { createSourceHttp } from '../helpers/source-http.helper.js';
+import { cacheHelper, getRedisClient } from '../../../config/redis.config.js';
+import { AI_CACHE_TTL, AI_ENRICHMENT_LIMITS, extractVisualAssets, foldSearchTitle, groupCandidates, rankSearchCandidates, sameWork, selectUnambiguousCandidate, sourceIdentity } from '../helpers/ai-metadata.helper.js';
+import { JikanRateLimiter, fetchAniList, fetchAniListStaff, fetchJikan, fetchOMDb, fetchTMDB, fetchTMDBPerson, searchAniList, searchJikan, searchOMDb, searchTMDB } from '../helpers/ai-sources.helper.js';
+import { parseSourceQuery } from '../../movie/helpers/movie-search.helper.js';
 const SOURCES = ["tmdb", "anilist", "jikan", "omdb"];
 const TIMEOUT_MS = 10000;
-const animeFields = `id idMal title { romaji english native userPreferred } synonyms format status source
-  description(asHtml:false) season seasonYear startDate { year month day } countryOfOrigin episodes duration genres averageScore
-  studios(isMain:true) { nodes { name } } staff(perPage:25) { edges { role node { name { full native } } } }
-  characters(sort:ROLE,perPage:12) { edges { role node { name { full native } } voiceActors(language:JAPANESE) { name { full native } image { large } } } }
-  trailer { id site } coverImage { extraLarge large } bannerImage`;
-
-/** Wait with cancellation, including the local source rate limiter. */
-const pause = (milliseconds, signal) => new Promise((resolve, reject) => {
-  if (signal?.aborted) return reject(signal.reason || new Error("Aborted"));
-  const onAbort = () => { clearTimeout(timer); reject(signal.reason || new Error("Aborted")); };
-  const timer = setTimeout(() => { signal?.removeEventListener("abort", onAbort); resolve(); }, milliseconds);
-  signal?.addEventListener("abort", onAbort, { once: true });
-});
-
-/** Preserve explicit country, full release date and real voice actors. */
-const normalizeAnime = (media) => ({
-  ...media,
-  studios: (media.studios?.nodes || []).map((studio) => studio.name),
-  staff: (media.staff?.edges || []).map((edge) => ({ role: edge.role, name: edge.node?.name?.full })),
-  director: media.staff?.edges?.find((edge) => /^director$/i.test(edge.role))?.node?.name?.full || null,
-  season: media.season?.toLowerCase() || null,
-  cover_image: media.coverImage?.extraLarge || media.coverImage?.large || null,
-  banner_image: media.bannerImage || null,
-  trailer_url: media.trailer?.site === "youtube" ? `https://www.youtube.com/watch?v=${media.trailer.id}` : null,
-  cast: (media.characters?.edges || []).flatMap((edge) => (edge.voiceActors || []).slice(0, 1).map((actor) => ({
-    actor_name: actor.name?.full || actor.name?.native,
-    actor_image_url: actor.image?.large || null,
-    character_name: edge.node?.name?.full || edge.node?.name?.native || "",
-    role_name: "Lồng tiếng", is_main_cast: edge.role === "MAIN",
-  }))),
-});
-
-/** Retain raw Jikan dates rather than manufacturing release dates from years. */
-const normalizeJikan = (anime) => ({
-  ...anime, genres: (anime.genres || []).map((genre) => genre.name),
-  studios: (anime.studios || []).map((studio) => studio.name),
-  image_url: anime.images?.jpg?.large_image_url || anime.images?.webp?.large_image_url || null,
-  trailer_url: anime.trailer?.url || null,
-});
 
 export class EvidenceCollectorService {
   constructor({ http = axios, config = env, cache = cacheHelper } = {}) {
-    this.http = http;
+    this.http = http === axios ? createSourceHttp({ http, redis: Object.fromEntries(['get','set','eval'].map((method) => [method, (...args) => getRedisClient()[method](...args)])) }) : http;
     this.config = config;
     this.cache = cache;
-    this.jikanSlots = Promise.resolve();
-    this.jikanNextAt = 0;
+    this.jikanLimiter = new JikanRateLimiter(config.jikan?.rateLimit || 3);
   }
 
-  /** Versioned source cache includes exact identity and media namespace. */
   generateQueryHash(title, year, candidate = {}) {
-    return crypto.createHash("sha256").update(JSON.stringify({ version: 3,
-      title: String(title || "").trim().toLowerCase(), year: year || null,
-      sourceIds: Object.entries(candidate.sourceIds || {}).sort(), mediaType: candidate.mediaType || null,
+    return crypto.createHash("sha256").update(JSON.stringify({
+      version: 5, locale: "vi-VN",
+      title: String(title || "").trim().toLowerCase(),
+      year: year || null,
+      sourceIds: Object.entries(candidate.sourceIds || {}).sort(),
+      mediaType: candidate.mediaType || null,
     })).digest("hex");
   }
 
-  /** Bounded transient retries never swallow cancellation. */
-  async fetchWithRetry(call, retries = 1, delay = 500, signal) {
-    for (let attempt = 0; ; attempt++) {
+  async searchCandidateResult({ title, year, signal, mediaType = "all", sourceHints = {}, alternateTitle, onPrimaryResult }) {
+    const attempted = [], succeeded = [], sourceErrors = [];
+    const enabled = (source) => source === 'anilist' ? this.config.anilist?.enabled !== false : Boolean(this.config[source]?.enabled);
+    const run = async (source, search) => {
       signal?.throwIfAborted();
-      try { return await call(); } catch (error) {
-        if (signal?.aborted || attempt >= retries || !error.response || error.response.status < 500) throw error;
-        await pause(delay, signal);
+      if (!enabled(source)) { sourceErrors.push({ source, code: "SOURCE_DISABLED" }); return []; }
+      attempted.push(source);
+      try {
+        const records = await search();
+        succeeded.push(source);
+        return records.map((data) => sourceIdentity(source, data));
+      } catch (error) {
+        signal?.throwIfAborted();
+        sourceErrors.push({ source, code: error.code || "SOURCE_UNAVAILABLE" });
+        return [];
       }
+    };
+
+    const direct = parseSourceQuery(title);
+    if (direct) {
+      const source = ({ mal: 'jikan', imdb: 'omdb' })[direct.source] || direct.source;
+      const candidate = { sourceIds: { [direct.source]: direct.id }, mediaType: direct.mediaType, isAnimation: ['mal','anilist'].includes(direct.source) ? true : undefined };
+      const fetchers = {
+        tmdb: () => fetchTMDB(this.http, this.config, { selectedCandidate: candidate, signal }),
+        anilist: () => fetchAniList(this.http, { selectedCandidate: candidate, signal }),
+        jikan: () => fetchJikan(this.http, this.config, this.jikanLimiter, { malId: direct.id, signal }),
+        omdb: () => fetchOMDb(this.http, this.config, { selectedCandidate: candidate, signal }),
+      };
+      const records = await run(source, async () => { const record = await fetchers[source](); return record ? [record] : []; });
+      return { candidates: groupCandidates(records).filter((item) => (!year || item.year === Number(year)) && (!mediaType || mediaType === "all" || item.mediaType === (mediaType === "tv" ? "series" : mediaType))), sources_attempted: attempted, sources_succeeded: succeeded, source_errors: sourceErrors, direct: true };
     }
+    const searches = [];
+    if (this.config.tmdb?.enabled) searches.push(() => run('tmdb', () => searchTMDB(this.http, this.config, { title, year, signal, mediaType })));
+    if (this.config.anilist?.enabled !== false) searches.push(() => run('anilist', () => searchAniList(this.http, { title, year, signal })));
+    if (this.config.jikan?.enabled) searches.push(() => run('jikan', () => searchJikan(this.http, this.config, this.jikanLimiter, { title, year, signal })));
+    if (this.config.omdb?.enabled) searches.push(() => run('omdb', () => searchOMDb(this.http, this.config, { title, year, signal })));
+
+    const initial = (await Promise.all(searches.map((s) => s()))).flat();
+    const primaryCandidates = groupCandidates(initial);
+    const primaryResult = {
+      candidates: rankSearchCandidates(primaryCandidates, title),
+      sources_attempted: [...attempted],
+      sources_succeeded: [...succeeded],
+      source_errors: [...sourceErrors],
+    };
+    onPrimaryResult?.(primaryResult);
+
+    const hintIds = sourceHints.sourceIds || {};
+    const hasConsensus = primaryCandidates.some((c) =>
+      Object.entries(hintIds).some(([src, id]) => c.sourceIds[src] && String(c.sourceIds[src]) === String(id))
+      || Object.keys(c.sourceIds).length >= 2
+    );
+
+    if (!hasConsensus && alternateTitle && foldSearchTitle(alternateTitle) !== foldSearchTitle(title)) {
+      const altInitial = (await Promise.all([
+        () => run("tmdb", () => searchTMDB(this.http, this.config, { title: alternateTitle, year, signal, mediaType })),
+        () => run("anilist", () => searchAniList(this.http, { title: alternateTitle, year, signal })),
+        () => run("jikan", () => searchJikan(this.http, this.config, this.jikanLimiter, { title: alternateTitle, year, signal })),
+        () => run("omdb", () => searchOMDb(this.http, this.config, { title: alternateTitle, year, signal })),
+      ].map((s) => s()))).flat();
+
+      const combined = groupCandidates([...initial, ...altInitial]);
+      return {
+        candidates: rankSearchCandidates(combined, title),
+        sources_attempted: [...new Set(attempted)],
+        sources_succeeded: [...new Set(succeeded)],
+        source_errors: sourceErrors,
+      };
+    }
+
+    return primaryResult;
   }
 
-  /** Serialize starts to honor configured requests per second for Jikan. */
-  async requestJikan(path, params, signal) {
-    const previous = this.jikanSlots;
-    let release;
-    this.jikanSlots = new Promise((resolve) => { release = resolve; });
-    await previous;
-    try {
-      await pause(Math.max(0, this.jikanNextAt - Date.now()), signal);
-      this.jikanNextAt = Date.now() + Math.ceil(1000 / Math.max(1, this.config.jikan.rateLimit || 3));
-    } finally { release(); }
-    return this.http.get(`${this.config.jikan.baseUrl.replace(/\/$/, "")}/${path}`, { params, signal, timeout: TIMEOUT_MS });
+  async searchCandidates(params) {
+    const result = await this.searchCandidateResult(params);
+    return result.candidates;
   }
 
-  /** Return all plausible source candidates; first search hit is never authoritative. */
-  async searchCandidates({ title, year, mediaType = "all", signal }) {
-    const results = await Promise.allSettled([
-      this.searchTMDB(title, year, signal), this.searchAniList(title, year, signal),
-      this.searchJikan(title, year, signal), this.searchOMDb(title, year, signal),
-    ]);
+  async collectEvidence({ title, year, mediaType = "all", selectedCandidate = null, forceRefresh = false, signal }) {
     signal?.throwIfAborted();
-    const candidates = results.flatMap((result, index) => result.status === "fulfilled"
-      ? result.value.map((data) => sourceIdentity(SOURCES[index], data)) : []);
-    const type = normalizeMediaType(mediaType);
-    return groupCandidates(candidates.filter((candidate) => (!year || Number(year) === candidate.year) && (!type || type === candidate.mediaType)));
-  }
+    let candidate = selectedCandidate;
+    if (!candidate && title) {
+      const candidates = await this.searchCandidates({ title, year, mediaType, signal });
+      candidate = selectUnambiguousCandidate(candidates, { title, year, mediaType });
+    }
 
-  /** Collect selected IDs and conservative cross-source matches with rejected-source diagnostics. */
-  async collectEvidence({ title, year, mediaType = "all", selectedCandidate, forceRefresh = false, signal }) {
-    const candidate = selectedCandidate || selectUnambiguousCandidate(
-      await this.searchCandidates({ title, year, mediaType, signal }), { title, year, mediaType });
-    const cacheKey = `ai:v3:evidence:${this.generateQueryHash(title, year, candidate || {})}`;
-    if (!forceRefresh && candidate) {
+    if (!candidate) throw Object.assign(new Error("Chưa xác minh tác phẩm."), { code: "AI_IDENTITY_REQUIRED" });
+    const queryHash = this.generateQueryHash(title, year, candidate || {});
+    const cacheKey = `ai:v5:evidence:${queryHash}`;
+    if (!forceRefresh) {
       const cached = await this.cache.get(cacheKey);
-      signal?.throwIfAborted();
       if (cached) return cached;
     }
-    const empty = {
-      query: { title, year, collected_at: new Date().toISOString() }, selected_candidate: candidate,
-      source_presence: Object.fromEntries(SOURCES.map((source) => [source, false])),
-      rejected_sources: [], source_errors: [], tmdb: null, anilist: null, jikan: null, omdb: null,
+
+    const http = forceRefresh && this.http.fresh ? this.http.fresh() : this.http;
+    const fetchers = {
+      tmdb: (cand, sig) => fetchTMDB(http, this.config, { title, year, selectedCandidate: cand, signal: sig }),
+      anilist: (cand, sig) => fetchAniList(http, { title, year, selectedCandidate: cand, signal: sig }),
+      jikan: (cand, sig) => fetchJikan(http, this.config, this.jikanLimiter, { title, year, selectedCandidate: cand, signal: sig }),
+      omdb: (cand, sig) => fetchOMDb(http, this.config, { title, year, selectedCandidate: cand, signal: sig }),
     };
-    if (!candidate) return { ...empty, visual_assets: this.extractVisualAssets(), detected_source_type: null };
-    const options = { signal, selectedCandidate: candidate };
-    const results = await Promise.allSettled([
-      this.fetchTMDB(title || candidate.title, candidate.year, options),
-      this.fetchAniList(title || candidate.title, candidate.year, options),
-      this.fetchJikan(title || candidate.title, candidate.year, candidate.sourceIds?.mal, options),
-      this.fetchOMDb(title || candidate.title, candidate.year, options),
-    ]);
-    const snapshot = { ...empty };
-    const verifiedIdentity = { ...candidate, sourceIds: { ...candidate.sourceIds } };
-    results.forEach((result, index) => {
-      const source = SOURCES[index];
-      if (result.status === "rejected") {
-        snapshot.source_errors.push({ source, code: signal?.aborted ? "ABORTED" : "SOURCE_UNAVAILABLE" });
-      } else if (result.value) {
-        const identity = sourceIdentity(source, result.value);
-        if (sameWork(verifiedIdentity, identity)) {
-          snapshot[source] = result.value;
+
+    const results = await Promise.allSettled(
+      SOURCES.map(async (source) => {
+        signal?.throwIfAborted();
+        const data = source === "anilist" && this.config.anilist?.enabled === false ? null : await fetchers[source](candidate, signal);
+        return { source, data };
+      })
+    );
+
+    signal?.throwIfAborted();
+    const snapshot = {
+      query: { title, year, mediaType },
+      source_presence: {},
+      source_errors: [],
+      rejected_sources: [],
+      visual_assets: { posters: [], covers: [], banners: [] },
+      selected_candidate: candidate || null,
+    };
+
+    for (let i = 0; i < SOURCES.length; i++) {
+      const source = SOURCES[i];
+      const outcome = results[i];
+      if (outcome.status === "fulfilled" && outcome.value.data) {
+        const item = outcome.value.data;
+        if (sameWork(candidate, sourceIdentity(source, item))) {
+          snapshot[source] = item;
           snapshot.source_presence[source] = true;
-          Object.assign(verifiedIdentity.sourceIds, identity.sourceIds);
-        } else snapshot.rejected_sources.push({ source, reason: "IDENTITY_MISMATCH" });
-      }
-    });
-    if (!snapshot.jikan && snapshot.anilist?.idMal && !signal?.aborted) {
-      try {
-        const jikan = await this.fetchJikan("", null, snapshot.anilist.idMal, { signal });
-        if (jikan && sameWork(verifiedIdentity, sourceIdentity("jikan", jikan))) {
-          snapshot.jikan = jikan; snapshot.source_presence.jikan = true;
+        } else {
+          snapshot.rejected_sources.push({ source, reason: "IDENTITY_MISMATCH" });
+          snapshot.source_presence[source] = false;
         }
-      } catch { snapshot.source_errors.push({ source: "jikan", code: "SOURCE_UNAVAILABLE" }); }
+      } else {
+        snapshot[source] = null;
+        snapshot.source_presence[source] = false;
+        if (outcome.status === "rejected") {
+          snapshot.source_errors.push({ source, code: outcome.reason?.code || "FETCH_FAILED" });
+        }
+      }
     }
-    snapshot.visual_assets = this.extractVisualAssets(snapshot.tmdb, snapshot.anilist, snapshot.jikan);
-    snapshot.detected_source_type = this.detectSourceType(snapshot.anilist);
-    if (!signal?.aborted && Object.values(snapshot.source_presence).some(Boolean)) {
-      await this.cache.set(cacheKey, snapshot, AI_CACHE_TTL.EVIDENCE_SECONDS);
-    }
-    logger.info("[AI][Evidence] Source verification complete", {
-      verified: Object.values(snapshot.source_presence).filter(Boolean).length, rejected: snapshot.rejected_sources.length,
-    });
+
+    snapshot.visual_assets = extractVisualAssets(snapshot);
+    await this.cache.set(cacheKey, snapshot, snapshot.source_errors.length || !Object.values(snapshot.source_presence).some(Boolean) ? 60 : AI_CACHE_TTL.EVIDENCE_SECONDS);
     return snapshot;
   }
 
-  /** Enrich using only aliases already verified by source data. */
   async enrichEvidenceWithTitles({ previousSnapshot = {}, candidateTitles = {}, signal }) {
-    const anchor = previousSnapshot.selected_candidate;
-    if (!anchor || signal?.aborted) return { snapshot: previousSnapshot, newlyFoundCount: 0 };
-    const trusted = new Set([...(anchor.titles || []), ...SOURCES.flatMap((source) =>
-      previousSnapshot[source] ? sourceIdentity(source, previousSnapshot[source]).titles : [])]);
-    const title = Object.values(candidateTitles).find((value) => trusted.has(value));
-    if (!title) return { snapshot: previousSnapshot, newlyFoundCount: 0 };
-    const found = await this.collectEvidence({ title, year: anchor.year, selectedCandidate: anchor, forceRefresh: true, signal });
-    const snapshot = { ...found, ...previousSnapshot, source_presence: { ...previousSnapshot.source_presence } };
-    let newlyFoundCount = 0;
-    for (const source of SOURCES) if (!snapshot[source] && found[source]) {
-      snapshot[source] = found[source]; snapshot.source_presence[source] = true; newlyFoundCount++;
-    }
-    snapshot.visual_assets = this.extractVisualAssets(snapshot.tmdb, snapshot.anilist, snapshot.jikan);
-    snapshot.detected_source_type = this.detectSourceType(snapshot.anilist);
-    return { snapshot, newlyFoundCount };
-  }
+    signal?.throwIfAborted();
+    const query = candidateTitles.verified || candidateTitles.english || candidateTitles.romaji;
+    if (!query) return { snapshot: previousSnapshot, newlyFoundCount: 0 };
 
-  /** Search TMDB movie and TV namespaces, excluding people. */
-  async searchTMDB(title, year, signal) {
-    if (!this.config.tmdb.enabled) return [];
-    const response = await this.http.get(`${this.config.tmdb.baseUrl}/search/multi`, {
-      params: { api_key: this.config.tmdb.apiKey, query: title, language: "vi-VN", include_adult: false },
-      signal, timeout: TIMEOUT_MS,
-    });
-    return (response.data?.results || []).filter((item) => ["movie", "tv"].includes(item.media_type)).slice(0, 10).map((item) => ({
-      ...item, poster_path: item.poster_path ? `${this.config.tmdb.imageBaseUrl}/w185${item.poster_path}` : null,
-    }));
-  }
+    const snapshot = { ...previousSnapshot, source_presence: { ...previousSnapshot.source_presence } };
+    const missingSources = SOURCES.filter((s) => !snapshot.source_presence[s] && (s === "anilist" ? this.config.anilist?.enabled !== false : this.config[s]?.enabled));
+    if (!missingSources.length) return { snapshot, newlyFoundCount: 0 };
 
-  /** Search a page of anime to preserve ambiguity between seasons. */
-  async searchAniList(title, year, signal) {
-    const response = await this.http.post("https://graphql.anilist.co", {
-      query: `query($search:String,$year:Int) { Page(perPage:10) { media(search:$search,seasonYear:$year,type:ANIME,sort:SEARCH_MATCH) { ${animeFields} } } }`,
-      variables: { search: title, year: year ? Number(year) : undefined },
-    }, { signal, timeout: TIMEOUT_MS });
-    return (response.data?.data?.Page?.media || []).map(normalizeAnime);
-  }
-
-  /** Search configured Jikan endpoint and bounded candidate page. */
-  async searchJikan(title, year, signal) {
-    if (!this.config.jikan.enabled) return [];
-    const response = await this.requestJikan("anime", { q: title, limit: 10,
-      ...(year ? { start_date: `${year}-01-01`, end_date: `${year}-12-31` } : {}) }, signal);
-    return (response.data?.data || []).map(normalizeJikan);
-  }
-
-  /** Search IMDb candidates; title-only detail queries are deliberately avoided. */
-  async searchOMDb(title, year, signal) {
-    if (!this.config.omdb.enabled) return [];
-    const response = await this.http.get(this.config.omdb.baseUrl, {
-      params: { apikey: this.config.omdb.apiKey, s: title, y: year || undefined }, signal, timeout: TIMEOUT_MS,
-    });
-    return (response.data?.Search || []).slice(0, 10).map((item) => ({
-      ...item, title: item.Title, year: item.Year, type: item.Type, imdb_id: item.imdbID,
-    }));
-  }
-
-  /** Fetch complete TMDB metadata including runtime, countries, studios and external IDs. */
-  async fetchTMDB(title, year, { selectedCandidate, signal } = {}) {
-    if (!this.config.tmdb.enabled) return null;
-    let identity = selectedCandidate;
-    if (!identity?.sourceIds?.tmdb) {
-      const candidates = (await this.searchTMDB(title, year, signal)).map((data) => sourceIdentity("tmdb", data));
-      identity = selectedCandidate ? candidates.find((candidate) => sameWork(selectedCandidate, candidate))
-        : selectUnambiguousCandidate(candidates, { title, year });
-    }
-    if (!identity?.sourceIds?.tmdb) return null;
-    const mediaType = identity.mediaType === "series" ? "tv" : "movie";
-    const response = await this.http.get(`${this.config.tmdb.baseUrl}/${mediaType}/${identity.sourceIds.tmdb}`, {
-      params: { api_key: this.config.tmdb.apiKey, language: "vi-VN", append_to_response: "credits,videos,external_ids,alternative_titles" },
-      signal, timeout: TIMEOUT_MS,
-    });
-    const detail = response.data;
-    const trailer = detail.videos?.results?.find((video) => video.site === "YouTube" && ["Trailer", "Teaser"].includes(video.type));
-    const image = (path, size = "original") => path ? `${this.config.tmdb.imageBaseUrl}/${size}${path}` : null;
-    return {
-      ...detail, media_type: mediaType, title: detail.title || detail.name, original_title: detail.original_title || detail.original_name,
-      release_date: detail.release_date || detail.first_air_date || null,
-      titles: (detail.alternative_titles?.titles || detail.alternative_titles?.results || []).map((item) => item.title),
-      is_animation: (detail.genres || []).some((genre) => genre.id === 16), genres: (detail.genres || []).map((genre) => genre.name),
-      countries: (detail.production_countries || []).map((country) => country.iso_3166_1),
-      studios: (detail.production_companies || []).map((studio) => studio.name),
-      duration: detail.runtime || detail.episode_run_time?.[0] || null, imdb_id: detail.external_ids?.imdb_id || detail.imdb_id || null,
-      director: detail.credits?.crew?.find((crew) => crew.job === "Director")?.name || null,
-      poster_path: image(detail.poster_path), backdrop_path: image(detail.backdrop_path),
-      trailer_url: trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : null,
-      cast: (detail.credits?.cast || []).slice(0, 12).map((actor) => ({
-        actor_name: actor.name || actor.original_name, actor_image_url: image(actor.profile_path, "w185"),
-        character_name: actor.character, role_name: "Diễn viên", is_main_cast: actor.order < 3, cast_order: actor.order,
-      })),
+    let newlyFound = 0;
+    const fetchers = {
+      tmdb: (sig) => fetchTMDB(this.http, this.config, { title: query, selectedCandidate: snapshot.selected_candidate, signal: sig }),
+      anilist: (sig) => fetchAniList(this.http, { title: query, selectedCandidate: snapshot.selected_candidate, signal: sig }),
+      jikan: (sig) => fetchJikan(this.http, this.config, this.jikanLimiter, { title: query, selectedCandidate: snapshot.selected_candidate, signal: sig }),
+      omdb: (sig) => fetchOMDb(this.http, this.config, { title: query, selectedCandidate: snapshot.selected_candidate, signal: sig }),
     };
+
+    const results = await Promise.allSettled(missingSources.map((src) => fetchers[src](signal)));
+    for (let i = 0; i < missingSources.length; i++) {
+      const source = missingSources[i];
+      const outcome = results[i];
+      if (outcome.status === "fulfilled" && outcome.value && snapshot.selected_candidate
+        && sameWork(snapshot.selected_candidate, sourceIdentity(source, outcome.value))) {
+        snapshot[source] = outcome.value;
+        snapshot.source_presence[source] = true;
+        newlyFound++;
+      } else if (outcome.status === "fulfilled" && outcome.value) {
+        snapshot.rejected_sources = [...(snapshot.rejected_sources || []), { source, reason: "IDENTITY_MISMATCH" }];
+      }
+    }
+
+    if (newlyFound > 0) {
+      snapshot.visual_assets = extractVisualAssets(snapshot);
+    }
+    return { snapshot, newlyFoundCount: newlyFound };
   }
 
-  /** Fetch AniList using known IDs or a conservative cross-source match. */
-  async fetchAniList(title, year, { selectedCandidate, signal } = {}) {
-    if (selectedCandidate?.isAnimation === false) return null;
-    if (!selectedCandidate?.sourceIds?.anilist && !selectedCandidate?.sourceIds?.mal) {
-      const records = await this.searchAniList(title, year, signal);
-      const candidates = records.map((data) => sourceIdentity("anilist", data));
-      const choice = selectedCandidate ? candidates.find((candidate) => sameWork(selectedCandidate, candidate))
-        : selectUnambiguousCandidate(candidates, { title, year });
-      return records.find((data) => data.id === choice?.sourceIds?.anilist) || null;
-    }
-    const response = await this.http.post("https://graphql.anilist.co", {
-      query: `query($id:Int,$mal:Int) { Media(id:$id,idMal:$mal,type:ANIME) { ${animeFields} } }`,
-      variables: {
-        id: selectedCandidate.sourceIds.anilist ? Number(selectedCandidate.sourceIds.anilist) : undefined,
-        mal: !selectedCandidate.sourceIds.anilist && selectedCandidate.sourceIds.mal ? Number(selectedCandidate.sourceIds.mal) : undefined,
-      },
-    }, { signal, timeout: TIMEOUT_MS });
-    return response.data?.data?.Media ? normalizeAnime(response.data.data.Media) : null;
-  }
+  async enrichActorDetails(actors = [], { signal, maxActors = AI_ENRICHMENT_LIMITS.ACTOR_LIMIT, concurrency = AI_ENRICHMENT_LIMITS.MAX_CONCURRENCY } = {}) {
+    if (!Array.isArray(actors) || actors.length === 0) return [];
 
-  /** Fetch MAL identity or one exact conservative Jikan match. */
-  async fetchJikan(title, year, malId, { selectedCandidate, signal } = {}) {
-    if (!this.config.jikan.enabled || selectedCandidate?.isAnimation === false) return null;
-    if (malId) {
-      const response = await this.requestJikan(`anime/${Number(malId)}/full`, {}, signal);
-      return response.data?.data ? normalizeJikan(response.data.data) : null;
-    }
-    const records = await this.searchJikan(title, year, signal);
-    const candidates = records.map((data) => sourceIdentity("jikan", data));
-    const choice = selectedCandidate ? candidates.find((candidate) => sameWork(selectedCandidate, candidate))
-      : selectUnambiguousCandidate(candidates, { title, year });
-    return records.find((data) => data.mal_id === choice?.sourceIds?.mal) || null;
-  }
-
-  /** Fetch OMDb using explicit IMDb identity. */
-  async fetchOMDb(title, year, { selectedCandidate, signal } = {}) {
-    if (!this.config.omdb.enabled) return null;
-    let id = selectedCandidate?.sourceIds?.imdb;
-    if (!id) {
-      const candidates = (await this.searchOMDb(title, year, signal)).map((data) => sourceIdentity("omdb", data));
-      const choice = selectedCandidate ? candidates.find((candidate) => sameWork(selectedCandidate, candidate))
-        : selectUnambiguousCandidate(candidates, { title, year });
-      id = choice?.sourceIds?.imdb;
-    }
-    if (!id) return null;
-    const response = await this.http.get(this.config.omdb.baseUrl, {
-      params: { apikey: this.config.omdb.apiKey, i: id, plot: "full" }, signal, timeout: TIMEOUT_MS,
+    const scored = actors.map((actor, index) => {
+      let score = 0;
+      if (actor.is_new && actor.is_main_cast) score = 40;
+      else if (actor.is_new) score = 30;
+      else if (actor.is_main_cast) score = 20;
+      else score = 10;
+      return { actor, index, score, hasSource: Boolean(actor.source && actor.source_id) };
     });
-    const data = response.data;
-    if (data.Response === "False") return null;
-    const available = (value) => value && value !== "N/A" ? value : null;
-    return {
-      imdb_id: data.imdbID, title: data.Title, year: data.Year, type: data.Type, rated: available(data.Rated), released: available(data.Released),
-      runtime: available(data.Runtime), genre: available(data.Genre)?.split(",").map((genre) => genre.trim()) || [],
-      director: available(data.Director), plot: available(data.Plot), country: available(data.Country),
-      imdb_rating: available(data.imdbRating) ? Number(data.imdbRating) : null,
+
+    const eligible = scored.filter((item) => item.hasSource);
+    eligible.sort((a, b) => b.score - a.score || a.index - b.index);
+
+    const seenIdentities = new Set();
+    const toEnrich = [];
+    for (const item of eligible) {
+      const identityKey = `${item.actor.source}:${item.actor.source_id}`;
+      if (!seenIdentities.has(identityKey) && toEnrich.length < maxActors) {
+        seenIdentities.add(identityKey);
+        toEnrich.push(item);
+      }
+    }
+
+    const toEnrichIndices = new Set(toEnrich.map((item) => item.index));
+    const enrichedResults = new Map();
+
+    const enrichItem = async ({ actor }) => {
+      try {
+        signal?.throwIfAborted();
+        let enriched = null;
+        if (actor.source === "tmdb") {
+          enriched = await this.fetchTMDBPerson(actor.source_id, { signal });
+        } else if (actor.source === "anilist") {
+          enriched = await this.fetchAniListStaff(actor.source_id, { signal });
+        }
+        if (enriched) {
+          return {
+            ...actor,
+            gender: enriched.gender || actor.gender || null,
+            birth_date: enriched.birth_date || actor.birth_date || null,
+            nationality: enriched.nationality || actor.nationality || null,
+            biography: enriched.biography || actor.biography || null,
+            aliases: enriched.aliases?.length ? enriched.aliases : (actor.aliases || []),
+            actor_image_url: actor.actor_image_url || enriched.image_url || null,
+            metadata: {
+              ...(actor.metadata || {}),
+              ...(enriched.metadata || {}),
+              enriched_at: new Date().toISOString(),
+            },
+            enrichment_status: "enriched",
+          };
+        }
+        return { ...actor, enrichment_status: "failed" };
+      } catch {
+        signal?.throwIfAborted();
+        return { ...actor, enrichment_status: "failed" };
+      }
     };
+
+    let cursor = 0;
+    await Promise.all(Array.from({ length: Math.min(toEnrich.length, Math.max(1, Math.min(3, Number(concurrency) || 1))) }, async () => {
+      while (cursor < toEnrich.length) {
+        signal?.throwIfAborted();
+        const item = toEnrich[cursor++];
+        enrichedResults.set(item.index, await enrichItem(item));
+      }
+    }));
+
+    return actors.map((actor, idx) => {
+      if (toEnrichIndices.has(idx)) {
+        return enrichedResults.get(idx) || { ...actor, enrichment_status: "failed" };
+      }
+      return { ...actor, enrichment_status: actor.source_id ? "skipped" : "unsupported_source" };
+    });
   }
 
   /** Expose source images without downloads or uploads. */
   extractVisualAssets(tmdb, anilist, jikan) {
+    if (tmdb && typeof tmdb === "object" && ("tmdb" in tmdb || "anilist" in tmdb || "jikan" in tmdb)) {
+      const snap = tmdb;
+      tmdb = snap.tmdb;
+      anilist = snap.anilist;
+      jikan = snap.jikan;
+    }
     const asset = (url, source, ratio) => ({ url, source, ratio, label: `${source} (${ratio})` });
     return {
       posters: [
@@ -334,16 +309,62 @@ export class EvidenceCollectorService {
     };
   }
 
-  /** Map only explicitly supplied source material. */
-  detectSourceType(anilist) {
-    const source = String(anilist?.source || "").toUpperCase();
-    return ({
-      MANGA: "manga", WEB_MANGA: "manga", DOUJINSHI: "manga", LIGHT_NOVEL: "light_novel", ORIGINAL: "original",
-      MULTIMEDIA_PROJECT: "original", VIDEO_GAME: "game", VISUAL_NOVEL: "visual_novel", NOVEL: "novel", OTHER: "other",
-    })[source] || null;
+  async enrichDirectorDetails({ directorName, tmdbDirectorId, anilistStaffId, signal, timeout = AI_ENRICHMENT_LIMITS.TIMEOUT_MS } = {}) {
+    if (!directorName && !tmdbDirectorId && !anilistStaffId) {
+      return { schema_version: 1, primary: null, people: [] };
+    }
+
+    let enriched = null;
+    let source = null;
+    let sourceId = null;
+
+    try {
+      if (tmdbDirectorId) {
+        source = "tmdb";
+        sourceId = String(tmdbDirectorId);
+        enriched = await this.fetchTMDBPerson(tmdbDirectorId, { signal, timeout });
+      } else if (anilistStaffId) {
+        source = "anilist";
+        sourceId = String(anilistStaffId);
+        enriched = await this.fetchAniListStaff(anilistStaffId, { signal, timeout });
+      }
+
+      const name = directorName || enriched?.name || null;
+      if (!name && !sourceId) {
+        return { schema_version: 1, primary: null, people: [] };
+      }
+
+      signal?.throwIfAborted();
+      const primaryKey = source && sourceId ? `${source}:person:${sourceId}` : null;
+      const person = {
+        source: source || "unknown",
+        source_id: sourceId,
+        name,
+        credit_role: "Director",
+        image_url: enriched?.image_url || null,
+        gender: enriched?.gender || null,
+        birth_date: enriched?.birth_date || null,
+        nationality: enriched?.nationality || null,
+        biography: enriched?.biography || null,
+      };
+
+      return {
+        schema_version: 1,
+        primary: primaryKey,
+        people: [person],
+      };
+    } catch {
+      signal?.throwIfAborted();
+      return {
+        schema_version: 1,
+        primary: directorName ? `unknown:person:${directorName}` : null,
+        people: [{ name: directorName, credit_role: "Director", enrichment_status: "failed" }],
+      };
+    }
   }
+
+  fetchTMDBPerson(id, options) { return fetchTMDBPerson(this.http, this.config, this.cache, id, options); }
+  fetchAniListStaff(id, options) { return fetchAniListStaff(this.http, this.cache, id, options); }
 }
 
 export const evidenceCollector = new EvidenceCollectorService();
-export default evidenceCollector;
-

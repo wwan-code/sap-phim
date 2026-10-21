@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { buildSuggestionMergePlan, createSuggestionDiff, isSuggestionFieldEmpty, safeSuggestionUrl, suggestionConfidencePercent, suggestionNotice } from '../mappers/ai-suggestion.mapper';
-import { filterReviewFields, readableEvidenceValue, REVIEW_FILTERS, REVIEW_GROUP_LABELS, sourceLabel } from '../utils/ai-review.util';
+import { filterReviewFields, readableEvidenceValue, REVIEW_FILTERS, REVIEW_GROUP_LABELS, sourceDiagnostics, sourceLabel } from '../utils/ai-review.util';
 
 const WARNING_LABELS = {
   POSSIBLE_DIRECTOR_AUTHOR_CONFUSION: 'Tên đạo diễn có thể bị nhầm với tác giả nguyên tác.',
@@ -17,6 +17,9 @@ const WARNING_LABELS = {
   INVALID_RELEASE_DATE: 'Ngày phát hành không hợp lệ đã được loại khỏi gợi ý.',
   UNSUPPORTED_FIELD_REMOVED: 'Giá trị không khớp chứng cứ đã được loại khỏi gợi ý.',
   UNSUPPORTED_TITLE_TYPE_REMOVED: 'Loại tiêu đề không khớp nguồn đã được loại khỏi gợi ý.',
+  LOCALIZATION_INCOMPLETE: 'Chưa có phần giới thiệu tiếng Việt đạt yêu cầu. Hãy bổ sung hoặc biên tập trước khi lưu phim.',
+  VIETNAMESE_SYNOPSIS_REQUIRED: 'Chưa có phần giới thiệu tiếng Việt đạt yêu cầu. Hãy bổ sung hoặc biên tập trước khi lưu phim.',
+  VIETNAMESE_TRANSLATION_MISSING: 'Chưa có bản giới thiệu tiếng Việt. Dữ liệu đã xác minh vẫn được giữ lại.',
 };
 
 /** @hook useAiSuggestionReview @description Preserve choices through filtering and background updates; confirm the exact current form. */
@@ -87,7 +90,7 @@ export const useAiSuggestionReview = ({ suggestionData, suggestionId, currentVal
   const warnings = [...new Set([...(suggestionData?.flags || []), ...(suggestionData?.warnings || [])].map((item) => {
     const text = typeof item === 'string' ? item : item.message || item.code;
     return WARNING_LABELS[text] || (/^[A-Z][A-Z0-9_]+$/.test(text || '') ? 'Một giá trị chưa đủ chứng cứ cần được kiểm tra.' : text);
-  }).filter(Boolean))];
+  }).filter(Boolean).concat(sourceDiagnostics(suggestionData?.evidence_summary?.source_errors || suggestionData?.source_errors)))];
   const partialReason = suggestionNotice(suggestionData?.partial_reason, 'Một số nguồn chưa đầy đủ. Kết quả giữ lại dữ liệu đã xác minh.');
   const conflicts = (suggestionData?.conflicts || []).map((item) => ({ ...item,
     label: fields.find((field) => field.key === item.field)?.label || 'Thông tin tác phẩm',

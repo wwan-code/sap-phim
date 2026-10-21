@@ -9,6 +9,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ROUTES } from '@/shared/constants/routes.constants';
+import { useJobStore } from '@/store/use-job-store';
 
 import {
   JOB_STATUSES,
@@ -178,6 +179,9 @@ export const useJobProgress = (job, options = {}) => {
   const handleOpenAiResult = useCallback(() => {
     if (progress.jobType !== 'ai' || !progress.target) return;
     const path = progress.target.movieId ? ROUTES.ADMIN.MOVIE_EDIT(progress.target.movieId) : ROUTES.ADMIN.MOVIE_CREATE;
+    if (progress.jobId) {
+      useJobStore.getState().dismissJob(progress.jobId);
+    }
     navigate(path, { state: { aiJobId: progress.jobId } });
   }, [navigate, progress]);
 

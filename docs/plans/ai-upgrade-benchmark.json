@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-21T06:07:15.317Z",
+  "schema": "ai_test_1792562835271",
+  "platform": "win32",
+  "cpu": "Intel(R) Core(TM) Ultra 5 225H",
+  "logicalCpus": 14,
+  "hostRamBytes": 16574767104,
+  "node": "v24.22.0",
+  "externalRequests": 0,
+  "integration": [
+    "additive migrations",
+    "concurrent source identity creates one actor",
+    "manual fields preserved",
+    "cross-owner denied",
+    "movie transaction rollback leaves no new actor",
+    "actor rename refreshes projection",
+    "movie update refreshes projection"
+  ],
+  "search": {
+    "catalogSize": 10001,
+    "clients": 5,
+    "queries": 243,
+    "quality": {
+      "id": {
+        "total": 30,
+        "passed": 30
+      },
+      "exact": {
+        "total": 90,
+        "passed": 90
+      },
+      "folded": {
+        "total": 30,
+        "passed": 30
+      },
+      "typo": {
+        "total": 30,
+        "passed": 30
+      },
+      "entity": {
+        "total": 60,
+        "passed": 60
+      },
+      "namespace": {
+        "total": 1,
+        "passed": 1
+      },
+      "missing": {
+        "total": 2,
+        "passed": 2
+      }
+    },
+    "failures": [],
+    "firstPass": {
+      "p50": 42.23189999999886,
+      "p95": 116.38099999999986,
+      "p99": 133.33100000000013
+    },
+    "warm": {
+      "p50": 40.00830000000133,
+      "p95": 103.04230000000098,
+      "p99": 112.92849999999817
+    },
+    "memory": {
+      "rss": 77250560,
+      "heapTotal": 26488832,
+      "heapUsed": 22638280,
+      "external": 3159535,
+      "arrayBuffers": 679625
+    },
+    "note": "SQL retrieval benchmark, first pass is not OS-cache eviction; excludes HTTP/auth and third-party latency."
+  },
+  "passed": true
+}

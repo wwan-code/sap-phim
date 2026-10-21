@@ -176,10 +176,13 @@ export const useMovieForm = () => {
 
   // 6. Submit Logic
   const onSubmit = async (values) => {
+    let actualJobId = null;
     try {
       // Build submission payload
       const jobId = Object.values(imageFiles).some(Boolean) ? `movie-job-${Date.now()}` : null;
-      const { payload, isMultipart, jobId: actualJobId, hasNewFiles, primaryTitle } = buildMovieSubmission(values, imageFiles, jobId);
+      const submission = buildMovieSubmission(values, imageFiles, jobId);
+      const { payload, isMultipart, hasNewFiles, primaryTitle } = submission;
+      actualJobId = submission.jobId;
       const displayTitle = primaryTitle || values.title || 'Tác phẩm mới';
 
       if (actualJobId) {
@@ -190,8 +193,9 @@ export const useMovieForm = () => {
         setActiveMediaJobId(actualJobId);
       }
 
+      let res;
       if (isEdit) {
-        await updateMutation.mutateAsync({ id, payload, data: payload, isMultipart, jobId: actualJobId });
+        res = await updateMutation.mutateAsync({ id, payload, data: payload, isMultipart, jobId: actualJobId });
         toast.success(
           hasNewFiles
             ? 'Đã cập nhật phim! Đang xử lý ảnh trong nền...'
@@ -200,7 +204,7 @@ export const useMovieForm = () => {
         setImageFiles({ poster: null, banner: null, cover: null, logo: null });
         reset(values); // Reset dirty state
       } else {
-        const res = await createMutation.mutateAsync({ payload, data: payload, isMultipart, jobId: actualJobId });
+        res = await createMutation.mutateAsync({ payload, data: payload, isMultipart, jobId: actualJobId });
         const newId = res?.data?.id || res?.id;
         ai.completeAiDraft();
         toast.success(
@@ -218,7 +222,65 @@ export const useMovieForm = () => {
           navigate(ROUTES.ADMIN.MOVIE_EDIT(newId), { replace: true });
         }
       }
+
+      // Xử lý đối chiếu (Reconciliation) cho Job lưu phim
+      if (actualJobId) {
+        const isAsyncImageQueued = Boolean(res?.meta?.async && res?.meta?.imageStatus === 'queued');
+
+        if (!isAsyncImageQueued) {
+          // Không có hàng đợi ảnh nền hoặc backend đã hoàn tất ngay tức thì
+          useJobStore.getState().updateJobProgress({
+            jobId: actualJobId,
+            jobType: 'movie',
+            status: 'completed',
+            percent: 100,
+            stage: 'completed',
+            stageLabel: 'Hoàn tất',
+            message: isEdit ? 'Đã cập nhật phim thành công' : 'Đã tạo phim thành công',
+            terminal: true,
+          });
+          setActiveMediaJobId(null);
+        } else {
+          // Có ảnh đưa vào hàng đợi nền: cập nhật tiến trình bước đầu
+          useJobStore.getState().updateJobProgress({
+            jobId: actualJobId,
+            jobType: 'movie',
+            status: 'processing',
+            percent: 25,
+            stage: 'QUEUED',
+            stageLabel: 'Đang xếp hàng xử lý ảnh...',
+            message: 'Đang đợi hàng đợi xử lý ảnh...',
+          });
+
+          // Cơ chế an toàn: Sau 25s nếu socket lỡ gói tin, tự hoàn tất
+          setTimeout(() => {
+            const currentJob = useJobStore.getState().jobs[actualJobId];
+            if (currentJob && !currentJob.isTerminal && !currentJob.isDismissed) {
+              useJobStore.getState().updateJobProgress({
+                jobId: actualJobId,
+                jobType: 'movie',
+                status: 'completed',
+                percent: 100,
+                stage: 'completed',
+                stageLabel: 'Hoàn tất',
+                message: 'Đã hoàn tất lưu phim',
+                terminal: true,
+              });
+            }
+          }, 25000);
+        }
+      }
     } catch (err) {
+      if (actualJobId) {
+        useJobStore.getState().updateJobProgress({
+          jobId: actualJobId,
+          jobType: 'movie',
+          status: 'failed',
+          error: err?.message || 'Có lỗi xảy ra khi lưu phim.',
+          terminal: true,
+        });
+        setActiveMediaJobId(null);
+      }
       toast.error(err?.message || 'Có lỗi xảy ra khi lưu phim.');
     }
   };

@@ -6,6 +6,7 @@ const parseListQuery = (query) => {
     page: parseInt(query.page || 1, 10),
     limit: Math.min(parseInt(query.limit || 20, 10), 100),
     search: query.search,
+    search_field: query.search_field, sort_by: query.sort_by, order_by: query.order_by,
     genre: query.genre,
     category: query.category,
     country: query.country,

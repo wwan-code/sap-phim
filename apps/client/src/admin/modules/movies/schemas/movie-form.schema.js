@@ -164,6 +164,11 @@ export const movieSchema = yup.object().shape({
     .max(255, 'Tên đạo diễn không được vượt quá 255 ký tự')
     .nullable()
     .transform((curr, orig) => (orig === '' ? null : curr)),
+  director_metadata: yup
+    .object()
+    .nullable()
+    .optional()
+    .default({}),
   trailer_url: yup
     .string()
     .trim()
@@ -253,6 +258,7 @@ export const movieDefaultValues = {
   season_number: '',
   age_rating: 'PG-13',
   director: '',
+  director_metadata: {},
   trailer_url: '',
   imdb_id: '',
   tmdb_id: '',

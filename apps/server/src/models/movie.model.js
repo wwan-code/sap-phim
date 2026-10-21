@@ -200,6 +200,12 @@ const Movie = sequelize.define(
       allowNull: true,
       comment: 'Đạo diễn',
     },
+    director_metadata: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: {},
+      comment: 'Chi tiết metadata đạo diễn (TMDB/AniList)',
+    },
     season: {
       type: DataTypes.STRING(20),
       allowNull: true,

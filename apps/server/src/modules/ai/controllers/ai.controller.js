@@ -8,7 +8,12 @@ import { aiJobService, getAiAuditHistory } from '../services/ai-job.service.js';
 
 /** @controller resolveMovie @route POST /api/v1/ai/resolve @description Tìm ứng viên trước khi tổng hợp. */
 export const resolveMovie = async (req, res, next) => {
-  try { res.json({ success: true, data: await aiJobService.resolve(req.body, req.user) }); } catch (error) { next(error); }
+  const controller = new AbortController();
+  const disconnect = () => { if (!res.writableEnded) controller.abort(); };
+  res.on('close', disconnect);
+  try { res.json({ success: true, data: await aiJobService.resolve(req.body, req.user, { signal: controller.signal }) }); }
+  catch (error) { if (!controller.signal.aborted) next(error); }
+  finally { res.off('close', disconnect); }
 };
 
 /** @controller suggestMovie @route POST /api/v1/ai/suggest @description Tiếp nhận yêu cầu đã gắn form. */

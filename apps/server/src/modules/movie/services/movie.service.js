@@ -1,3 +1,6 @@
+import { getAdminSearch } from './movie-search.service.js';
+import { literal } from 'sequelize';
+import { createEntityPersistence } from '../../ai/services/entity-persistence.service.js';
 import { Op, col, cast, where as sqlWhere, QueryTypes } from "sequelize";
 
 import {
@@ -13,6 +16,7 @@ import {
   MovieActor,
   AuditLog,
   WatchHistory,
+  AIJob,
 } from "../../../models/index.js";
 import { slugify } from "../../../utils/slugify.util.js";
 import { logger } from "../../../utils/logger.js";
@@ -22,6 +26,8 @@ import movieImageService from "./movie-image.service.js";
 import jobsService from "../../jobs/services/jobs.service.js";
 import { QUEUE_NAMES } from "../../../config/queue.config.js";
 import homeConfigHelper from "./../helpers/home-config.helper.js";
+
+const applyAiEntities = createEntityPersistence({ AIJob, Actor, Studio, sequelize });
 
 const MOVIE_ERROR_CODES = {
   MOVIE_NOT_FOUND: "MOVIE_001",
@@ -57,6 +63,7 @@ const MOVIE_MUTABLE_FIELDS = [
   "imdb_rating",
   "age_rating",
   "director",
+  "director_metadata",
   "marketing_content",
   "tags",
   "season",
@@ -341,6 +348,7 @@ const normalizeActorCast = (data = {}) => {
       const actorName = typeof item === "object" ? item.actor_name || item.name || null : null;
       if (!actorId && !actorName) return null;
       return {
+        ai_verified: item?.ai_verified === true,
         actor_id: actorId,
         actor_name: actorName,
         actor_image_url: typeof item === "object"
@@ -449,6 +457,7 @@ const resolveActorCastReferences = async (actorCast, transaction, userId = null)
 
     if (
       actor &&
+      !item.ai_verified &&
       actorName &&
       /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]/u.test(actor.name) &&
       !/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]/u.test(actorName)
@@ -470,6 +479,7 @@ const resolveActorCastReferences = async (actorCast, transaction, userId = null)
       }
     }
 
+    if (!actor?.id && item.ai_verified) throw createMovieError('Invalid verified actor', 409, 'AI_ENTITY_CHANGED');
     if (!actor?.id) {
       logger.warn("[Movie] Dropping invalid actor reference from cast", {
         actorId: item.actor_id,
@@ -768,6 +778,8 @@ export const movieService = {
       }
 
       transaction = await sequelize.transaction();
+      data = await applyAiEntities(data, { userId, movieId: movie?.id || null, transaction });
+      actorCast = normalizeActorCast(data);
       actorCast = await resolveActorCastReferences(actorCast, transaction, userId);
       await validateReferences(data, actorCast, transaction);
 
@@ -945,6 +957,7 @@ export const movieService = {
         order_by = "updated_at",
         sort = "DESC",
       } = normalizeListOptions(options);
+      const indexedSearch = await getAdminSearch(search, options.search_field || "all");
       const offset = (page - 1) * limit;
       const where = {};
       const baseWhere = {};
@@ -985,14 +998,17 @@ export const movieService = {
         ];
         baseWhere[Op.or] = where[Op.or];
       }
-      if (search) {
+      if (indexedSearch) {
+        where[Op.and] = [literal(indexedSearch.condition)];
+        baseWhere[Op.and] = [literal(indexedSearch.condition)];
+      } else if (search) {
         const searchCond = [
           { slug: { [Op.iLike]: `%${search}%` } },
           { description: { [Op.iLike]: `%${search}%` } },
           sqlWhere(cast(col("Movie.titles"), "text"), { [Op.iLike]: `%${search}%` }),
         ];
-        where[Op.or] = searchCond;
-        baseWhere[Op.or] = searchCond;
+        where[Op.and] = [{ [Op.or]: searchCond }];
+        baseWhere[Op.and] = [{ [Op.or]: searchCond }];
       }
 
       const isTrashTab = is_trash === true || options.is_trash === "true" || options.tab === "trash";
@@ -1025,6 +1041,8 @@ export const movieService = {
         orderClause.push(["updated_at", "DESC"]);
       }
 
+      if (indexedSearch && (options.sort_by === 'relevance' || (!options.sort_by && !options.order_by))) orderClause.unshift([literal(indexedSearch.rank), 'DESC']);
+      orderClause.push(['id', 'ASC']);
       const { count: total, rows: items } = await Movie.findAndCountAll({
         where,
         include: baseIncludes({
@@ -1167,6 +1185,8 @@ export const movieService = {
         throw createMovieError("Movie requires at least one title", 400, MOVIE_ERROR_CODES.MOVIE_TITLE_REQUIRED);
       }
 
+      data = await applyAiEntities(data, { userId, movieId: movie?.id || null, transaction });
+      actorCast = normalizeActorCast(data);
       actorCast = await resolveActorCastReferences(actorCast, transaction, userId);
       await validateReferences(data, actorCast, transaction);
 

@@ -183,7 +183,7 @@ export function useActiveJob() {
   const allActiveJobs = useMemo(() => {
     return activeJobIds
       .map((id) => jobs[id])
-      .filter((job) => job && job.jobType !== 'suggest' && (job.jobType !== 'ai' || (ownerId && String(job.ownerId) === String(ownerId))));
+      .filter((job) => job && !job.isDismissed && job.jobType !== 'suggest' && (job.jobType !== 'ai' || (ownerId && String(job.ownerId) === String(ownerId))));
   }, [activeJobIds, jobs, ownerId]);
 
   const activeJob = useMemo(() => {

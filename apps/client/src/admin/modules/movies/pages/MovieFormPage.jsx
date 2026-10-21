@@ -41,6 +41,7 @@ const MovieFormPageInner = () => {
     setIsAiModalOpen,
     isAiDrawerOpen,
     setIsAiDrawerOpen,
+    handleCloseAiDrawer,
     aiSuggestionData,
     aiSuggestionJobId,
     aiTarget,
@@ -132,7 +133,7 @@ const MovieFormPageInner = () => {
         <AISuggestionDrawer
           isOpen={isAiDrawerOpen}
           job={viewedAiJob}
-          onClose={() => setIsAiDrawerOpen(false)}
+          onClose={handleCloseAiDrawer || (() => setIsAiDrawerOpen(false))}
           suggestionData={aiSuggestionData}
           suggestionId={aiSuggestionJobId}
           metadata={metadata}

@@ -63,6 +63,11 @@
       width: auto;
       max-width: none;
     }
+
+    // Khi OffCanvas Drawer đang mở, ẩn widget nổi để không che hoặc đè lên drawer
+    body:has(.off-canvas__panel) & {
+      display: none;
+    }
   }
 
   // ── Minimized Pill Modifier ─────────────────────────────────────────────

@@ -70,6 +70,7 @@ export const mapMovieToFormValues = (item) => {
     season_number: item.season_number != null ? item.season_number : '',
     age_rating: item.age_rating || 'PG-13',
     director: item.director || '',
+    director_metadata: item.director_metadata || {},
     trailer_url: item.trailer_url || '',
     description: item.description || '',
     seo_keywords: item.seo_keywords || [],
@@ -144,6 +145,7 @@ export const buildMovieSubmission = (values, imageFiles = {}, jobId = null) => {
     ? values.actor_cast
         .filter((a) => Boolean(a?.actor_name || a?.name || a?.actor_id))
         .map((a, idx) => ({
+          ...(a.entity_key ? { entity_key: a.entity_key } : {}),
           actor_id: a.actor_id || null,
           actor_name: (a.actor_name || a.name || '').trim(),
           actor_image_url: a.actor_image_url || a.image_url || null,
@@ -201,6 +203,7 @@ export const buildMovieSubmission = (values, imageFiles = {}, jobId = null) => {
         : null,
     age_rating: values.age_rating || 'PG-13',
     director: (values.director || '').trim() || null,
+    director_metadata: values.director_metadata || {},
     trailer_url: (values.trailer_url || '').trim() || null,
     description: (values.description || '').trim() || null,
     meta_title: (values.meta_title || '').trim() || null,
@@ -213,6 +216,13 @@ export const buildMovieSubmission = (values, imageFiles = {}, jobId = null) => {
     imdb_rating: values.imdb_rating ? Number(values.imdb_rating) : null,
   };
 
+  if (values.ai_application) {
+    const keys = cleanedActorCast.map((row) => row.entity_key).filter(Boolean);
+    if (values.studio_candidate?.entity_key && !values.studio_id) keys.push(values.studio_candidate.entity_key);
+    if (keys.length) payloadData.ai_application = { ...values.ai_application, entity_keys: [...new Set(keys)] };
+    else delete payloadData.ai_application;
+  }
+  delete payloadData.studio_candidate;
   if (jobId) {
     payloadData.jobId = jobId;
   }

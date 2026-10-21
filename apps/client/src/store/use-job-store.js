@@ -89,9 +89,12 @@ export const useJobStore = create((set, get) => ({
     set((state) => {
       const existing = state.jobs[jobId];
       const initialRecord = existing || createInitialJobRecord(jobId, meta);
+      const isDismissed = meta.isDismissed ?? false;
 
-      // Đảm bảo jobId nằm trong activeJobIds (đưa lên đầu danh sách)
-      const nextActiveIds = [jobId, ...state.activeJobIds.filter((id) => id !== jobId)];
+      // Đảm bảo jobId nằm trong activeJobIds nếu chưa bị dismiss
+      const nextActiveIds = isDismissed
+        ? state.activeJobIds.filter((id) => id !== jobId)
+        : [jobId, ...state.activeJobIds.filter((id) => id !== jobId)];
 
       return {
         jobs: {
@@ -99,12 +102,12 @@ export const useJobStore = create((set, get) => ({
           [jobId]: {
             ...initialRecord,
             ...meta,
-            isDismissed: false,
+            isDismissed,
             updatedAt: Date.now(),
           },
         },
         activeJobIds: nextActiveIds,
-        activeMovieJobId: jobId, // Tự động focus vào job vừa tạo
+        activeMovieJobId: isDismissed ? state.activeMovieJobId : jobId,
       };
     });
 
@@ -284,7 +287,7 @@ export const useJobStore = create((set, get) => ({
       socketClient.unsubscribeJob(jobId, _refs.subscribedJobs.get(jobId));
       _refs.subscribedJobs.delete(jobId);
     }
-    if (rawStatus === 'completed' && get().jobs[jobId]?.jobType !== 'ai') {
+    if (rawStatus === 'completed') {
       if (_refs.autoDismissTimers.has(jobId)) {
         clearTimeout(_refs.autoDismissTimers.get(jobId));
       }

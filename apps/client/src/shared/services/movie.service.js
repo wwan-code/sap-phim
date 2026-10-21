@@ -109,7 +109,11 @@ class MovieService extends BaseService {
       }
       const response = await api.post(ENDPOINTS.MOVIES.ADMIN_CREATE, payload, { headers });
       this.clearCache();
-      return this._extractData(response);
+      const data = this._extractData(response);
+      if (data && typeof data === 'object' && response?.data?.meta) {
+        data.meta = response.data.meta;
+      }
+      return data;
     });
   }
 
@@ -129,7 +133,11 @@ class MovieService extends BaseService {
       }
       const response = await api.patch(ENDPOINTS.MOVIES.ADMIN_UPDATE(id), payload, { headers });
       this.clearCache();
-      return this._extractData(response);
+      const data = this._extractData(response);
+      if (data && typeof data === 'object' && response?.data?.meta) {
+        data.meta = response.data.meta;
+      }
+      return data;
     });
   }
 

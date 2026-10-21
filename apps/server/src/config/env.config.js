@@ -147,7 +147,7 @@ export const env = {
       process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY,
       []
     ),
-    model: process.env.GEMINI_MODEL || "gemini-3.5-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     freeTierConfirmed: process.env.GEMINI_FREE_TIER_CONFIRMED === "true",
     freeModels: parseArraySafe(process.env.GEMINI_FREE_MODELS, [
       "gemini-2.5-flash",
@@ -160,6 +160,8 @@ export const env = {
     acceptingJobs: process.env.AI_SUGGEST_ACCEPTING_JOBS !== "false",
     workerEnabled: process.env.AI_SUGGEST_WORKER_ENABLED !== "false",
   },
+
+  anilist: { enabled: process.env.ANILIST_ENABLED !== "false" },
 
   // TMDB API
   tmdb: {

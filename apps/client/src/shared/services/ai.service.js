@@ -35,9 +35,9 @@ class AIService extends BaseService {
     });
   }
 
-  /** @description Resolve catalog identity before starting a suggestion. @param {object} payload @returns {Promise<object>} */
-  async resolveMovie(payload) {
-    return this._extractData(await api.post(ENDPOINTS.AI.RESOLVE, payload));
+  /** @description Resolve catalog identity with form context; allow obsolete lookups to be cancelled. @param {object} payload @param {object} options @returns {Promise<object>} */
+  async resolveMovie(payload, { signal } = {}) {
+    return this._extractData(await api.post(ENDPOINTS.AI.RESOLVE, payload, { signal }));
   }
 
   /** @description Recover jobs for the authenticated account and exact form target. @param {object} params @returns {Promise<object>} */

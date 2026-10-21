@@ -7,7 +7,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { assertAiAccess } from '../../modules/ai/services/ai-job-policy.js';
+import { assertAiAccess } from '../../modules/ai/helpers/ai-job.helper.js';
 import { ROLES } from '../../constants/roles.constant.js';
 
 import { createJobSnapshotReader, normalizeJobStatusSnapshot } from './job-access.util.js';

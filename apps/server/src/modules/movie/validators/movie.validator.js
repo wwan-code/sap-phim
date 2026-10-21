@@ -12,6 +12,7 @@ const titleSchema = Joi.object({
 });
 
 const actorCastSchema = Joi.object({
+  entity_key: Joi.string().pattern(/^(tmdb:person|anilist:staff):[1-9]\d{0,9}$/).optional(),
   id: Joi.string().uuid().allow("", null).optional(),
   actor_id: Joi.string().uuid().allow("", null).optional(),
   actorId: Joi.string().uuid().allow("", null).optional(),
@@ -35,6 +36,11 @@ const orchestrationFields = {
 };
 
 const relationFields = {
+  ai_application: Joi.object({
+    job_id: Joi.string().max(100).required(), candidate_id: Joi.string().max(64).required(),
+    draft_id: Joi.string().uuid().optional(),
+    entity_keys: Joi.array().items(Joi.string().pattern(/^(tmdb:(person|company)|anilist:(staff|studio)):[1-9]\d{0,9}$/)).unique().max(21).required(),
+  }).optional(),
   actor_ids: Joi.array().items(Joi.string().uuid()).optional(),
   actor_cast: Joi.array().items(actorCastSchema).optional(),
   actors: Joi.array().items(actorCastSchema).optional(),
@@ -71,6 +77,7 @@ export const movieValidator = {
     imdb_rating: Joi.number().min(0).max(10).allow("", null).optional(),
     age_rating: Joi.string().valid("G", "PG", "PG-13", "R", "R+", "13+", "16+", "18+", "P").default("PG-13"),
     director: Joi.string().allow("", null).optional(),
+    director_metadata: Joi.object().unknown(true).optional(),
     seo_keywords: Joi.array().items(Joi.string()).optional(),
     marketing_content: Joi.object().unknown(true).optional(),
     tags: Joi.array().items(Joi.string()).optional(),
@@ -113,6 +120,7 @@ export const movieValidator = {
     imdb_rating: Joi.number().min(0).max(10).allow("", null).optional(),
     age_rating: Joi.string().valid("G", "PG", "PG-13", "R", "R+", "13+", "16+", "18+", "P").optional(),
     director: Joi.string().allow("", null).optional(),
+    director_metadata: Joi.object().unknown(true).optional(),
     seo_keywords: Joi.array().items(Joi.string()).optional(),
     marketing_content: Joi.object().unknown(true).optional(),
     tags: Joi.array().items(Joi.string()).optional(),
@@ -133,7 +141,7 @@ export const movieValidator = {
   list: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(20),
-    search: Joi.string().trim().allow("").optional(),
+    search: Joi.string().trim().max(500).allow("").optional(),
     genre: Joi.string().trim().optional(),
     category: Joi.string().trim().optional(),
     country: Joi.string().trim().optional(),
@@ -151,9 +159,11 @@ export const movieValidator = {
   }),
 
   adminList: Joi.object({
+    search_field: Joi.string().valid('all', 'title', 'actor', 'director', 'studio').optional(),
+    sort_by: Joi.string().valid('relevance').optional(),
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(20),
-    search: Joi.string().trim().allow("").optional(),
+    search: Joi.string().trim().max(500).allow("").optional(),
     status: Joi.string().valid("ongoing", "completed", "upcoming", "cancelled", "hiatus").optional(),
     type: Joi.string().valid("movie", "series", "special", "ova", "ona", "tv").optional(),
     category: Joi.string().trim().optional(),
@@ -169,7 +179,7 @@ export const movieValidator = {
     is_published: Joi.boolean().optional(),
     is_trash: Joi.boolean().optional(),
     tab: Joi.string().optional(),
-    order_by: Joi.string().optional().default("updated_at"),
+    order_by: Joi.string().valid("updated_at", "created_at", "release_date", "release_year", "trending_score", "daily_views", "weekly_views", "monthly_views", "total_views", "rating_average", "title").optional(),
     sort: Joi.string().valid("ASC", "DESC", "asc", "desc").optional().default("DESC"),
   }),
 

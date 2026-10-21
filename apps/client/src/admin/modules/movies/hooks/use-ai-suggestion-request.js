@@ -7,12 +7,15 @@ import { useEffect, useRef, useState } from 'react';
 
 import aiService from '@/shared/services/ai.service';
 
-import { extractFormContextForAI } from '../mappers/ai-suggestion.mapper';
+import { createAiResolutionBinding, extractFormContextForAI } from '../mappers/ai-suggestion.mapper';
 
 /** @hook useAiSuggestionRequest @description Preserve user input while resolving the intended work. @param {object} options @returns {object} */
 export const useAiSuggestionRequest = ({ isOpen, formValues, onSubmit, isLoading, target }) => {
   const initialised = useRef(false);
-  const inFlight = useRef(false);
+  const pending = useRef(null);
+  const mounted = useRef(false);
+  const openRef = useRef(isOpen);
+  const bindingRef = useRef('');
   const valuesRef = useRef(formValues);
   const resolutionRef = useRef(null);
   valuesRef.current = formValues;
@@ -21,6 +24,28 @@ export const useAiSuggestionRequest = ({ isOpen, formValues, onSubmit, isLoading
   const [candidateId, setCandidateId] = useState('');
   const [isResolving, setIsResolving] = useState(false);
   const [error, setError] = useState('');
+  const context = extractFormContextForAI(formValues);
+  const binding = createAiResolutionBinding({ ...values, target }, context);
+  bindingRef.current = binding;
+  openRef.current = isOpen;
+  const currentResolution = resolution?.binding === binding ? resolution.result : null;
+  const currentCandidateId = currentResolution ? candidateId : '';
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; pending.current?.controller.abort(); pending.current = null; };
+  }, []);
+
+  useEffect(() => {
+    if (pending.current && (!isOpen || pending.current.binding !== binding)) {
+      pending.current.controller.abort();
+      pending.current = null;
+      setIsResolving(false);
+    }
+    if (resolution && resolution.binding !== binding) {
+      setResolution(null); setCandidateId(''); setError('');
+    }
+  }, [binding, isOpen, resolution]);
 
   useEffect(() => {
     if (!isOpen || initialised.current) return;
@@ -30,8 +55,8 @@ export const useAiSuggestionRequest = ({ isOpen, formValues, onSubmit, isLoading
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen && resolution && !isResolving) resolutionRef.current?.focus({ preventScroll: false });
-  }, [isOpen, resolution, isResolving]);
+    if (isOpen && currentResolution && !isResolving) resolutionRef.current?.focus({ preventScroll: false });
+  }, [isOpen, currentResolution, isResolving]);
 
   const update = (key, value) => {
     setValues((current) => ({ ...current, [key]: value }));
@@ -41,26 +66,35 @@ export const useAiSuggestionRequest = ({ isOpen, formValues, onSubmit, isLoading
 
   const submit = async (event) => {
     event?.preventDefault?.();
-    if (isLoading || isResolving || inFlight.current || !values.title.trim()) return;
+    if (!isOpen || isLoading || isResolving || pending.current || !values.title.trim()) return;
     const year = values.year ? Number(values.year) : undefined;
     if (year !== undefined && (!Number.isInteger(year) || year < 1900 || year > 2100)) { setError('Năm phát hành phải từ 1900 đến 2100.'); return; }
-    if (resolution?.candidates?.length && !candidateId) { setError('Chọn một tác phẩm để tạo gợi ý.'); return; }
+    if (currentResolution?.candidates?.length && !currentCandidateId) { setError('Chọn một tác phẩm để tạo gợi ý.'); return; }
     setError('');
-    inFlight.current = true;
+    const request = { binding, controller: new AbortController() };
+    pending.current = request;
+    const isCurrent = () => mounted.current && openRef.current && bindingRef.current === request.binding && pending.current === request;
     try {
-      if (!resolution || !candidateId) {
+      if (!currentResolution || !currentCandidateId) {
         setIsResolving(true);
-        const result = await aiService.resolveMovie({ target, title: values.title.trim(), year, ...(values.media_type ? { media_type: values.media_type } : {}) });
-        setResolution(result);
+        const result = await aiService.resolveMovie({ target, title: values.title.trim(), year, ...(values.media_type ? { media_type: values.media_type } : {}), context }, { signal: request.controller.signal });
+        if (!isCurrent()) return;
+        setResolution({ result, binding });
         if (result.status === 'matched') setCandidateId(result.selectedCandidate?.candidateId || result.candidates?.[0]?.candidateId || '');
         return;
       }
-      await onSubmit({ ...Object.fromEntries(Object.entries(values).filter(([key, value]) => key !== 'media_type' || value)), title: values.title.trim(), year, resolutionId: resolution.resolutionId, candidateId, enable_web_search: false, context: extractFormContextForAI(valuesRef.current) });
+      await onSubmit({ ...Object.fromEntries(Object.entries(values).filter(([key, value]) => key !== 'media_type' || value)), title: values.title.trim(), year, resolutionId: currentResolution.resolutionId, candidateId: currentCandidateId, enable_web_search: false, context });
     } catch (failure) {
+      if (!isCurrent() || request.controller.signal.aborted) return;
       if (['AI_RESOLUTION_EXPIRED', 'AI_RESOLUTION_MISMATCH', 'AI_IDENTITY_REQUIRED'].includes(failure?.code)) { setResolution(null); setCandidateId(''); }
       setError(failure?.message || 'Không thể tra cứu tác phẩm. Vui lòng thử lại.');
     }
-    finally { inFlight.current = false; setIsResolving(false); }
+    finally {
+      if (pending.current === request) {
+        pending.current = null;
+        if (mounted.current) setIsResolving(false);
+      }
+    }
   };
-  return { values, update, resolution, resolutionRef, candidateId, selectCandidate: (id) => { setCandidateId(id); setError(''); }, busy: isLoading || isResolving, isResolving, error, submit };
+  return { values, update, resolution: currentResolution, resolutionRef, candidateId: currentCandidateId, selectCandidate: (id) => { if (currentResolution?.candidates?.some((candidate) => candidate.candidateId === id)) { setCandidateId(id); setError(''); } }, busy: isLoading || isResolving, isResolving, error, submit };
 };

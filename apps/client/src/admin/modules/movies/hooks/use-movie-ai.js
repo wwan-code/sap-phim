@@ -47,12 +47,27 @@ export const useMovieAi = ({ ownerId, movieId, isReadOnly, form, requestedJobId 
         setIsAiModalOpen(false);
         if (open) setIsAiDrawerOpen(true);
         if (['queued', 'processing', 'completed'].includes(existing.status)) setActiveAiJobId(job.jobId);
+        if (existing.status === 'completed' || open) store.dismissJob(job.jobId);
       }
       return;
     }
-    store.registerJob(job.jobId, { jobType: 'ai', ownerId: job.ownerId, target: job.target, requestId: job.requestId, title: job.title || 'Gợi ý dữ liệu phim' });
+    const context = reviewContextRef.current;
+    const isCompleted = job.status === 'completed';
+    const shouldDismiss = (isCompleted && (open || intent === 'explicit' || context.drawerOpen || intent === 'restore')) || (open && intent === 'explicit');
+
+    store.registerJob(job.jobId, {
+      jobType: 'ai',
+      ownerId: job.ownerId,
+      target: job.target,
+      requestId: job.requestId,
+      title: job.title || 'Gợi ý dữ liệu phim',
+      isDismissed: shouldDismiss,
+    });
     store.updateJobProgress({ ...job, jobType: 'ai' });
-    if (job.status === 'completed' && job.result) {
+    if (shouldDismiss) {
+      store.dismissJob(job.jobId);
+    }
+    if (isCompleted && job.result) {
       const explicit = intent === 'explicit';
       const latest = latestCompletedRef.current;
       const incomingTime = Date.parse(job.createdAt || job.updatedAt || '');
@@ -64,7 +79,6 @@ export const useMovieAi = ({ ownerId, movieId, isReadOnly, form, requestedJobId 
         setLatestCompletedJob(job);
         if (intent === 'background' && reviewContextRef.current.visibleJobId && reviewContextRef.current.visibleJobId !== job.jobId) setNewResultJobId(job.jobId);
       }
-      const context = reviewContextRef.current;
       const reviewingDifferentJob = context.drawerOpen && context.visibleJobId !== job.jobId;
       const preserveReview = !explicit && (context.modalOpen || reviewingDifferentJob);
       if (!preserveReview && (explicit || promoteLatest || context.visibleJobId === job.jobId)) {
@@ -76,7 +90,6 @@ export const useMovieAi = ({ ownerId, movieId, isReadOnly, form, requestedJobId 
       }
       setActiveAiJobId((current) => current === job.jobId ? null : current);
     } else {
-      const context = reviewContextRef.current;
       if (intent === 'explicit' || context.visibleJobId === job.jobId) {
         setViewedAiJobId(job.jobId); setViewedSnapshot(job);
         if (intent === 'explicit') { setSuggestionJob(null); setNewResultJobId(null); setIsAiModalOpen(false); if (open) setIsAiDrawerOpen(true); }
@@ -112,8 +125,11 @@ export const useMovieAi = ({ ownerId, movieId, isReadOnly, form, requestedJobId 
   const openResult = useCallback(async (jobId) => {
     const resultJobId = jobId || latestCompletedRef.current?.jobId;
     if (!resultJobId) return;
-    try { accept(await recoverAiJob(aiService, resultJobId, ownerId, target), true, 'explicit'); }
-    catch (failure) { toast.error(failure?.message || 'Không thể tải kết quả AI.'); }
+    try {
+      useJobStore.getState().dismissJob(resultJobId);
+      accept(await recoverAiJob(aiService, resultJobId, ownerId, target), true, 'explicit');
+      useJobStore.getState().dismissJob(resultJobId);
+    } catch (failure) { toast.error(failure?.message || 'Không thể tải kết quả AI.'); }
   }, [accept, ownerId, target]);
   const openLatestResult = useCallback(() => openResult(), [openResult]);
   const openAiProgress = useCallback(() => openResult(activeAiJobId), [activeAiJobId, openResult]);
@@ -184,16 +200,41 @@ export const useMovieAi = ({ ownerId, movieId, isReadOnly, form, requestedJobId 
     if (isReadOnly || !belongs(suggestionJob) || data !== suggestionJob.result) return false;
     const plan = buildSuggestionMergePlan(selectedKeys, data, { ...options, currentValues: form.getValues() });
     if (plan.overwrites.length && options.confirmedPlan !== JSON.stringify(plan.changes)) return false;
+    const previousApplication = form.getValues('ai_application');
+    if (previousApplication && previousApplication.job_id !== suggestionJob.jobId && plan.changes.some(({ key }) => ['actor_cast', 'studio_candidate'].includes(key))) {
+      const plannedCast = plan.changes.find(({ key }) => key === 'actor_cast')?.value || form.getValues('actor_cast') || [];
+      const plannedStudio = plan.changes.find(({ key }) => key === 'studio_candidate')?.value || form.getValues('studio_candidate');
+      const allowedKeys = new Set([...(data.suggested_entities?.actors || []).map((row) => row.entity_key), data.suggested_entities?.studio?.entity_key].filter(Boolean));
+      if ([...plannedCast.map((row) => row.entity_key), plannedStudio?.entity_key].some((key) => key && !allowedKeys.has(key))) {
+        toast.error('Form còn thực thể từ lần gợi ý trước. Lưu phim hoặc bỏ lựa chọn đó trước khi áp dụng kết quả mới.');
+        return false;
+      }
+    }
     const applied = mergeSuggestionToForm(selectedKeys, data, form.setValue, { ...options, currentValues: form.getValues() });
+    const entityChanges = applied.changes.filter(({ key }) => ['actor_cast', 'studio_candidate'].includes(key));
+    if (entityChanges.length) {
+      const currentKeys = [...(form.getValues('actor_cast') || []).map((row) => row.entity_key).filter(Boolean), form.getValues('studio_candidate')?.entity_key].filter(Boolean);
+      form.setValue('ai_application', { job_id: suggestionJob.jobId, candidate_id: data.candidate_id,
+        ...(target.draftId ? { draft_id: target.draftId } : {}), entity_keys: [...new Set(currentKeys)] }, { shouldDirty: true });
+    }
     aiService.recordReview(suggestionJob.jobId, {
       appliedFields: applied.changes.map(({ key }) => key),
       skippedCount: applied.skippedCount,
       consideredCount: new Set(selectedKeys).size,
     }).catch(() => {});
     setIsAiDrawerOpen(false);
+    if (suggestionJob?.jobId) {
+      useJobStore.getState().dismissJob(suggestionJob.jobId);
+    }
     toast.success(`Đã áp dụng ${applied.appliedCount} trường, bỏ qua ${applied.skippedCount} trường. Kiểm tra và lưu phim để hoàn tất.`);
     return true;
   };
+  const handleCloseAiDrawer = useCallback(() => {
+    setIsAiDrawerOpen(false);
+    if (viewedAiJobId && jobs[viewedAiJobId]?.isCompleted) {
+      useJobStore.getState().dismissJob(viewedAiJobId);
+    }
+  }, [viewedAiJobId, jobs]);
   const activeAiJob = activeAiJobId && belongs(jobs[activeAiJobId]) ? jobs[activeAiJobId] : null;
   const viewedAiJob = useMemo(() => {
     const stored = jobs[viewedAiJobId];
@@ -204,9 +245,37 @@ export const useMovieAi = ({ ownerId, movieId, isReadOnly, form, requestedJobId 
     const result = suggestionJob?.jobId === viewedAiJobId ? suggestionJob.result : null;
     return { ...latest, result, outputs: result, isReconnecting: live?.isReconnecting, isStale: live?.isStale };
   }, [jobs, viewedAiJobId, viewedSnapshot, belongs, suggestionJob]);
-  return { completeAiDraft: () => retireAiDraft(ownerId, target.draftId, window.sessionStorage), aiTarget: target,
-    isAiModalOpen, setIsAiModalOpen, isAiDrawerOpen, setIsAiDrawerOpen, aiSuggestionData: suggestionJob?.result || null, aiSuggestionJobId: suggestionJob?.jobId,
-    activeAiJobId, activeAiJob, viewedAiJob, openAiProgress, refreshViewedAiJob, openAiRequest,
+  return {
+    completeAiDraft: () => {
+      if (suggestionJob?.jobId) {
+        useJobStore.getState().dismissJob(suggestionJob.jobId);
+      }
+      if (activeAiJobId) {
+        useJobStore.getState().dismissJob(activeAiJobId);
+      }
+      return retireAiDraft(ownerId, target.draftId, window.sessionStorage);
+    },
+    aiTarget: target,
+    isAiModalOpen,
+    setIsAiModalOpen,
+    isAiDrawerOpen,
+    setIsAiDrawerOpen,
+    handleCloseAiDrawer,
+    aiSuggestionData: suggestionJob?.result || null,
+    aiSuggestionJobId: suggestionJob?.jobId,
+    activeAiJobId,
+    activeAiJob,
+    viewedAiJob,
+    openAiProgress,
+    refreshViewedAiJob,
+    openAiRequest,
     hasNewAiResult: Boolean(latestCompletedJob?.result && latestCompletedJob.jobId !== viewedAiJobId && (suggestionJob?.result || newResultJobId === latestCompletedJob.jobId)),
-    isAiLoading, isAiCancelling, handleAiModalSubmit, handleApplyAiSuggestion, cancelAiJob, openAiResult: openLatestResult, hasAiResult: Boolean(latestCompletedJob?.result) };
+    isAiLoading,
+    isAiCancelling,
+    handleAiModalSubmit,
+    handleApplyAiSuggestion,
+    cancelAiJob,
+    openAiResult: openLatestResult,
+    hasAiResult: Boolean(latestCompletedJob?.result),
+  };
 };

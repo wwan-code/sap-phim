@@ -241,6 +241,7 @@ export const MoviePage = () => {
   const activeTab = searchParams.get('tab') || 'all';
   const typeFilter = searchParams.get('type') || '';
   const categoryFilter = searchParams.get('category') || '';
+  const searchField = searchParams.get('search_field') || 'all';
   const [selectedIds, setSelectedIds] = useState([]);
 
   // Confirm Modal state
@@ -265,7 +266,7 @@ export const MoviePage = () => {
 
   // Tham số query tùy chỉnh theo Tab và Filter Dropdown
   const customParams = useMemo(() => {
-    const params = {};
+    const params = { search_field: searchField };
     if (activeTab === 'published') params.is_published = true;
     if (activeTab === 'draft') params.is_published = false;
     if (activeTab === 'trash') params.tab = 'trash';
@@ -274,14 +275,14 @@ export const MoviePage = () => {
     if (categoryFilter) params.category = categoryFilter;
 
     return params;
-  }, [activeTab, typeFilter, categoryFilter]);
+  }, [activeTab, typeFilter, categoryFilter, searchField]);
 
   // DataGrid Query Hook với URL SearchParams Sync
   const { gridProps, refetch, data, optimisticRemoveRow } = useDataGridQuery({
     queryKey: MOVIE_QUERY_KEYS.adminList(customParams),
     queryFn: (params) => movieService.getAll(params),
     customParams,
-    defaultSortModel: [{ field: 'updated_at', sort: 'desc' }],
+    defaultSortModel: [],
     defaultPageSize: 20,
     syncUrlParams: true,
   });
@@ -871,6 +872,10 @@ export const MoviePage = () => {
           placeholder="Tất cả danh mục"
           className="sp-movie-page__filter-select"
         />
+        <Select size="small" aria-label="Tìm theo" value={searchField}
+          onChange={(event) => setSearchParams((previous) => { const next = new URLSearchParams(previous); next.set('search_field', event.target.value); next.set('page', '1'); return next; })}
+          options={[{ value: 'all', label: 'Tìm tất cả' }, { value: 'title', label: 'Tên phim' }, { value: 'actor', label: 'Diễn viên' }, { value: 'director', label: 'Đạo diễn' }, { value: 'studio', label: 'Hãng phim' }]}
+          className="sp-movie-page__filter-select" />
       </AdminFilterToolbar>
 
       {/* 3. Centralized DataGrid with Native Selection & Bulk Actions */}
@@ -920,7 +925,7 @@ export const MoviePage = () => {
         showColumnSelector
         showFilterButton
         showExportButton
-        quickFilterPlaceholder="Tìm kiếm theo tiêu đề, slug, mô tả..."
+        quickFilterPlaceholder="Tìm tên, diễn viên, đạo diễn hoặc tmdb:movie:123…"
         onAddRecord={() => navigate(ROUTES.ADMIN.MOVIE_CREATE)}
         addRecordLabel="Thêm Phim Mới"
         emptyTitle={activeTab === 'trash' ? 'Thùng rác trống' : 'Chưa có tác phẩm nào'}
